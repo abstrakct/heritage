@@ -41,6 +41,7 @@ class Display {
                 void update();
                 void put(int x, int y, int c, TCOD_bkgnd_flag_t flag = TCOD_BKGND_DEFAULT);
                 void putmap(int x, int y, int c, TCOD_bkgnd_flag_t flag = TCOD_BKGND_DEFAULT);
+                void putmap(int x, int y, int c, TCODColor &fg, TCODColor &bg);
                 TCOD_key_t get_key(bool flush);
         protected:
         private:

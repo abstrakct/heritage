@@ -10,10 +10,9 @@
 
 #include "display.h"
 #include "debug.h"
-#include "world.h"
 
 extern Display *display;
-extern World *world;
+
 typedef struct {
         int x;
         int y;
@@ -30,6 +29,8 @@ enum direction {
         se,
         sw
 };
+
+bool fiftyfifty();
 
 #endif
 

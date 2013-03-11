@@ -9,9 +9,10 @@
 #define _WORLD_H
 
 #include "libtcod.hpp"
+#include "common.h"
 
-#define AREA_MAX_X 128
-#define AREA_MAX_Y 75
+#define AREA_MAX_X 90
+#define AREA_MAX_Y 60
 
 #define MAX_AREAS 12
 
@@ -29,10 +30,15 @@ class Cell {
                 int          flags;
                 TCODColor    fg, bg;
                 bool         visible;
+                char         c;
         protected:
         public:
                 Cell();
                 ~Cell();
+                void set_wall();
+                void set_floor();
+                void set_color(TCODColor fg, TCODColor bg);
+                void draw(int x, int y);
                 bool is_passable();
                 bool is_visible();
 };
@@ -44,6 +50,7 @@ class Area {
         public:
                 Area();
                 ~Area();
+                void generate();
                 Cell **cell;
 };
 
@@ -55,7 +62,11 @@ class World {
         public:
                 World();
                 ~World();
+                Area *a;
                 bool is_passable(int x, int y);
+                void draw_map();
+                void draw_cell(int x, int y);
+                void draw_cell(coord_t co);
 };
 
 #endif

@@ -17,7 +17,8 @@ Player::Player()
 {
         health = 0;
         setchar('@');
-        setxy(45, 30);
+        setxy((MAP_W/2), (MAP_H/2));
+        setprevxy(getxy());
 }
 
 Player::~Player()

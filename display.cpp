@@ -12,6 +12,12 @@ using namespace std;
 #include "libtcod.hpp"
 #include "debug.h"
 #include "display.h"
+#include "common.h"
+#include "player.h"
+#include "world.h"
+
+extern World *world;
+extern Player *player;
 
 Display::Display()
 {
@@ -21,9 +27,10 @@ Display::Display()
         set_title(t);
 
         console = new TCODConsole(chars_x, chars_y);
-        console->setCustomFont(FONT, TCOD_FONT_TYPE_GRAYSCALE | TCOD_FONT_LAYOUT_ASCII_INROW, 0, 0);
-        console->initRoot(chars_x, chars_y, title, false, TCOD_RENDERER_SDL);
-        console->setKeyboardRepeat(350, 70);
+        console->setCustomFont(FONT, TCOD_FONT_TYPE_GRAYSCALE | TCOD_FONT_LAYOUT_ASCII_INROW, 16, 16);
+        TCODConsole::initRoot(chars_x, chars_y, title, false, TCOD_RENDERER_SDL);
+        console->root->setCustomFont(FONT, TCOD_FONT_TYPE_GRAYSCALE | TCOD_FONT_LAYOUT_ASCII_INROW, 16, 16);
+        console->root->setKeyboardRepeat(350, 70);
 
         map =     new TCODConsole(MAP_W, MAP_H);
         left =    new TCODConsole(LEFT_W, LEFT_H);
@@ -51,8 +58,8 @@ void Display::set_title(char *window_title)
 
 TCOD_key_t Display::get_key(bool flush)
 {
-        console->flush();
-        return console->checkForKeypress(TCOD_KEY_PRESSED);
+        console->root->flush();
+        return console->root->checkForKeypress(TCOD_KEY_PRESSED);
 }
 
 char *Display::get_title()
@@ -62,19 +69,21 @@ char *Display::get_title()
 
 void Display::draw_game_screen()
 {
-        left->printFrame(LEFT_X, LEFT_Y, LEFT_W, LEFT_H, true);
-        map->printFrame(0, 0, MAP_W, MAP_H, false);
-        bottom->printFrame(0, 0, BOTTOM_W, BOTTOM_H, true);
+        console->printFrame(LEFT_X, LEFT_Y, LEFT_W, LEFT_H, true);
+        console->printFrame(MAP_X, MAP_Y, MAP_W, MAP_H, false);
+        console->printFrame(BOTTOM_X, BOTTOM_Y, BOTTOM_W, BOTTOM_H, true);
 
 }
 
 void Display::update()
 {
         this->draw_game_screen();
+        world->draw_map();
+        player->draw();
 
-        TCODConsole::blit(left, 0, 0, LEFT_W, LEFT_H, console, LEFT_X, LEFT_Y, 0.2, 0.2);
-        TCODConsole::blit(map, 0, 0, MAP_W, MAP_H, console, MAP_X, MAP_Y, 0.2, 0.2);
-        TCODConsole::blit(bottom, 0, 0, BOTTOM_W, BOTTOM_H, console, BOTTOM_X, BOTTOM_Y, 0.2, 0.2);
+        //TCODConsole::blit(left, 0, 0, LEFT_W, LEFT_H, console, LEFT_X, LEFT_Y, 0.2, 0.2);
+        //TCODConsole::blit(map, 0, 0, MAP_W, MAP_H, console, MAP_X, MAP_Y, 0.2, 0.2);
+        //TCODConsole::blit(bottom, 0, 0, BOTTOM_W, BOTTOM_H, console, BOTTOM_X, BOTTOM_Y, 0.2, 0.2);
         TCODConsole::blit(console, 0, 0, chars_x, chars_y, TCODConsole::root, 0.1, 0.1);
         
         TCODConsole::flush();
@@ -87,6 +96,11 @@ void Display::put(int x, int y, int c, TCOD_bkgnd_flag_t flag)
 
 void Display::putmap(int x, int y, int c, TCOD_bkgnd_flag_t flag)
 {
-        map->putChar(x, y, c, flag);
+        console->putChar(MAP_X + x, MAP_Y + y, c, flag);
+}
+
+void Display::putmap(int x, int y, int c, TCODColor &fg, TCODColor &bg)
+{
+        console->putCharEx(MAP_X + x, MAP_Y + y, c, fg, bg);
 }
 // vim: fdm=syntax guifont=Terminus\ 8

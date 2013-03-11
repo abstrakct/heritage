@@ -25,8 +25,11 @@ class Actor {
                 bool is_alive();
                 void kill();
                 void draw();
+                coord_t getxy();
                 void setxy(int x, int y);
                 void setxy(coord_t newco);
+                void setprevxy(int x, int y);
+                void setprevxy(coord_t newco);
                 void setchar(char newc);
                 void move_left();
                 void move_right();

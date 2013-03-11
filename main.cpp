@@ -26,6 +26,18 @@ NPC *npc;
 World *world;
 SoundEngine *audio;
 
+bool fiftyfifty()
+{
+        int i;
+
+        i = 1 + (rand() % 100);
+
+        if(i <= 50)
+                return true;
+        else
+                return false;
+}
+
 void clean_up()
 {
         delete audio;
@@ -43,7 +55,9 @@ int main(int argc, char **argv)
         audio = new SoundEngine;
         world = new World;
 
-        audio->initialize();
+        srand(time(0));
+
+        //audio->initialize();
         //audio->load_all_files();
 
         game->loop();

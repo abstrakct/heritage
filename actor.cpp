@@ -7,7 +7,9 @@
 using namespace std;
 #include "common.h"
 #include "actor.h"
+#include "world.h"
 
+extern World *world;
 
 Actor::Actor()
 {
@@ -53,61 +55,99 @@ void Actor::setxy(coord_t newco)
         co = newco;
 }
 
+void Actor::setprevxy(int x, int y)
+{
+        prev.x = x;
+        prev.y = y;
+}
+
+void Actor::setprevxy(coord_t newco)
+{
+        prev = newco;
+}
+
 void Actor::setchar(char newc)
 {
         c = newc;
 }
 
+coord_t Actor::getxy()
+{
+        return co;
+}
+
 void Actor::draw()
 {
+        world->draw_cell(this->prev);
         display->putmap(this->co.x, this->co.y, this->c);
 }
 
 void Actor::move_left()
 {
         if(world->is_passable(this->co.x - 1, this->co.y)) {
-                prev.x = co.x;
+                prev = co;
                 co.x -= 1;
         }
 }
 
 void Actor::move_right()
 {
-        co.x += 1;
+        if(world->is_passable(this->co.x + 1, this->co.y)) {
+                prev = co;
+                co.x += 1;
+        }
 }
 
 void Actor::move_down()
 {
-        co.y += 1;
+        if(world->is_passable(this->co.x, this->co.y + 1)) {
+                prev = co;
+                co.y += 1;
+        }
 }
 
 void Actor::move_up()
 {
-        co.y -= 1;
+        if(world->is_passable(this->co.x, this->co.y - 1)) {
+                prev = co;
+                co.y -= 1;
+        }
 }
 
 void Actor::move_nw()
 {
-        co.x -= 1;
-        co.y -= 1;
+        if(world->is_passable(this->co.x - 1, this->co.y - 1)) {
+                prev = co;
+                co.x -= 1;
+                co.y -= 1;
+        }
 }
 
 void Actor::move_ne()
 {
-        co.x += 1;
-        co.y -= 1;
+        if(world->is_passable(this->co.x + 1, this->co.y - 1)) {
+                prev = co;
+                co.x += 1;
+                co.y -= 1;
+        }
 }
 
 void Actor::move_sw()
 {
-        co.x -= 1;
-        co.y += 1;
+        if(world->is_passable(this->co.x - 1, this->co.y + 1)) {
+                prev = co;
+                co.x -= 1;
+                co.y += 1;
+        }
 }
 
 void Actor::move_se()
 {
-        co.x += 1;
-        co.y += 1;
+        if(world->is_passable(this->co.x + 1, this->co.y + 1)) {
+                prev = co;
+                co.x += 1;
+                co.y += 1;
+        }
 }
 
 
