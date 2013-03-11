@@ -12,7 +12,7 @@ actor.o: actor.cpp common.h display.h include/libtcod.hpp \
  include/noise.hpp include/fov.hpp include/path.hpp include/lex.hpp \
  include/parser.hpp include/tree.hpp include/bsp.hpp \
  include/heightmap.hpp include/zip.hpp include/namegen.hpp \
- include/txtfield.hpp debug.h world.h actor.h
+ include/txtfield.hpp debug.h actor.h world.h
 command.o: command.cpp include/libtcod.hpp include/libtcod.h \
  include/list.h include/color.h include/console.h include/console_types.h \
  include/image.h include/mouse.h include/mouse_types.h include/sys.h \
@@ -26,7 +26,7 @@ command.o: command.cpp include/libtcod.hpp include/libtcod.h \
  include/noise.hpp include/fov.hpp include/path.hpp include/lex.hpp \
  include/parser.hpp include/tree.hpp include/bsp.hpp \
  include/heightmap.hpp include/zip.hpp include/namegen.hpp \
- include/txtfield.hpp command.h common.h display.h debug.h world.h
+ include/txtfield.hpp command.h common.h display.h debug.h
 display.o: display.cpp include/libtcod.hpp include/libtcod.h \
  include/list.h include/color.h include/console.h include/console_types.h \
  include/image.h include/mouse.h include/mouse_types.h include/sys.h \
@@ -40,7 +40,7 @@ display.o: display.cpp include/libtcod.hpp include/libtcod.h \
  include/noise.hpp include/fov.hpp include/path.hpp include/lex.hpp \
  include/parser.hpp include/tree.hpp include/bsp.hpp \
  include/heightmap.hpp include/zip.hpp include/namegen.hpp \
- include/txtfield.hpp debug.h display.h common.h world.h player.h actor.h
+ include/txtfield.hpp debug.h display.h common.h player.h actor.h world.h
 game.o: game.cpp include/libtcod.hpp include/libtcod.h include/list.h \
  include/color.h include/console.h include/console_types.h \
  include/image.h include/mouse.h include/mouse_types.h include/sys.h \
@@ -54,8 +54,8 @@ game.o: game.cpp include/libtcod.hpp include/libtcod.h include/list.h \
  include/noise.hpp include/fov.hpp include/path.hpp include/lex.hpp \
  include/parser.hpp include/tree.hpp include/bsp.hpp \
  include/heightmap.hpp include/zip.hpp include/namegen.hpp \
- include/txtfield.hpp actor.h common.h display.h debug.h world.h game.h \
- command.h player.h npc.h
+ include/txtfield.hpp actor.h common.h display.h debug.h game.h command.h \
+ player.h npc.h world.h
 main.o: main.cpp include/libtcod.hpp include/libtcod.h include/list.h \
  include/color.h include/console.h include/console_types.h \
  include/image.h include/mouse.h include/mouse_types.h include/sys.h \
@@ -70,7 +70,7 @@ main.o: main.cpp include/libtcod.hpp include/libtcod.h include/list.h \
  include/parser.hpp include/tree.hpp include/bsp.hpp \
  include/heightmap.hpp include/zip.hpp include/namegen.hpp \
  include/txtfield.hpp command.h debug.h display.h game.h player.h actor.h \
- common.h world.h npc.h sound.h
+ common.h npc.h sound.h world.h
 npc.o: npc.cpp actor.h common.h display.h include/libtcod.hpp \
  include/libtcod.h include/list.h include/color.h include/console.h \
  include/console_types.h include/image.h include/mouse.h \
@@ -85,7 +85,7 @@ npc.o: npc.cpp actor.h common.h display.h include/libtcod.hpp \
  include/noise.hpp include/fov.hpp include/path.hpp include/lex.hpp \
  include/parser.hpp include/tree.hpp include/bsp.hpp \
  include/heightmap.hpp include/zip.hpp include/namegen.hpp \
- include/txtfield.hpp debug.h world.h npc.h
+ include/txtfield.hpp debug.h npc.h
 player.o: player.cpp actor.h common.h display.h include/libtcod.hpp \
  include/libtcod.h include/list.h include/color.h include/console.h \
  include/console_types.h include/image.h include/mouse.h \
@@ -100,7 +100,7 @@ player.o: player.cpp actor.h common.h display.h include/libtcod.hpp \
  include/noise.hpp include/fov.hpp include/path.hpp include/lex.hpp \
  include/parser.hpp include/tree.hpp include/bsp.hpp \
  include/heightmap.hpp include/zip.hpp include/namegen.hpp \
- include/txtfield.hpp debug.h world.h player.h
+ include/txtfield.hpp debug.h player.h
 sound.o: sound.cpp actor.h common.h display.h include/libtcod.hpp \
  include/libtcod.h include/list.h include/color.h include/console.h \
  include/console_types.h include/image.h include/mouse.h \
@@ -115,7 +115,7 @@ sound.o: sound.cpp actor.h common.h display.h include/libtcod.hpp \
  include/noise.hpp include/fov.hpp include/path.hpp include/lex.hpp \
  include/parser.hpp include/tree.hpp include/bsp.hpp \
  include/heightmap.hpp include/zip.hpp include/namegen.hpp \
- include/txtfield.hpp debug.h world.h player.h sound.h
+ include/txtfield.hpp debug.h player.h sound.h
 world.o: world.cpp world.h include/libtcod.hpp include/libtcod.h \
  include/list.h include/color.h include/console.h include/console_types.h \
  include/image.h include/mouse.h include/mouse_types.h include/sys.h \
@@ -129,4 +129,4 @@ world.o: world.cpp world.h include/libtcod.hpp include/libtcod.h \
  include/noise.hpp include/fov.hpp include/path.hpp include/lex.hpp \
  include/parser.hpp include/tree.hpp include/bsp.hpp \
  include/heightmap.hpp include/zip.hpp include/namegen.hpp \
- include/txtfield.hpp common.h display.h debug.h
+ include/txtfield.hpp common.h display.h debug.h player.h actor.h

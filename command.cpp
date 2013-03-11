@@ -16,16 +16,29 @@ using namespace std;
 #include "debug.h"
 
 command_t command_set_normal[] = {
+        { { TCODK_CHAR,   0,  1, 0, 0, 0, 0, 0 }, cmd_nothing },
         { { TCODK_ESCAPE, 0,  1, 0, 0, 0, 0, 0 }, cmd_exit },
-//        { { TCODK_CHAR,  'q', 1, 0, 0, 0, 0, 0 }, cmd_exit },
+//      { { TCODK_CHAR,  'q', 1, 0, 0, 0, 0, 0 }, cmd_exit },
         { { TCODK_CHAR,  'j', 1, 0, 0, 0, 0, 0 }, cmd_move_down },
+        { { TCODK_DOWN,   0,  1, 0, 0, 0, 0, 0 }, cmd_move_down },
+        { { TCODK_KP2,    0,  1, 0, 0, 0, 0, 0 }, cmd_move_down },
         { { TCODK_CHAR,  'k', 1, 0, 0, 0, 0, 0 }, cmd_move_up },
+        { { TCODK_UP,     0,  1, 0, 0, 0, 0, 0 }, cmd_move_up },
+        { { TCODK_KP8,    0,  1, 0, 0, 0, 0, 0 }, cmd_move_up },
         { { TCODK_CHAR,  'h', 1, 0, 0, 0, 0, 0 }, cmd_move_left },
+        { { TCODK_LEFT,   0,  1, 0, 0, 0, 0, 0 }, cmd_move_left },
+        { { TCODK_KP4,    0,  1, 0, 0, 0, 0, 0 }, cmd_move_left },
         { { TCODK_CHAR,  'l', 1, 0, 0, 0, 0, 0 }, cmd_move_right },
+        { { TCODK_RIGHT,  0,  1, 0, 0, 0, 0, 0 }, cmd_move_right },
+        { { TCODK_KP6,    0,  1, 0, 0, 0, 0, 0 }, cmd_move_right },
         { { TCODK_CHAR,  'y', 1, 0, 0, 0, 0, 0 }, cmd_move_nw },
+        { { TCODK_KP7,    0,  1, 0, 0, 0, 0, 0 }, cmd_move_nw },
         { { TCODK_CHAR,  'u', 1, 0, 0, 0, 0, 0 }, cmd_move_ne },
+        { { TCODK_KP9,    0,  1, 0, 0, 0, 0, 0 }, cmd_move_ne },
         { { TCODK_CHAR,  'b', 1, 0, 0, 0, 0, 0 }, cmd_move_sw },
+        { { TCODK_KP1,    0,  1, 0, 0, 0, 0, 0 }, cmd_move_sw },
         { { TCODK_CHAR,  'n', 1, 0, 0, 0, 0, 0 }, cmd_move_se },
+        { { TCODK_KP3,    0,  1, 0, 0, 0, 0, 0 }, cmd_move_se },
 };
 
 Command::Command()
@@ -49,24 +62,26 @@ void Command::add_command(TCOD_key_t key, command_type cmd)
 
 command_type Command::get_command()
 {
-        command_type ret;
         vector<struct command_t>::iterator i;
 
-        ret = cmd_nothing;
-
         TCOD_key_t key = display->get_key(true);
+        //dbg("Got key: vk = %d   c = %c (%d)", key.vk, key.c, key.c);
 
         for(i = command_list.begin(); i != command_list.end(); ++i) {
                 if(key.vk == TCODK_CHAR) {
-                        if(key.c == i->key.c)
+                        if(key.c == i->key.c) {
                                 return i->cmd;
-                } else {
-                        if(key.vk == i->key.vk)
-                                return i->cmd;
+                        }
+                } else if(key.vk == i->key.vk) {
+                        return i->cmd;
                 }
+                
+                //if(key.vk == 65) {
+                //        ret = cmd_nothing;
+                //}
         }
 
-        return ret;
+        return cmd_nothing;
 }
 
 void init_commands(Command *c)

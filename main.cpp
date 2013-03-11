@@ -38,6 +38,26 @@ bool fiftyfifty()
                 return false;
 }
 
+int dice(int num, int sides, signed int modifier)
+{
+        int i, result;
+
+        result = modifier;
+        for(i=0;i<num;i++) {
+                result += 1 + (rand() % sides);
+        }
+
+        return result;
+}
+
+int ri(int a, int b) 
+{
+        int result;
+        result = (a + (rand() % (b-a+1)));
+
+        return result;
+}
+
 void clean_up()
 {
         delete audio;
@@ -49,13 +69,15 @@ void clean_up()
 
 int main(int argc, char **argv)
 {
+        unsigned int seed = time(0);
+        srand(seed);
+
         game = new Game;
         player = new Player;
         npc = new NPC;
         audio = new SoundEngine;
         world = new World;
 
-        srand(time(0));
 
         audio->initialize();
         audio->load_all_files();

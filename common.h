@@ -11,6 +11,8 @@
 #include "display.h"
 #include "debug.h"
 
+#define d(x,y) dice(x,y,0)
+
 extern Display *display;
 
 typedef struct {
@@ -30,7 +32,10 @@ enum direction {
         sw
 };
 
+// Function prototypes
 bool fiftyfifty();
+int dice(int num, int sides, signed int modifier);
+int ri(int a, int b);
 
 #endif
 

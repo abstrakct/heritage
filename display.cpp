@@ -21,7 +21,7 @@ extern Player *player;
 
 Display::Display()
 {
-        char t[] = "Test";
+        char t[] = "The Heritage of Efraim Eveningstar - Chapter I";
 
         set_resolution(1024, 600);
         set_title(t);
@@ -30,7 +30,7 @@ Display::Display()
         console->setCustomFont(FONT, TCOD_FONT_TYPE_GRAYSCALE | TCOD_FONT_LAYOUT_ASCII_INROW, 16, 16);
         TCODConsole::initRoot(chars_x, chars_y, title, false, TCOD_RENDERER_SDL);
         console->root->setCustomFont(FONT, TCOD_FONT_TYPE_GRAYSCALE | TCOD_FONT_LAYOUT_ASCII_INROW, 16, 16);
-        console->root->setKeyboardRepeat(350, 70);
+        console->root->setKeyboardRepeat(200, 50);
 
         map =     new TCODConsole(MAP_W, MAP_H);
         left =    new TCODConsole(LEFT_W, LEFT_H);

@@ -16,10 +16,12 @@ using namespace std;
 #include "game.h"
 #include "player.h"
 #include "npc.h"
+#include "world.h"
 
 extern Display *display;
 extern Player *player;
 extern NPC *npc;
+extern World *world;
 
 Game::Game()
 {
@@ -55,6 +57,9 @@ void Game::loop()
         //console.print(10, 10, "Welcome to game!!");
 
         while (this->is_running()) {
+                //dbg("Player coords = %d, %d", player->getx(), player->gety());
+
+                world->update_fov();
                 player->draw();
                 display->update();
 

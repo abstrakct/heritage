@@ -10,6 +10,9 @@
 
 #include "actor.h"
 
+#define PLAYER_STARTX (MAP_W / 2)
+#define PLAYER_STARTY (MAP_H - 4)
+
 class Player: public Actor {
         public:
                 Player();

@@ -55,6 +55,16 @@ void Actor::setxy(coord_t newco)
         co = newco;
 }
 
+int Actor::getx()
+{
+        return co.x;
+}
+
+int Actor::gety()
+{
+        return co.y;
+}
+
 void Actor::setprevxy(int x, int y)
 {
         prev.x = x;
@@ -108,6 +118,11 @@ void Actor::move_down()
 
 void Actor::move_up()
 {
+        if(world->is_closed_door(this->co.x, this->co.y - 1)) {
+                world->open_door(this->co.x, this->co.y - 1);
+                return;
+        }
+        
         if(world->is_passable(this->co.x, this->co.y - 1)) {
                 prev = co;
                 co.y -= 1;
