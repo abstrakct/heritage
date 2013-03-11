@@ -11,12 +11,22 @@
 #include "SDL/SDL.h"
 #include "SDL/SDL_mixer.h"
 
+#define SOUND_EFFECT_x 0
+#define SOUND_EFFECT_Y 1
+#define SOUND_MUSIC_1  2
+
+enum soundtype {
+        music = 0,
+        effect = 1
+};
+
 struct sound_def {
        int num;
+       soundtype type;
        char filename[256];
 };
 
-#define NUM_SOUNDS 2
+#define NUM_SOUNDS 3
 
 class SoundEngine {
         public:
@@ -25,15 +35,18 @@ class SoundEngine {
                 int initialize();
                 void load_file(const char *filename);
                 void load_all_files();
+                void load_sound_def(int i);
                 void play_sound(int sound);
                 void play_sound(int sound, int ms);       // play sound, fade in ms milliseconds.
                 void play_sound_infinite_loop(int sound);
+                void play_music(int sound);
                 void set_sound_volume(int sound, int volume);
                 void pause_sound(int sound);
                 void pause_sound(int sound, int ms);
         private:
                 struct {
                         Mix_Chunk *chunk;
+                        Mix_Music *music;
                         int channel;
                 } s[NUM_SOUNDS];
                 int sounds_count;

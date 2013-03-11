@@ -57,8 +57,11 @@ int main(int argc, char **argv)
 
         srand(time(0));
 
-        //audio->initialize();
-        //audio->load_all_files();
+        audio->initialize();
+        audio->load_all_files();
+        
+        //audio->play_music(2);
+        //audio->play_sound(0, 5000);
 
         game->loop();
         

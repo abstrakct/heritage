@@ -17,8 +17,9 @@ using namespace std;
 #include "sound.h"
 
 struct sound_def sound_defs[NUM_SOUNDS] = {
-        { 0, "test.wav"},
-        { 1, "test.wav"},
+        { 0, effect, "sound/120400__adamlhumphreys__storm01.wav"},
+        { 1, effect, "sound/127202__adamlhumphreys__rain10.wav"},
+        { 2, music,  "sound/music/The House of Leaves.mp3"},
 };
         
 SoundEngine::SoundEngine()
@@ -35,21 +36,43 @@ SoundEngine::~SoundEngine()
         Mix_CloseAudio();
 }
 
-void SoundEngine::load_file(const char *filename)
+/*void SoundEngine::load_file(const char *filename)
 {
-        s[sounds_count].chunk = Mix_LoadWAV(filename);
+        s[sound_defs].chunk = Mix_LoadWAV(filename);
         if(s[sounds_count].chunk == NULL) {
                 fprintf(stderr, "Unable to load WAV file: %s\n", Mix_GetError());
         }
 
         sounds_count++;
+}*/
+
+void SoundEngine::load_sound_def(int i)
+{
+        if(sound_defs[i].type == effect) {
+                s[i].chunk = Mix_LoadWAV(sound_defs[i].filename);
+                if(s[i].chunk == NULL) {
+                        fprintf(stderr, "Unable to load WAV file %s: %s\n", sound_defs[i].filename, Mix_GetError());
+                }
+        } else if(sound_defs[i].type == music) {
+                s[i].music = Mix_LoadMUS(sound_defs[i].filename);
+                if(!s[i].music)
+                        dbg("Failed to load music file %s: %s\n", sound_defs[i].filename, Mix_GetError());
+        }
 }
 
 void SoundEngine::load_all_files()
 {
         int i;
         for(i = 0; i < NUM_SOUNDS; i++) {
-                load_file(sound_defs[i].filename);
+                load_sound_def(i);
+        }
+}
+
+void SoundEngine::play_music(int sound)
+{
+        s[sound].channel = Mix_PlayMusic(s[sound].music, 1);
+        if(s[sound].channel == -1) {
+                fprintf(stderr, "Unable to play music %d: %s\n", sound, Mix_GetError());
         }
 }
 

@@ -139,4 +139,7 @@ void World::draw_cell(coord_t co)
 {
         a->cell[co.x][co.y].draw(co.x, co.y);
 }
+
+
+
 // vim: fdm=syntax guifont=Terminus\ 8
