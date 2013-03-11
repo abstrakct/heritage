@@ -1,0 +1,3 @@
+An attempt at making a very generic roguelike engine in c++.
+Also, an attempt at teaching myself c++.
+As of yet it's not intended to be used by anything. Heck, there's barely any code in it.
