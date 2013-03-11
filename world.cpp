@@ -148,20 +148,11 @@ void Area::build_tcodmap()
         }
 }
 
-void Area::generate()
+direction Area::generate_starting_room()
 {
-        this->frame();
-        //vertical_line(PLAYER_STARTX - 3, PLAYER_STARTY + 1, PLAYER_STARTY - 6);
-        //vertical_line(PLAYER_STARTX + 3, PLAYER_STARTY + 1, PLAYER_STARTY - 6);
-
-        //this->make_room(PLAYER_STARTX - 3, PLAYER_STARTY + 1, PLAYER_STARTX + 3, PLAYER_STARTY - 6);
-
-        // let's try to generate a house floor!
-
         int x1, x2, y1, y2;
         direction d;
 
-        // First, the starting room.
         x1 = PLAYER_STARTX - 3;
         x2 = PLAYER_STARTX + 3;
         y1 = PLAYER_STARTY + 1;
@@ -195,8 +186,46 @@ void Area::generate()
                 make_door(dx, dy, false);
         }
 
-        // That should do the trick.
-        // Now, let's try to build further.
+        return d;
+}
+
+void Area::generate()
+{
+        direction d;
+
+        this->frame();
+
+        // let's try to generate a house floor!
+
+        int rooms_vertical = ri(4,8);
+        int rooms_horizontal = ri(4,8);
+        int x = ri(5, 8);
+
+        for(int i = 0; i < rooms_vertical; ++i) {
+                int maxsize = AREA_MAX_X / rooms_vertical;
+                vertical_line(x);
+
+                x += ri(3,maxsize);
+                if(x >= AREA_MAX_X)
+                        x = AREA_MAX_X - 3;
+        }
+
+        int y = ri(5,8);
+        for(int i = 0; i < rooms_horizontal; ++i) {
+                int maxsize = AREA_MAX_X / rooms_vertical;
+                horizontal_line(y);
+
+                y += ri(3,maxsize);
+                if(y >= AREA_MAX_Y)
+                        y = AREA_MAX_Y - 3;
+        }
+
+        d = generate_starting_room();
+
+        /*switch(d) {
+                case north:
+                        generate_room_above(*/
+
         
 
         this->build_tcodmap();

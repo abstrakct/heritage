@@ -55,6 +55,7 @@ class Area {
                 Area();
                 ~Area();
                 void generate();
+                direction generate_starting_room();
                 void horizontal_line(int y);
                 void horizontal_line(int x, int y, int x2);
                 void vertical_line(int x);
