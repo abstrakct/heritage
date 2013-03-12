@@ -16,6 +16,46 @@ using namespace std;
 extern Player *player;
 extern World *world;
 
+class MyCallback : public ITCODBspCallback
+{
+        public :
+                bool visitNode(TCODBsp *node, void *userData)
+                {
+                        //dbg("trying to make room from %d,%d to %d,%d", node->x, node->y, node->x+node->w, node->y+node->h);
+                        //dbg("making room: x=%d y=%d w=%d h=%d position=%d horizontal=%s", node->x, node->y, node->w, node->h, node->position, node->horizontal ? "true" : "false");
+
+                        world->a->make_room(node->x, node->y, node->x + node->w-2, node->y + node->h-2);
+                        //dbg("made room from %d,%d to %d,%d", node->x, node->y, node->x+node->w-2, node->y+node->h-2);
+                        int x1 = node->x;
+                        int y1 = node->y;
+                        int x2 = node->x + node->w - 2;
+                        int y2 = node->y + node->h - 2;
+
+                        if(node->horizontal) {
+                                int ypos = node->y + ri(1, node->h);
+                                while(ypos >= AREA_MAX_Y-2)
+                                        --ypos;
+
+                                world->a->make_door(x1, ri(y1, y2), false);
+                                world->a->make_door(x2, ri(y1, y2), false);
+                                //world->a->make_door(node->x, ypos, false);
+                                //world->a->make_door(node->x+node->w - ri(2, node->w-2), ypos, false);
+                        } else {
+                                int xpos = node->x + ri(1, node->w);
+                                while(xpos >= AREA_MAX_X-2)
+                                        --xpos;
+                                
+                                world->a->make_door(ri(x1, x2), y1, false);
+                                world->a->make_door(ri(x1, x2), y2, false);
+
+                                //world->a->make_door(xpos, node->y, false);
+                                //world->a->make_door(xpos, node->y + node->h, false);
+                        }
+
+                        return true;
+                }
+};
+
 /*
  * class: Cell
  */
@@ -30,7 +70,7 @@ Cell::~Cell()
 {
 }
 
-bool Cell::is_passable()
+bool Cell::is_walkable()
 {
         switch(this->type) {
                 case floor:
@@ -84,7 +124,7 @@ void Cell::set_floor()
 void Cell::set_door_closed()
 {
         this->type = door_closed;
-        this->fg = TCODColor::white;
+        this->fg = TCODColor::grey;
         this->bg = TCODColor::black;
         c = '+';
 }
@@ -92,7 +132,7 @@ void Cell::set_door_closed()
 void Cell::set_door_open()
 {
         this->type = door_open;
-        this->fg = TCODColor::white;
+        this->fg = TCODColor::grey;
         this->bg = TCODColor::black;
         c = '\\';
 }
@@ -127,6 +167,7 @@ Area::Area()
                 cell[i] = new Cell[AREA_MAX_Y];
 
         tcodmap = new TCODMap(AREA_MAX_X, AREA_MAX_Y);
+        bsp = new TCODBsp(1, 1, AREA_MAX_X, AREA_MAX_Y);
 }
 
 Area::~Area()
@@ -143,7 +184,18 @@ void Area::build_tcodmap()
 
         for(x = 0; x < AREA_MAX_X; ++x) {
                 for(y = 0; y < AREA_MAX_Y; ++y) {
-                        tcodmap->setProperties(x, y, cell[x][y].is_transparent(), cell[x][y].is_passable());
+                        tcodmap->setProperties(x, y, cell[x][y].is_transparent(), cell[x][y].is_walkable());
+                }
+        }
+}
+
+void Area::set_all_visible()
+{
+        int x, y;
+
+        for(x = 0; x < AREA_MAX_X; ++x) {
+                for(y = 0; y < AREA_MAX_Y; ++y) {
+                        tcodmap->setProperties(x, y, true, cell[x][y].is_walkable());
                 }
         }
 }
@@ -191,41 +243,20 @@ direction Area::generate_starting_room()
 
 void Area::generate()
 {
-        direction d;
+        //direction d;
 
         this->frame();
 
         // let's try to generate a house floor!
 
-        int rooms_vertical = ri(4,8);
-        int rooms_horizontal = ri(4,8);
-        int x = ri(5, 8);
-
-        for(int i = 0; i < rooms_vertical; ++i) {
-                int maxsize = AREA_MAX_X / rooms_vertical;
-                vertical_line(x);
-
-                x += ri(3,maxsize);
-                if(x >= AREA_MAX_X)
-                        x = AREA_MAX_X - 3;
-        }
-
-        int y = ri(5,8);
-        for(int i = 0; i < rooms_horizontal; ++i) {
-                int maxsize = AREA_MAX_X / rooms_vertical;
-                horizontal_line(y);
-
-                y += ri(3,maxsize);
-                if(y >= AREA_MAX_Y)
-                        y = AREA_MAX_Y - 3;
-        }
-
-        d = generate_starting_room();
+        //d = generate_starting_room();
 
         /*switch(d) {
                 case north:
                         generate_room_above(*/
 
+        bsp->splitRecursive(NULL, 5, 3, 3, 1.5f, 1.5f);
+        bsp->traversePreOrder(new MyCallback(), NULL);
         
 
         this->build_tcodmap();
@@ -249,7 +280,10 @@ void Area::make_room(int x1, int y1, int x2, int y2)
 
 void Area::make_door(int x, int y, bool open)
 {
-        dbg("Making door at %d,%d (%s)", x, y, open ? "open" : "closed");
+        //dbg("Making door at %d,%d (%s)", x, y, open ? "open" : "closed");
+
+        if(cell[x][y].get_type() != wall)
+                return;
         if(open)
                 cell[x][y].set_door_open();
         else
@@ -304,7 +338,6 @@ World::World()
 {
         area = new Area[MAX_AREAS];
         current_area = 0;
-        area[current_area].generate();
         a = &area[current_area];
 }
 
@@ -313,9 +346,9 @@ World::~World()
         delete [] area;
 }
 
-bool World::is_passable(int x, int y)
+bool World::is_walkable(int x, int y)
 {
-        return a->cell[x][y].is_passable();
+        return a->cell[x][y].is_walkable();
 }
 
 bool World::is_closed_door(int x, int y)
@@ -363,6 +396,23 @@ void World::update_fov()
         co = player->getxy();
         a->tcodmap->computeFov(co.x, co.y, 0, true, FOV_BASIC);
 }
+
+coord_t World::get_random_walkable_cell()
+{
+        coord_t co;
+
+        co.x = ri(1, AREA_MAX_X);
+        co.y = ri(1, AREA_MAX_Y);
+        while(!a->cell[co.x][co.y].is_walkable()) {
+                co.x = ri(1, AREA_MAX_X);
+                co.y = ri(1, AREA_MAX_Y);
+        }
+
+        return co;
+}
+
+        
+
 
 
 

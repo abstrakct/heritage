@@ -92,6 +92,10 @@ void Game::loop()
                         case cmd_move_se:
                                 player->move_se();
                                 break;
+                        case cmd_all_visible:
+                                world->a->set_all_visible();
+                                world->update_fov();
+                                break;
                         default:
                                 break;
                 }

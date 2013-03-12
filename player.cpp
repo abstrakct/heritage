@@ -13,12 +13,11 @@ using namespace std;
 #include "player.h"
 #include "common.h"
 
+
 Player::Player()
 {
         health = 0;
         setchar('@');
-        setxy(PLAYER_STARTX, PLAYER_STARTY);
-        setprevxy(getxy());
 }
 
 Player::~Player()

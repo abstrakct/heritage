@@ -94,7 +94,11 @@ void Actor::draw()
 
 void Actor::move_left()
 {
-        if(world->is_passable(this->co.x - 1, this->co.y)) {
+        if(world->is_closed_door(this->co.x - 1, this->co.y)) {
+                world->open_door(this->co.x - 1, this->co.y);
+                return;
+        }
+        if(world->is_walkable(this->co.x - 1, this->co.y)) {
                 prev = co;
                 co.x -= 1;
         }
@@ -102,7 +106,11 @@ void Actor::move_left()
 
 void Actor::move_right()
 {
-        if(world->is_passable(this->co.x + 1, this->co.y)) {
+        if(world->is_closed_door(this->co.x + 1, this->co.y)) {
+                world->open_door(this->co.x + 1, this->co.y);
+                return;
+        }
+        if(world->is_walkable(this->co.x + 1, this->co.y)) {
                 prev = co;
                 co.x += 1;
         }
@@ -110,7 +118,11 @@ void Actor::move_right()
 
 void Actor::move_down()
 {
-        if(world->is_passable(this->co.x, this->co.y + 1)) {
+        if(world->is_closed_door(this->co.x, this->co.y + 1)) {
+                world->open_door(this->co.x, this->co.y + 1);
+                return;
+        }
+        if(world->is_walkable(this->co.x, this->co.y + 1)) {
                 prev = co;
                 co.y += 1;
         }
@@ -123,7 +135,7 @@ void Actor::move_up()
                 return;
         }
         
-        if(world->is_passable(this->co.x, this->co.y - 1)) {
+        if(world->is_walkable(this->co.x, this->co.y - 1)) {
                 prev = co;
                 co.y -= 1;
         }
@@ -131,7 +143,7 @@ void Actor::move_up()
 
 void Actor::move_nw()
 {
-        if(world->is_passable(this->co.x - 1, this->co.y - 1)) {
+        if(world->is_walkable(this->co.x - 1, this->co.y - 1)) {
                 prev = co;
                 co.x -= 1;
                 co.y -= 1;
@@ -140,7 +152,7 @@ void Actor::move_nw()
 
 void Actor::move_ne()
 {
-        if(world->is_passable(this->co.x + 1, this->co.y - 1)) {
+        if(world->is_walkable(this->co.x + 1, this->co.y - 1)) {
                 prev = co;
                 co.x += 1;
                 co.y -= 1;
@@ -149,7 +161,7 @@ void Actor::move_ne()
 
 void Actor::move_sw()
 {
-        if(world->is_passable(this->co.x - 1, this->co.y + 1)) {
+        if(world->is_walkable(this->co.x - 1, this->co.y + 1)) {
                 prev = co;
                 co.x -= 1;
                 co.y += 1;
@@ -158,7 +170,7 @@ void Actor::move_sw()
 
 void Actor::move_se()
 {
-        if(world->is_passable(this->co.x + 1, this->co.y + 1)) {
+        if(world->is_walkable(this->co.x + 1, this->co.y + 1)) {
                 prev = co;
                 co.x += 1;
                 co.y += 1;

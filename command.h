@@ -26,6 +26,7 @@ enum command_type {
         cmd_move_se,
         cmd_exit,
         cmd_wait,
+        cmd_all_visible,
 };
 
 struct command_t {

@@ -24,6 +24,14 @@ enum cell_type {
         door_closed,
 };
 
+/*class MyCallback: public ITCODBspCallback {
+        public:
+                bool visitNode(TCODBsp *node, void *userData) {
+                        printf("node pos %dx%d size %dx%d level %d\n",node->x,node->y,node->w,node->h,node->level);
+                        return true;
+                }
+};*/
+
 class Cell {
         private:
                 cell_type    type;
@@ -41,7 +49,7 @@ class Cell {
                 void set_door_closed();
                 void set_door_open();
                 void draw(int x, int y);
-                bool is_passable();
+                bool is_walkable();
                 bool is_visible();
                 bool is_transparent();
                 cell_type get_type();
@@ -49,6 +57,7 @@ class Cell {
 
 class Area {
         private:
+                TCODBsp *bsp;
                 //Cell cell[AREA_MAX_X][AREA_MAX_Y];
         protected:
         public:
@@ -65,6 +74,7 @@ class Area {
                 bool cell_is_visible(int x, int y);
                 void make_room(int x1, int y1, int x2, int y2);
                 void make_door(int x, int y, bool open);
+                void set_all_visible();
 
                 Cell    **cell;
                 TCODMap *tcodmap;
@@ -80,7 +90,7 @@ class World {
         public:
                 World();
                 ~World();
-                bool is_passable(int x, int y);
+                bool is_walkable(int x, int y);
                 bool is_closed_door(int x, int y);
                 void open_door(int x, int y);
 
@@ -88,6 +98,7 @@ class World {
                 void draw_cell(int x, int y);
                 void draw_cell(coord_t co);
                 void update_fov();
+                coord_t get_random_walkable_cell();
 
                 Area *a;
 

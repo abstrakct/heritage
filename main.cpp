@@ -70,14 +70,18 @@ void clean_up()
 int main(int argc, char **argv)
 {
         unsigned int seed = time(0);
-        srand(seed);
+        //srand(seed);
 
         game = new Game;
-        player = new Player;
         npc = new NPC;
         audio = new SoundEngine;
         world = new World;
+        player = new Player;
 
+        player->setxy(world->get_random_walkable_cell());
+        player->setprevxy(player->getxy());
+
+        world->a->generate();
 
         audio->initialize();
         audio->load_all_files();
