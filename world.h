@@ -75,6 +75,7 @@ class Area {
                 void make_room(int x1, int y1, int x2, int y2);
                 void make_door(int x, int y, bool open);
                 void set_all_visible();
+                void set_all_invisible();
 
                 Cell    **cell;
                 TCODMap *tcodmap;

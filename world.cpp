@@ -75,8 +75,8 @@ bool Cell::is_walkable()
         switch(this->type) {
                 case floor:
                 case door_open:
-                case wall:
                         return true;
+                case wall:
                 case door_closed:
                 case nothing:
                         return false;
@@ -196,6 +196,17 @@ void Area::set_all_visible()
         for(x = 0; x < AREA_MAX_X; ++x) {
                 for(y = 0; y < AREA_MAX_Y; ++y) {
                         tcodmap->setProperties(x, y, true, cell[x][y].is_walkable());
+                }
+        }
+}
+
+void Area::set_all_invisible()
+{
+        int x, y;
+
+        for(x = 0; x < AREA_MAX_X; ++x) {
+                for(y = 0; y < AREA_MAX_Y; ++y) {
+                        tcodmap->setProperties(x, y, false, cell[x][y].is_walkable());
                 }
         }
 }
@@ -394,7 +405,7 @@ void World::update_fov()
         coord_t co;
 
         co = player->getxy();
-        a->tcodmap->computeFov(co.x, co.y, 0, true, FOV_BASIC);
+        a->tcodmap->computeFov(co.x, co.y, 5, true, FOV_SHADOW);
 }
 
 coord_t World::get_random_walkable_cell()

@@ -60,7 +60,6 @@ void Game::loop()
                 //dbg("Player coords = %d, %d", player->getx(), player->gety());
 
                 world->update_fov();
-                player->draw();
                 display->update();
 
                 c = cmd.get_command();

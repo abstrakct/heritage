@@ -143,6 +143,10 @@ void Actor::move_up()
 
 void Actor::move_nw()
 {
+        if(world->is_closed_door(this->co.x - 1, this->co.y - 1)) {
+                world->open_door(this->co.x - 1, this->co.y - 1);
+                return;
+        }
         if(world->is_walkable(this->co.x - 1, this->co.y - 1)) {
                 prev = co;
                 co.x -= 1;
@@ -152,6 +156,10 @@ void Actor::move_nw()
 
 void Actor::move_ne()
 {
+        if(world->is_closed_door(this->co.x + 1, this->co.y - 1)) {
+                world->open_door(this->co.x + 1, this->co.y - 1);
+                return;
+        }
         if(world->is_walkable(this->co.x + 1, this->co.y - 1)) {
                 prev = co;
                 co.x += 1;
@@ -161,6 +169,10 @@ void Actor::move_ne()
 
 void Actor::move_sw()
 {
+        if(world->is_closed_door(this->co.x - 1, this->co.y + 1)) {
+                world->open_door(this->co.x - 1, this->co.y + 1);
+                return;
+        }
         if(world->is_walkable(this->co.x - 1, this->co.y + 1)) {
                 prev = co;
                 co.x -= 1;
@@ -170,6 +182,10 @@ void Actor::move_sw()
 
 void Actor::move_se()
 {
+        if(world->is_closed_door(this->co.x + 1, this->co.y + 1)) {
+                world->open_door(this->co.x + 1, this->co.y + 1);
+                return;
+        }
         if(world->is_walkable(this->co.x + 1, this->co.y + 1)) {
                 prev = co;
                 co.x += 1;
