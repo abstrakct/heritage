@@ -48,6 +48,7 @@ class Cell {
                 void set_color(TCODColor fg, TCODColor bg);
                 void set_door_closed();
                 void set_door_open();
+                void set_visibility(bool b);
                 void draw(int x, int y);
                 bool is_walkable();
                 bool is_visible();
@@ -76,6 +77,7 @@ class Area {
                 void make_door(int x, int y, bool open);
                 void set_all_visible();
                 void set_all_invisible();
+                void update_visibility();
 
                 Cell    **cell;
                 TCODMap *tcodmap;

@@ -137,10 +137,14 @@ void Cell::set_door_open()
         c = '\\';
 }
 
+void Cell::set_visibility(bool b)
+{
+        this->visible = b;
+}
+
 void Cell::draw(int x, int y)
 {
-        if(world->a->cell_is_visible(x, y))
-                display->putmap(x, y, this->c, this->fg, this->bg);
+        display->putmap(x, y, this->c, this->fg, this->bg);
 }
 
 void Cell::set_color(TCODColor fg, TCODColor bg)
@@ -189,24 +193,38 @@ void Area::build_tcodmap()
         }
 }
 
-void Area::set_all_visible()
-{
-        int x, y;
-
-        for(x = 0; x < AREA_MAX_X; ++x) {
-                for(y = 0; y < AREA_MAX_Y; ++y) {
-                        tcodmap->setProperties(x, y, true, cell[x][y].is_walkable());
-                }
-        }
-}
-
 void Area::set_all_invisible()
 {
         int x, y;
 
         for(x = 0; x < AREA_MAX_X; ++x) {
                 for(y = 0; y < AREA_MAX_Y; ++y) {
-                        tcodmap->setProperties(x, y, false, cell[x][y].is_walkable());
+                        cell[x][y].set_visibility(false);
+                }
+        }
+}
+
+void Area::set_all_visible()
+{
+        int x, y;
+
+        for(x = 0; x < AREA_MAX_X; ++x) {
+                for(y = 0; y < AREA_MAX_Y; ++y) {
+                        this->tcodmap->setProperties(x, y, true, cell[x][y].is_walkable());
+                }
+        }
+}
+
+void Area::update_visibility()
+{
+        int x, y;
+
+        for(x = 0; x < AREA_MAX_X; ++x) {
+                for(y = 0; y < AREA_MAX_Y; ++y) {
+                        if(this->tcodmap->isInFov(x, y))
+                                cell[x][y].set_visibility(true);
+                        else
+                                cell[x][y].set_visibility(false);
                 }
         }
 }
@@ -337,7 +355,8 @@ void Area::vertical_line(int x)
 
 bool Area::cell_is_visible(int x, int y)
 {
-        return tcodmap->isInFov(x, y);
+        //return tcodmap->isInFov(x, y);
+        return cell[x][y].is_visible();
 }
 
 
@@ -381,11 +400,10 @@ void World::draw_map()
 {
         int i, j;
 
-        Area *a = &area[current_area];
-
         for(i = 1; i < AREA_MAX_X-1; ++i) {
                 for(j = 1; j < AREA_MAX_Y-1; ++j) {
-                        a->cell[i][j].draw(i, j);
+                        if(this->a->cell_is_visible(i, j))
+                                draw_cell(i, j);
                 }
         }               
 }
@@ -405,7 +423,9 @@ void World::update_fov()
         coord_t co;
 
         co = player->getxy();
-        a->tcodmap->computeFov(co.x, co.y, 5, true, FOV_SHADOW);
+        a->tcodmap->computeFov(co.x, co.y, 10, true, FOV_BASIC);
+        a->set_all_invisible();
+        a->update_visibility();
 }
 
 coord_t World::get_random_walkable_cell()
