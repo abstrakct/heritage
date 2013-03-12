@@ -50,6 +50,7 @@ class Cell {
                 void set_door_open();
                 void set_visibility(bool b);
                 void draw(int x, int y);
+                void draw(int x, int y, TCODColor fg, TCODColor bg);
                 bool is_walkable();
                 bool is_visible();
                 bool is_transparent();
@@ -81,6 +82,7 @@ class Area {
 
                 Cell    **cell;
                 TCODMap *tcodmap;
+                bool lights_on;
 
                 friend class Cell;
 };
@@ -100,6 +102,7 @@ class World {
                 void draw_map();
                 void draw_cell(int x, int y);
                 void draw_cell(coord_t co);
+                void draw_cell(int x, int y, TCODColor fg, TCODColor bg);
                 void update_fov();
                 coord_t get_random_walkable_cell();
 

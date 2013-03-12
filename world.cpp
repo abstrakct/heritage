@@ -97,7 +97,7 @@ bool Cell::is_transparent()
                         return false;
         }
 
-        return true;
+        return false;
 }
 
 bool Cell::is_visible()
@@ -147,6 +147,11 @@ void Cell::draw(int x, int y)
         display->putmap(x, y, this->c, this->fg, this->bg);
 }
 
+void Cell::draw(int x, int y, TCODColor fg, TCODColor bg)
+{
+        display->putmap(x, y, this->c, fg, bg);
+}
+
 void Cell::set_color(TCODColor fg, TCODColor bg)
 {
         this->fg = fg;
@@ -172,6 +177,7 @@ Area::Area()
 
         tcodmap = new TCODMap(AREA_MAX_X, AREA_MAX_Y);
         bsp = new TCODBsp(1, 1, AREA_MAX_X, AREA_MAX_Y);
+        lights_on = true;
 }
 
 Area::~Area()
@@ -286,9 +292,9 @@ void Area::generate()
 
         bsp->splitRecursive(NULL, 5, 3, 3, 1.5f, 1.5f);
         bsp->traversePreOrder(new MyCallback(), NULL);
-        
 
         this->build_tcodmap();
+        lights_on = false;
 }
 
 void Area::frame()
@@ -355,8 +361,8 @@ void Area::vertical_line(int x)
 
 bool Area::cell_is_visible(int x, int y)
 {
-        //return tcodmap->isInFov(x, y);
-        return cell[x][y].is_visible();
+        return tcodmap->isInFov(x, y);
+        //return cell[x][y].is_visible();
 }
 
 
@@ -402,8 +408,12 @@ void World::draw_map()
 
         for(i = 1; i < AREA_MAX_X-1; ++i) {
                 for(j = 1; j < AREA_MAX_Y-1; ++j) {
-                        if(this->a->cell_is_visible(i, j))
+                        if(this->a->cell_is_visible(i, j)) {
                                 draw_cell(i, j);
+                        } else {
+                                if(!a->lights_on)
+                                        draw_cell(i, j, TCODColor::black, TCODColor::black); 
+                        }
                 }
         }               
 }
@@ -418,14 +428,17 @@ void World::draw_cell(coord_t co)
         a->cell[co.x][co.y].draw(co.x, co.y);
 }
 
+void World::draw_cell(int x, int y, TCODColor fg, TCODColor bg)
+{
+        a->cell[x][y].draw(x, y, fg, bg);
+}
+
 void World::update_fov()
 {
         coord_t co;
 
         co = player->getxy();
-        a->tcodmap->computeFov(co.x, co.y, 10, true, FOV_BASIC);
-        a->set_all_invisible();
-        a->update_visibility();
+        a->tcodmap->computeFov(co.x, co.y, 9, true, FOV_SHADOW);
 }
 
 coord_t World::get_random_walkable_cell()
