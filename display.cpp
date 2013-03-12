@@ -26,9 +26,9 @@ Display::Display()
         set_resolution(1024, 600);
         set_title(t);
 
+        TCODConsole::initRoot(chars_x, chars_y, title, false, TCOD_RENDERER_SDL);
         console = new TCODConsole(chars_x, chars_y);
         console->setCustomFont(FONT, TCOD_FONT_TYPE_GRAYSCALE | TCOD_FONT_LAYOUT_ASCII_INROW, 16, 16);
-        TCODConsole::initRoot(chars_x, chars_y, title, false, TCOD_RENDERER_SDL);
         console->root->setCustomFont(FONT, TCOD_FONT_TYPE_GRAYSCALE | TCOD_FONT_LAYOUT_ASCII_INROW, 16, 16);
         console->root->setKeyboardRepeat(200, 50);
 

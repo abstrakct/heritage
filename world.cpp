@@ -397,7 +397,7 @@ bool World::is_closed_door(int x, int y)
 
 void World::open_door(int x, int y)
 {
-        dbg("opening door at %d,%d", x, y);
+        //dbg("opening door at %d,%d", x, y);
         a->cell[x][y].set_door_open();
         a->build_tcodmap();
 }
@@ -438,7 +438,7 @@ void World::update_fov()
         coord_t co;
 
         co = player->getxy();
-        a->tcodmap->computeFov(co.x, co.y, 9, true, FOV_SHADOW);
+        a->tcodmap->computeFov(co.x, co.y, 9, true, FOV_BASIC);
 }
 
 coord_t World::get_random_walkable_cell()
