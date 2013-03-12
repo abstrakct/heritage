@@ -8,6 +8,7 @@
 using namespace std;
 
 #include <iostream>
+#include <vector>
 
 #include "libtcod.hpp"
 #include "debug.h"
@@ -84,6 +85,15 @@ void Display::update()
         //TCODConsole::blit(left, 0, 0, LEFT_W, LEFT_H, console, LEFT_X, LEFT_Y, 0.2, 0.2);
         //TCODConsole::blit(map, 0, 0, MAP_W, MAP_H, console, MAP_X, MAP_Y, 0.2, 0.2);
         //TCODConsole::blit(bottom, 0, 0, BOTTOM_W, BOTTOM_H, console, BOTTOM_X, BOTTOM_Y, 0.2, 0.2);
+
+        // Handling printing messages here!
+
+        display->message("TEST1");
+        display->message(" TEST2");
+        display->message("  TEST3");
+        display->message("   TEST4");
+        display->print_messages();
+        
         TCODConsole::blit(console, 0, 0, chars_x, chars_y, TCODConsole::root, 0.1, 0.1);
         
         TCODConsole::flush();
@@ -103,4 +113,35 @@ void Display::putmap(int x, int y, int c, TCODColor &fg, TCODColor &bg)
 {
         console->putCharEx(MAP_X + x, MAP_Y + y, c, fg, bg);
 }
+
+void Display::print_messages()
+{
+        int y, j;
+        vector <struct message_t>::iterator i; 
+
+        y = 1;
+        i = message_list.begin();
+        for(j = 0; j <= message_list.size(); ++j) {
+                if(y > 13)
+                        break;
+                console->print(BOTTOM_X + 1, BOTTOM_Y + y, i->message);
+                ++y;
+                ++i;
+        }
+}
+
+void Display::message(const char *message)
+{
+        message_t item;
+
+        item.num = 0;
+        strcpy(item.message, message);
+
+        message_list.push_back(item);
+
+        //console->print(BOTTOM_X + 1, BOTTOM_Y + 13, message);
+}
+
+
+
 // vim: fdm=syntax guifont=Terminus\ 8

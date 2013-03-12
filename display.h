@@ -9,6 +9,7 @@
 #define _DISPLAY_H
 
 #include "libtcod.hpp"
+#include <vector>
 
 #define CHARS_X 128
 #define CHARS_Y 75
@@ -29,6 +30,12 @@
 #define BOTTOM_H (CHARS_Y - MAP_H)
 
 #define FONT "fonts/terminal8x14_gs_ro.png"
+#define MAX_MESSAGE_SIZE 115
+
+struct message_t {
+        int num;
+        char message[MAX_MESSAGE_SIZE];
+};
 
 class Display {
         public:
@@ -42,6 +49,8 @@ class Display {
                 void put(int x, int y, int c, TCOD_bkgnd_flag_t flag = TCOD_BKGND_DEFAULT);
                 void putmap(int x, int y, int c, TCOD_bkgnd_flag_t flag = TCOD_BKGND_DEFAULT);
                 void putmap(int x, int y, int c, TCODColor &fg, TCODColor &bg);
+                void message(const char *message);
+                void print_messages();
                 TCOD_key_t get_key(bool flush);
         protected:
         private:
@@ -52,6 +61,7 @@ class Display {
                 TCODConsole *map;
                 TCODConsole *left;
                 TCODConsole *bottom;
+                vector <struct message_t> message_list;
 };
 
 #endif
