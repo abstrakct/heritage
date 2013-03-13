@@ -121,18 +121,22 @@ coord_t Actor::getxy()
 
 void Actor::draw()
 {
-        if(prev.x != co.x || prev.y != co.y || (prev.x != co.x && prev.y != co.y))
-                world->draw_cell(this->prev);
-        display->putmap(this->co.x, this->co.y, this->c, this->fg, this->bg);
-        display->touch();
+        if(world->a->cell_is_visible(co.x, co.y)) {
+                if(prev.x != co.x || prev.y != co.y || (prev.x != co.x && prev.y != co.y))
+                        world->draw_cell(this->prev);
+                display->putmap(this->co.x, this->co.y, this->c, this->fg, this->bg);
+                display->touch();
+        }
 }
 
 void Actor::draw(TCODColor fg, TCODColor bg)
 {
-        if(prev.x != co.x || prev.y != co.y || (prev.x != co.x && prev.y != co.y))
-                world->draw_cell(this->prev);
-        display->putmap(this->co.x, this->co.y, this->c, fg, bg);
-        display->touch();
+        if(world->a->cell_is_visible(co.x, co.y)) {
+                if(prev.x != co.x || prev.y != co.y || (prev.x != co.x && prev.y != co.y))
+                        world->draw_cell(this->prev);
+                display->putmap(this->co.x, this->co.y, this->c, fg, bg);
+                display->touch();
+        }
 }
 
 void Actor::move_left()

@@ -146,10 +146,10 @@ void Display::update()
                 return;
 
         dbg("display update yeah");
+
         this->draw_game_screen();
 
         world->draw_map();
-        //player->draw();
 
         //TCODConsole::blit(left, 0, 0, LEFT_W, LEFT_H, console, LEFT_X, LEFT_Y, 0.2, 0.2);
         //TCODConsole::blit(map, 0, 0, MAP_W, MAP_H, console, MAP_X, MAP_Y, 0.2, 0.2);
