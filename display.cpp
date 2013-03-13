@@ -88,10 +88,6 @@ void Display::update()
 
         // Handling printing messages here!
 
-        display->message("TEST1");
-        display->message(" TEST2");
-        display->message("  TEST3");
-        display->message("   TEST4");
         display->print_messages();
         
         TCODConsole::blit(console, 0, 0, chars_x, chars_y, TCODConsole::root, 0.1, 0.1);
@@ -116,17 +112,17 @@ void Display::putmap(int x, int y, int c, TCODColor &fg, TCODColor &bg)
 
 void Display::print_messages()
 {
-        int y, j;
+        int y;
         vector <struct message_t>::iterator i; 
 
-        y = 1;
-        i = message_list.begin();
-        for(j = 0; j <= message_list.size(); ++j) {
-                if(y > 13)
+        y = 13;
+        for(i = message_list.end(); i != message_list.begin(); --i) {
+                if(y < 1)
                         break;
-                console->print(BOTTOM_X + 1, BOTTOM_Y + y, i->message);
-                ++y;
-                ++i;
+                if(strcmp(i->message, "")) {
+                        console->print(BOTTOM_X + 1, BOTTOM_Y + y, i->message);
+                        --y;
+                }
         }
 }
 

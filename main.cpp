@@ -69,7 +69,7 @@ void clean_up()
 
 int main(int argc, char **argv)
 {
-        unsigned int seed = time(0);
+        //unsigned int seed = time(0);
         //srand(seed);
 
         game = new Game;
@@ -89,6 +89,7 @@ int main(int argc, char **argv)
         //audio->play_music(2);
         //audio->play_sound(0, 5000);
 
+        display->message("");     // "kickstart" the messaging system!
         game->loop();
         
         clean_up();
