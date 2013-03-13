@@ -74,6 +74,9 @@ Cell::~Cell()
 
 bool Cell::is_walkable()
 {
+        if(this->inhabitant)
+                return false;
+
         switch(this->type) {
                 case floor:
                 case door_open:
@@ -155,16 +158,18 @@ void Cell::draw(int x, int y)
                 //dbg("drawing cell %d,%d - without inhabitant.", x, y);
                 display->putmap(x, y, this->c, this->fg, this->bg);
         }
+        display->touch();
 }
 
-void Cell::draw(int x, int y, TCODColor fg, TCODColor bg)
+void Cell::draw(int x, int y, TCODColor fore, TCODColor back)
 {
         if(inhabitant) {
                 //dbg("drawing cell %d,%d - with inhabitant.", x, y);
-                inhabitant->draw(fg, bg);
+                inhabitant->draw(fore, back);
         } else {
-                display->putmap(x, y, this->c, fg, bg);
+                display->putmap(x, y, this->c, fore, back);
         }
+        display->touch();
 }
 
 void Cell::set_color(TCODColor fg, TCODColor bg)
@@ -458,11 +463,12 @@ void World::draw_map()
 
         for(i = 1; i < AREA_MAX_X-1; ++i) {
                 for(j = 1; j < AREA_MAX_Y-1; ++j) {
-                        if(this->a->cell_is_visible(i, j)) {
+                        if(a->cell_is_visible(i, j)) {
                                 draw_cell(i, j);
                         } else {
-                                if(!a->lights_on)
+                                if(!a->lights_on) {
                                         draw_cell(i, j, TCODColor::black, TCODColor::black); 
+                                }
                         }
                 }
         }               
@@ -517,6 +523,10 @@ void World::set_inhabitant(Actor *actor)
 void World::clear_inhabitant(coord_t co)
 {
         a->cell[co.x][co.y].inhabitant = NULL;
+        if(a->cell_is_visible(co.x, co.y))
+                a->cell[co.x][co.y].draw(co.x, co.y);
+        else
+                a->cell[co.x][co.y].draw(co.x, co.y, TCODColor::black, TCODColor::black);
 }
 
 const char *World::get_cell_type(int x, int y)

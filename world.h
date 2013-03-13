@@ -50,6 +50,10 @@ class Cell {
                 void set_door_closed();
                 void set_door_open();
                 void set_visibility(bool b);
+                void setfg(TCODColor color) { fg = color; };
+                void setbg(TCODColor color) { bg = color; };
+                TCODColor getfg() { return fg; };
+
                 void draw(int x, int y);
                 void draw(int x, int y, TCODColor fg, TCODColor bg);
                 bool is_walkable();

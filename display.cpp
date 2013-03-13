@@ -64,9 +64,10 @@ Display::Display()
         console->root->setCustomFont(FONT, TCOD_FONT_TYPE_GRAYSCALE | TCOD_FONT_LAYOUT_ASCII_INROW, 16, 16);
         console->root->setKeyboardRepeat(200, 50);
 
-        map =     new TCODConsole(MAP_W, MAP_H);
-        left =    new TCODConsole(LEFT_W, LEFT_H);
-        bottom =  new TCODConsole(BOTTOM_W, BOTTOM_H);
+        //map =     new TCODConsole(MAP_W, MAP_H);
+        //left =    new TCODConsole(LEFT_W, LEFT_H);
+        //bottom =  new TCODConsole(BOTTOM_W, BOTTOM_H);
+        touched = true;
 }
 
 Display::~Display()
@@ -141,6 +142,10 @@ void Display::draw_game_screen()
 
 void Display::update()
 {
+        if(!touched)
+                return;
+
+        dbg("display update yeah");
         this->draw_game_screen();
 
         world->draw_map();
@@ -157,6 +162,8 @@ void Display::update()
         TCODConsole::blit(console, 0, 0, chars_x, chars_y, TCODConsole::root, 0.1, 0.1);
         
         TCODConsole::flush();
+
+        touched = false;
 }
 
 void Display::put(int x, int y, int c, TCOD_bkgnd_flag_t flag)

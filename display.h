@@ -52,10 +52,12 @@ class Display {
                 void putmap(int x, int y, int c, TCODColor &fg, TCODColor &bg);
                 void message(const char *message);
                 void print_messages();
+                void touch() { touched = true; };
                 TCOD_key_t get_key(bool flush);
                 TCODColor get_random_color();
         protected:
         private:
+                bool touched;
                 int width, height;
                 int chars_x, chars_y;
                 char title[256];

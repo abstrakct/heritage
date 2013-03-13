@@ -7,9 +7,11 @@
 using namespace std;
 #include "common.h"
 #include "actor.h"
+#include "display.h"
 #include "world.h"
 
 extern World *world;
+extern Display *display;
 
 const char *sanitydesc[] = {
         "Member of WBC",              //  0 - 3
@@ -119,22 +121,25 @@ coord_t Actor::getxy()
 
 void Actor::draw()
 {
-        if(prev.x != co.x && prev.y != co.y)
+        if(prev.x != co.x || prev.y != co.y || (prev.x != co.x && prev.y != co.y))
                 world->draw_cell(this->prev);
         display->putmap(this->co.x, this->co.y, this->c, this->fg, this->bg);
+        display->touch();
 }
 
 void Actor::draw(TCODColor fg, TCODColor bg)
 {
-        if(prev.x != co.x && prev.y != co.y)
+        if(prev.x != co.x || prev.y != co.y || (prev.x != co.x && prev.y != co.y))
                 world->draw_cell(this->prev);
         display->putmap(this->co.x, this->co.y, this->c, fg, bg);
+        display->touch();
 }
 
 void Actor::move_left()
 {
         if(world->is_closed_door(this->co.x - 1, this->co.y)) {
                 world->open_door(this->co.x - 1, this->co.y);
+                display->touch();
                 return;
         }
         if(world->is_walkable(this->co.x - 1, this->co.y)) {
@@ -142,6 +147,7 @@ void Actor::move_left()
                 co.x -= 1;
                 world->clear_inhabitant(prev);
                 world->set_inhabitant(this);
+                display->touch();
         }
 }
 
@@ -150,12 +156,14 @@ void Actor::move_right()
         if(world->is_closed_door(this->co.x + 1, this->co.y)) {
                 world->open_door(this->co.x + 1, this->co.y);
                 return;
+                display->touch();
         }
         if(world->is_walkable(this->co.x + 1, this->co.y)) {
                 prev = co;
                 co.x += 1;
                 world->clear_inhabitant(prev);
                 world->set_inhabitant(this);
+                display->touch();
         }
 }
 
@@ -164,12 +172,14 @@ void Actor::move_down()
         if(world->is_closed_door(this->co.x, this->co.y + 1)) {
                 world->open_door(this->co.x, this->co.y + 1);
                 return;
+                display->touch();
         }
         if(world->is_walkable(this->co.x, this->co.y + 1)) {
                 prev = co;
                 co.y += 1;
                 world->clear_inhabitant(prev);
                 world->set_inhabitant(this);
+                display->touch();
         }
 }
 
@@ -177,6 +187,7 @@ void Actor::move_up()
 {
         if(world->is_closed_door(this->co.x, this->co.y - 1)) {
                 world->open_door(this->co.x, this->co.y - 1);
+                display->touch();
                 return;
         }
         
@@ -185,6 +196,7 @@ void Actor::move_up()
                 co.y -= 1;
                 world->clear_inhabitant(prev);
                 world->set_inhabitant(this);
+                display->touch();
         }
 }
 
@@ -192,6 +204,7 @@ void Actor::move_nw()
 {
         if(world->is_closed_door(this->co.x - 1, this->co.y - 1)) {
                 world->open_door(this->co.x - 1, this->co.y - 1);
+                display->touch();
                 return;
         }
         if(world->is_walkable(this->co.x - 1, this->co.y - 1)) {
@@ -200,6 +213,7 @@ void Actor::move_nw()
                 co.y -= 1;
                 world->clear_inhabitant(prev);
                 world->set_inhabitant(this);
+                display->touch();
         }
 }
 
@@ -207,6 +221,7 @@ void Actor::move_ne()
 {
         if(world->is_closed_door(this->co.x + 1, this->co.y - 1)) {
                 world->open_door(this->co.x + 1, this->co.y - 1);
+                display->touch();
                 return;
         }
         if(world->is_walkable(this->co.x + 1, this->co.y - 1)) {
@@ -215,6 +230,7 @@ void Actor::move_ne()
                 co.y -= 1;
                 world->clear_inhabitant(prev);
                 world->set_inhabitant(this);
+                display->touch();
         }
 }
 
@@ -222,6 +238,7 @@ void Actor::move_sw()
 {
         if(world->is_closed_door(this->co.x - 1, this->co.y + 1)) {
                 world->open_door(this->co.x - 1, this->co.y + 1);
+                display->touch();
                 return;
         }
         if(world->is_walkable(this->co.x - 1, this->co.y + 1)) {
@@ -230,6 +247,7 @@ void Actor::move_sw()
                 co.y += 1;
                 world->clear_inhabitant(prev);
                 world->set_inhabitant(this);
+                display->touch();
         }
 }
 
@@ -237,6 +255,7 @@ void Actor::move_se()
 {
         if(world->is_closed_door(this->co.x + 1, this->co.y + 1)) {
                 world->open_door(this->co.x + 1, this->co.y + 1);
+                display->touch();
                 return;
         }
         if(world->is_walkable(this->co.x + 1, this->co.y + 1)) {
@@ -245,6 +264,7 @@ void Actor::move_se()
                 co.y += 1;
                 world->clear_inhabitant(prev);
                 world->set_inhabitant(this);
+                display->touch();
         }
 }
 
