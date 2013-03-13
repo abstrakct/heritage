@@ -45,6 +45,7 @@ class Display {
                 void set_title(char *window_title);
                 char *get_title();
                 void draw_game_screen();
+                void draw_left_window();
                 void update();
                 void put(int x, int y, int c, TCOD_bkgnd_flag_t flag = TCOD_BKGND_DEFAULT);
                 void putmap(int x, int y, int c, TCOD_bkgnd_flag_t flag = TCOD_BKGND_DEFAULT);

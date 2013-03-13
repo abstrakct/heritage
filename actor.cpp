@@ -81,6 +81,16 @@ void Actor::setchar(char newc)
         c = newc;
 }
 
+void Actor::setname(const char *name)
+{
+        strcpy(this->name, name);
+}
+
+char *Actor::getname()
+{
+        return this->name;
+}
+
 coord_t Actor::getxy()
 {
         return co;

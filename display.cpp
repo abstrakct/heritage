@@ -68,12 +68,37 @@ char *Display::get_title()
         return title;
 }
 
+void Display::draw_left_window()
+{
+        int x, y;
+
+        x = LEFT_X+1;
+        y = LEFT_Y+2;
+
+        console->printEx(x+16, y, TCOD_BKGND_DEFAULT, TCOD_CENTER, "Time: 20:00"); y++;
+        console->print(x, y, "Name: %s", player->getname()); y++;
+        y++;
+        console->print(x, y, "Mind: %d", player->getstat(sMind)); y++;
+        console->print(x, y, "Body: %d", player->getstat(sBody)); y++;
+        console->print(x, y, "Soul: %d", player->getstat(sSoul)); y++;
+        y++;
+        console->print(x, y, "Sanity:"); y++;
+        console->print(x, y, "%d", player->getstat(sSanity)); console->print(x+5, y, "(%s)", player->get_sanitydesc()); y++;
+        console->print(x, y, "Fear:"); y++;
+        console->print(x, y, "%d", player->getstat(sFear)); console->print(x+5, y, "(Fearless)"); y++;
+        console->print(x, y, "Tiredness:"); y++;
+        console->print(x, y, "%d", player->getstat(sTired)); y++;
+
+
+
+}
+
 void Display::draw_game_screen()
 {
         console->printFrame(LEFT_X, LEFT_Y, LEFT_W, LEFT_H, true);
         console->printFrame(MAP_X, MAP_Y, MAP_W, MAP_H, false);
         console->printFrame(BOTTOM_X, BOTTOM_Y, BOTTOM_W, BOTTOM_H, true);
-
+        draw_left_window();
 }
 
 void Display::update()

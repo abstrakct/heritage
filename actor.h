@@ -20,7 +20,7 @@ enum e_role {
 class Actor {
         public:
                 Actor();
-                virtual ~Actor() { dbg("This is the end...."); };
+                virtual ~Actor() { /*dbg("This is the end....");*/ };
                 virtual bool is_player() = 0;
                 bool is_alive();
                 void kill();
@@ -33,6 +33,10 @@ class Actor {
                 void setprevxy(int x, int y);
                 void setprevxy(coord_t newco);
                 void setchar(char newc);
+                void setname(const char *name);
+                char *getname();
+
+                // Movement
                 void move_left();
                 void move_right();
                 void move_up();
@@ -48,6 +52,7 @@ class Actor {
                 char c;
                 coord_t co;
                 coord_t prev;
+                char name[64];
 };
 
 #endif
