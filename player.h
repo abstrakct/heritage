@@ -14,12 +14,12 @@
 #define PLAYER_STARTY (MAP_H - 4)
 
 enum enum_stat {
-        sMind = 1,
+        sMind = 0,
         sBody,
         sSoul,
         sSanity,
         sFear,
-        sTired
+        sHealth
 };
 
 class Player: public Actor {
@@ -27,8 +27,10 @@ class Player: public Actor {
                 Player();
                 ~Player();
                 bool is_player() { return true; }
-                int getstat(enum_stat stat);
+                int getstat(enum_stat which);
                 const char *get_sanitydesc();
+                void decstat(enum_stat which, int amount = 1);
+                void setstat(enum_stat which, int what);
         private:
                 // Stats
                 int body;         // 1-20, how physically strong you are
@@ -38,7 +40,8 @@ class Player: public Actor {
                 // "Resources"
                 int sanity;       // 0-100, where 0 is completely bonkers and 100 is a mental health extravaganza
                 int fear;         // 0-100, where 0 is zen master in nirvana, 100 is FUCKING SCARED MESSED MY PANTS
-                int tiredness;    // 0-100, where 0 is perfectly well-rested, 100 is I'd actually literally rather die than try to move one more inch
+                int health;       // 0-100, where 0 is totally dead and gone, 100 is healthiest fucking person evar
+                int stat[6];
 };
 
 #endif

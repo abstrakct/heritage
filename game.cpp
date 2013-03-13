@@ -50,6 +50,12 @@ void Game::intro()
 {
 }
 
+void Game::end_turn()
+{
+        if(!ri(0,100))
+                player->decstat(sSanity);
+}
+
 void Game::loop()
 {
         command_type c;
@@ -57,8 +63,6 @@ void Game::loop()
         //console.print(10, 10, "Welcome to game!!");
 
         while (this->is_running()) {
-                //dbg("Player coords = %d, %d", player->getx(), player->gety());
-
                 world->update_fov();
                 display->update();
 
@@ -69,31 +73,45 @@ void Game::loop()
                                 break;
                         case cmd_move_left:
                                 player->move_left();
+                                end_turn();
                                 break;
                         case cmd_move_right:
                                 player->move_right();
+                                end_turn();
                                 break;
                         case cmd_move_up:
                                 player->move_up();
+                                end_turn();
                                 break;
                         case cmd_move_down:
                                 player->move_down();
+                                end_turn();
                                 break;
                         case cmd_move_nw:
                                 player->move_nw();
+                                end_turn();
                                 break;
                         case cmd_move_ne:
                                 player->move_ne();
+                                end_turn();
                                 break;
                         case cmd_move_sw:
                                 player->move_sw();
+                                end_turn();
                                 break;
                         case cmd_move_se:
                                 player->move_se();
+                                end_turn();
                                 break;
                         case cmd_all_visible:
                                 world->a->set_all_visible();
                                 world->update_fov();
+                                break;
+                        case cmd_close_door:
+                                world->close_nearest_door(player);
+                                
+                        case cmd_wait:
+                                end_turn();
                                 break;
                         default:
                                 break;

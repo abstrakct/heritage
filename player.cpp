@@ -33,7 +33,13 @@ Player::Player()
         body = mind = soul = 10;
         sanity = 100;
         fear = 0;
-        tiredness = 50;
+        health = 100;
+        setstat(sBody, 10);
+        setstat(sMind, 10);
+        setstat(sSoul, 10);
+        setstat(sSanity, 100);
+        setstat(sFear, 0);
+        setstat(sHealth, 100);
         setchar('@');
         setname("Boris Hoffman");
 }
@@ -45,33 +51,35 @@ Player::~Player()
 
 const char *Player::get_sanitydesc()
 {
-        if(sanity == 100)
+        if(getstat(sSanity) == 100)
                 return sanitydesc[10];
-        else if(sanity >= 91)
+        else if(getstat(sSanity) >= 91)
                 return sanitydesc[9];
-        else if(sanity >= 81)
+        else if(getstat(sSanity) >= 81)
                 return sanitydesc[8];
-        else if(sanity >= 71)
+        else if(getstat(sSanity) >= 71)
                 return sanitydesc[7];
-        else if(sanity >= 61)
+        else if(getstat(sSanity) >= 61)
                 return sanitydesc[6];
-        else if(sanity >= 41)
+        else if(getstat(sSanity) >= 41)
                 return sanitydesc[5];
-        else if(sanity >= 31)
+        else if(getstat(sSanity) >= 31)
                 return sanitydesc[4];
-        else if(sanity >= 21)
+        else if(getstat(sSanity) >= 21)
                 return sanitydesc[3];
-        else if(sanity >= 11)
+        else if(getstat(sSanity) >= 11)
                 return sanitydesc[2];
-        else if(sanity >= 3)
+        else if(getstat(sSanity) >= 3)
                 return sanitydesc[1];
         else 
                 return sanitydesc[0];
 }
 
-int Player::getstat(enum_stat stat)
+int Player::getstat(enum_stat which)
 {
-        switch(stat) {
+        return this->stat[(int)which];
+
+        /*switch(which) {
                 case sMind:
                         return this->mind;
                         break;
@@ -87,15 +95,23 @@ int Player::getstat(enum_stat stat)
                 case sFear:
                         return this->fear;
                         break;
-                case sTired:
-                        return this->tiredness;
+                case sHealth:
+                        return this->health;
                         break;
                 default:
                         return 0;
-        }
+        }*/
 }
 
+void Player::setstat(enum_stat which, int what)
+{
+        this->stat[which] = what;
+}
 
+void Player::decstat(enum_stat which, int amount)
+{
+        this->stat[which] -= amount;
+}
 
 
 // vim: fdm=syntax guifont=Terminus\ 8

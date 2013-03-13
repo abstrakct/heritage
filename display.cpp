@@ -82,12 +82,12 @@ void Display::draw_left_window()
         console->print(x, y, "Body: %d", player->getstat(sBody)); y++;
         console->print(x, y, "Soul: %d", player->getstat(sSoul)); y++;
         y++;
+        console->print(x, y, "Health:"); y++;
+        console->print(x, y, "%d", player->getstat(sHealth)); y++;
         console->print(x, y, "Sanity:"); y++;
         console->print(x, y, "%d", player->getstat(sSanity)); console->print(x+5, y, "(%s)", player->get_sanitydesc()); y++;
         console->print(x, y, "Fear:"); y++;
         console->print(x, y, "%d", player->getstat(sFear)); console->print(x+5, y, "(Fearless)"); y++;
-        console->print(x, y, "Tiredness:"); y++;
-        console->print(x, y, "%d", player->getstat(sTired)); y++;
 
 
 

@@ -19,6 +19,7 @@ class Game {
                 bool is_running();
                 void endgame();
                 void intro();
+                void end_turn();
         protected:
         private:
                 Command cmd;

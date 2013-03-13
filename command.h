@@ -26,6 +26,9 @@ enum command_type {
         cmd_move_se,
         cmd_exit,
         cmd_wait,
+        cmd_close_door,
+
+        // debug / developement commands
         cmd_all_visible,
 };
 

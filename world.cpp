@@ -11,6 +11,7 @@ using namespace std;
 
 #include "world.h"
 #include "common.h"
+#include "actor.h"
 #include "player.h"
 
 extern Player *player;
@@ -395,11 +396,45 @@ bool World::is_closed_door(int x, int y)
                 return false;
 }
 
+bool World::is_open_door(int x, int y)
+{
+        if(a->cell[x][y].get_type() == door_open)
+                return true;
+        else
+                return false;
+}
+
 void World::open_door(int x, int y)
 {
-        //dbg("opening door at %d,%d", x, y);
         a->cell[x][y].set_door_open();
         a->build_tcodmap();
+}
+
+void World::close_door(int x, int y)
+{
+        a->cell[x][y].set_door_closed();
+        a->build_tcodmap();
+}
+
+bool World::close_nearest_door(Actor *actor)
+{
+        // Close the door nearest to acto, start at northwest.
+        // Returns true if successfully closed a door.
+
+        int x, y, dx, dy;
+
+        x = actor->getx();
+        y = actor->gety();
+        for(dx=-1; dx <= 1; dx++) {
+                for(dy=-1; dy <= 1; dy++) {
+                        if(is_open_door(x+dx, y+dy)) {
+                                close_door(x+dx, y+dy);
+                                return true;
+                        }
+                }
+        }
+
+        return false;
 }
 
 void World::draw_map()

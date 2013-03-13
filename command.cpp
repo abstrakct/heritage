@@ -39,6 +39,11 @@ command_t command_set_normal[] = {
         { { TCODK_KP1,    0,  1, 0, 0, 0, 0, 0 }, cmd_move_sw },
         { { TCODK_CHAR,  'n', 1, 0, 0, 0, 0, 0 }, cmd_move_se },
         { { TCODK_KP3,    0,  1, 0, 0, 0, 0, 0 }, cmd_move_se },
+        { { TCODK_KP5,    0,  1, 0, 0, 0, 0, 0 }, cmd_wait },
+        { { TCODK_CHAR,  '.', 1, 0, 0, 0, 0, 0 }, cmd_wait },
+        { { TCODK_CHAR,  'c', 1, 0, 0, 0, 0, 0 }, cmd_close_door },
+
+        // debug / development commands
         { { TCODK_F1,     0,  1, 0, 0, 0, 0, 0 }, cmd_all_visible },
 };
 

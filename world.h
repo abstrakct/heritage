@@ -9,6 +9,7 @@
 #define _WORLD_H
 
 #include "libtcod.hpp"
+#include "actor.h"
 #include "common.h"
 
 #define AREA_MAX_X 90
@@ -97,7 +98,10 @@ class World {
                 ~World();
                 bool is_walkable(int x, int y);
                 bool is_closed_door(int x, int y);
+                bool is_open_door(int x, int y);
                 void open_door(int x, int y);
+                void close_door(int x, int y);
+                bool close_nearest_door(Actor *actor);
 
                 void draw_map();
                 void draw_cell(int x, int y);
