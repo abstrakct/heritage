@@ -112,6 +112,7 @@ class World {
                 void update_fov();
                 coord_t get_random_walkable_cell();
                 void set_inhabitant(Actor *actor);
+                void clear_inhabitant(coord_t co);
 
                 Area *a;
 

@@ -140,6 +140,8 @@ void Actor::move_left()
         if(world->is_walkable(this->co.x - 1, this->co.y)) {
                 prev = co;
                 co.x -= 1;
+                world->clear_inhabitant(prev);
+                world->set_inhabitant(this);
         }
 }
 
@@ -152,6 +154,8 @@ void Actor::move_right()
         if(world->is_walkable(this->co.x + 1, this->co.y)) {
                 prev = co;
                 co.x += 1;
+                world->clear_inhabitant(prev);
+                world->set_inhabitant(this);
         }
 }
 
@@ -164,6 +168,8 @@ void Actor::move_down()
         if(world->is_walkable(this->co.x, this->co.y + 1)) {
                 prev = co;
                 co.y += 1;
+                world->clear_inhabitant(prev);
+                world->set_inhabitant(this);
         }
 }
 
@@ -177,6 +183,8 @@ void Actor::move_up()
         if(world->is_walkable(this->co.x, this->co.y - 1)) {
                 prev = co;
                 co.y -= 1;
+                world->clear_inhabitant(prev);
+                world->set_inhabitant(this);
         }
 }
 
@@ -190,6 +198,8 @@ void Actor::move_nw()
                 prev = co;
                 co.x -= 1;
                 co.y -= 1;
+                world->clear_inhabitant(prev);
+                world->set_inhabitant(this);
         }
 }
 
@@ -203,6 +213,8 @@ void Actor::move_ne()
                 prev = co;
                 co.x += 1;
                 co.y -= 1;
+                world->clear_inhabitant(prev);
+                world->set_inhabitant(this);
         }
 }
 
@@ -216,6 +228,8 @@ void Actor::move_sw()
                 prev = co;
                 co.x -= 1;
                 co.y += 1;
+                world->clear_inhabitant(prev);
+                world->set_inhabitant(this);
         }
 }
 
@@ -229,6 +243,8 @@ void Actor::move_se()
                 prev = co;
                 co.x += 1;
                 co.y += 1;
+                world->clear_inhabitant(prev);
+                world->set_inhabitant(this);
         }
 }
 

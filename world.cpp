@@ -159,10 +159,12 @@ void Cell::draw(int x, int y)
 
 void Cell::draw(int x, int y, TCODColor fg, TCODColor bg)
 {
-        if(inhabitant)
+        if(inhabitant) {
+                //dbg("drawing cell %d,%d - with inhabitant.", x, y);
                 inhabitant->draw(fg, bg);
-        else
+        } else {
                 display->putmap(x, y, this->c, fg, bg);
+        }
 }
 
 void Cell::set_color(TCODColor fg, TCODColor bg)
@@ -510,6 +512,11 @@ again:
 void World::set_inhabitant(Actor *actor)
 {
         a->cell[actor->getx()][actor->gety()].inhabitant = actor;
+}
+
+void World::clear_inhabitant(coord_t co)
+{
+        a->cell[co.x][co.y].inhabitant = NULL;
 }
 
 const char *World::get_cell_type(int x, int y)

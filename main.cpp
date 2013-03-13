@@ -94,6 +94,7 @@ int main(int argc, char **argv)
 
         player->setxy(world->get_random_walkable_cell());
         player->setprevxy(player->getxy());
+        world->set_inhabitant(player);
         init_npcs();
 
         audio->initialize();
