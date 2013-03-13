@@ -53,6 +53,7 @@ class Display {
                 void message(const char *message);
                 void print_messages();
                 TCOD_key_t get_key(bool flush);
+                TCODColor get_random_color();
         protected:
         private:
                 int width, height;

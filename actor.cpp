@@ -11,6 +11,20 @@ using namespace std;
 
 extern World *world;
 
+const char *sanitydesc[] = {
+        "Member of WBC",              //  0 - 3
+        "Completely insane",          //  3 - 10
+        "Raving and drooling",        // 11 - 20
+        "Nervous breakdown imminent", // 21 - 30
+        "You're losing it",           // 31 - 40
+        "Average man in the street",  // 41 - 60
+        "Less insane than most",      // 61 - 70
+        "Still doing great",          // 71 - 80
+        "Pretty darn sane",           // 81 - 90 
+        "Completely sane",            // 91 - 99
+        "Mental health poster child", // 100
+};
+
 Actor::Actor()
 {
         role = role_unknown;
@@ -52,6 +66,7 @@ void Actor::setxy(int x, int y)
 
 void Actor::setxy(coord_t newco)
 {
+        //dbg("setting co to %d,%d (type of cell is %s)", newco.x, newco.y, world->get_cell_type(newco.x, newco.y));
         co = newco;
 }
 
@@ -86,6 +101,12 @@ void Actor::setname(const char *name)
         strcpy(this->name, name);
 }
 
+void Actor::setcolors(TCODColor fg, TCODColor bg)
+{
+        this->fg = fg;
+        this->bg = bg;
+}
+
 char *Actor::getname()
 {
         return this->name;
@@ -98,8 +119,16 @@ coord_t Actor::getxy()
 
 void Actor::draw()
 {
-        world->draw_cell(this->prev);
-        display->putmap(this->co.x, this->co.y, this->c);
+        if(prev.x != co.x && prev.y != co.y)
+                world->draw_cell(this->prev);
+        display->putmap(this->co.x, this->co.y, this->c, this->fg, this->bg);
+}
+
+void Actor::draw(TCODColor fg, TCODColor bg)
+{
+        if(prev.x != co.x && prev.y != co.y)
+                world->draw_cell(this->prev);
+        display->putmap(this->co.x, this->co.y, this->c, fg, bg);
 }
 
 void Actor::move_left()
@@ -203,5 +232,121 @@ void Actor::move_se()
         }
 }
 
+
+const char *Actor::get_sanitydesc()
+{
+        if(getstat(sSanity) == 100)
+                return sanitydesc[10];
+        else if(getstat(sSanity) >= 91)
+                return sanitydesc[9];
+        else if(getstat(sSanity) >= 81)
+                return sanitydesc[8];
+        else if(getstat(sSanity) >= 71)
+                return sanitydesc[7];
+        else if(getstat(sSanity) >= 61)
+                return sanitydesc[6];
+        else if(getstat(sSanity) >= 41)
+                return sanitydesc[5];
+        else if(getstat(sSanity) >= 31)
+                return sanitydesc[4];
+        else if(getstat(sSanity) >= 21)
+                return sanitydesc[3];
+        else if(getstat(sSanity) >= 11)
+                return sanitydesc[2];
+        else if(getstat(sSanity) >= 3)
+                return sanitydesc[1];
+        else 
+                return sanitydesc[0];
+}
+
+int Actor::getstat(enum_stat which)
+{
+        return this->stat[(int)which];
+
+        /*switch(which) {
+                case sMind:
+                        return this->mind;
+                        break;
+                case sBody:
+                        return this->body;
+                        break;
+                case sSoul:
+                        return this->soul;
+                        break;
+                case sSanity:
+                        return this->sanity;
+                        break;
+                case sFear:
+                        return this->fear;
+                        break;
+                case sHealth:
+                        return this->health;
+                        break;
+                default:
+                        return 0;
+        }*/
+}
+
+void Actor::setstat(enum_stat which, int what)
+{
+        this->stat[which] = what;
+}
+
+void Actor::decstat(enum_stat which, int amount)
+{
+        this->stat[which] -= amount;
+}
+
+void Actor::setai(int which)
+{
+        which_ai = which;
+}
+
+void Actor::random_ai()
+{
+        int choice = ri(1,9);
+        switch (choice) {
+                case 1:
+                        this->move_sw();
+                        break;
+                case 2:
+                        this->move_down();
+                        break;
+                case 3:
+                        this->move_se();
+                        break;
+                case 4:
+                        this->move_left();
+                        break;
+                case 5:
+                        break;
+                case 6:
+                        this->move_right();
+                        break;
+                case 7:
+                        this->move_nw();
+                        break;
+                case 8:
+                        this->move_up();
+                        break;
+                case 9:
+                        this->move_ne();
+                        break;
+                default:
+                        break;
+        }
+}
+
+void Actor::ai()
+{
+        switch(which_ai) {
+                case AI_RANDOM:
+                        this->random_ai();
+                        break;
+                default:
+                        dbg("no ai defined.");
+                        break;
+        }
+}
 
 // vim: fdm=syntax guifont=Terminus\ 8

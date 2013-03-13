@@ -12,6 +12,7 @@
 #include "debug.h"
 
 #define d(x,y) dice(x,y,0)
+#define CALL_MEMBER_FN(object,ptrToMember)  ((object)->*(ptrToMember))
 
 extern Display *display;
 

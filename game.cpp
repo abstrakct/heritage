@@ -54,6 +54,8 @@ void Game::end_turn()
 {
         if(!ri(0,100))
                 player->decstat(sSanity);
+        for(int i=0;i<12;i++)
+                npc[i].ai();
 }
 
 void Game::loop()

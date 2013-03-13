@@ -15,10 +15,41 @@ using namespace std;
 #include "display.h"
 #include "common.h"
 #include "player.h"
+#include "npc.h"
 #include "world.h"
 
 extern World *world;
 extern Player *player;
+extern NPC *npc;
+
+TCODColor colorlist[] = {
+        //TCODColor::black,
+        TCODColor::white,
+        TCODColor::red,
+        TCODColor::flame,
+        TCODColor::orange,
+        TCODColor::yellow,
+        TCODColor::lime,
+        TCODColor::chartreuse,
+        TCODColor::green,
+        TCODColor::sea,
+        TCODColor::turquoise,
+        TCODColor::cyan,
+        TCODColor::sky,
+        TCODColor::azure,
+        TCODColor::blue,
+        TCODColor::han,
+        TCODColor::violet,
+        TCODColor::purple,
+        TCODColor::fuchsia,
+        TCODColor::magenta,
+        TCODColor::pink,
+        TCODColor::crimson,
+        TCODColor::peach,
+        TCODColor::celadon,
+        TCODColor::grey,
+        TCODColor::sepia,
+};
 
 Display::Display()
 {
@@ -63,6 +94,13 @@ TCOD_key_t Display::get_key(bool flush)
         return console->root->checkForKeypress(TCOD_KEY_PRESSED);
 }
 
+TCODColor Display::get_random_color()
+{
+        int i = ri(0, (sizeof(colorlist)/sizeof(TCODColor)));
+
+        return colorlist[i];
+}
+
 char *Display::get_title()
 {
         return title;
@@ -75,7 +113,7 @@ void Display::draw_left_window()
         x = LEFT_X+1;
         y = LEFT_Y+2;
 
-        console->printEx(x+16, y, TCOD_BKGND_DEFAULT, TCOD_CENTER, "Time: 20:00"); y++;
+        console->printEx(x+16, y, TCOD_BKGND_DEFAULT, TCOD_CENTER, "Time: 20:00"); y++; y++;
         console->print(x, y, "Name: %s", player->getname()); y++;
         y++;
         console->print(x, y, "Mind: %d", player->getstat(sMind)); y++;
@@ -104,6 +142,7 @@ void Display::draw_game_screen()
 void Display::update()
 {
         this->draw_game_screen();
+
         world->draw_map();
         player->draw();
 

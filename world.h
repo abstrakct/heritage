@@ -18,7 +18,7 @@
 #define MAX_AREAS 12
 
 enum cell_type {
-        nothing,
+        nothing = 0,
         wall,
         floor,
         door_open,
@@ -56,6 +56,7 @@ class Cell {
                 bool is_visible();
                 bool is_transparent();
                 cell_type get_type();
+                Actor *inhabitant;
 };
 
 class Area {
@@ -96,6 +97,7 @@ class World {
         public:
                 World();
                 ~World();
+                const char *get_cell_type(int x, int y);
                 bool is_walkable(int x, int y);
                 bool is_closed_door(int x, int y);
                 bool is_open_door(int x, int y);
@@ -109,6 +111,7 @@ class World {
                 void draw_cell(int x, int y, TCODColor fg, TCODColor bg);
                 void update_fov();
                 coord_t get_random_walkable_cell();
+                void set_inhabitant(Actor *actor);
 
                 Area *a;
 

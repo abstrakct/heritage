@@ -9,7 +9,7 @@ using namespace std;
 #include <unistd.h>
 #include "libtcod.hpp"
 
-// #include "actor.h"
+#include "actor.h"
 #include "command.h"
 #include "debug.h"
 #include "display.h"
@@ -60,11 +60,23 @@ int ri(int a, int b)
 
 void clean_up()
 {
-        delete audio;
-        delete npc;
         delete player;
-        delete game;
         delete world;
+        delete audio;
+        delete [] npc;
+        delete game;
+}
+
+void init_npcs()
+{
+        for(int i=0; i < 12; ++i) {
+                npc[i].setxy(world->get_random_walkable_cell());
+                npc[i].setprevxy(npc[i].getxy());
+                world->set_inhabitant(&npc[i]);
+                npc[i].setai(AI_RANDOM);
+                
+                //dbg("NPC %d set x,y = %d,%d", i, npc[i].getx(), npc[i].gety());
+        }
 }
 
 int main(int argc, char **argv)
@@ -73,15 +85,16 @@ int main(int argc, char **argv)
         //srand(seed);
 
         game = new Game;
-        npc = new NPC;
+        npc = new NPC[12];
         audio = new SoundEngine;
         world = new World;
         player = new Player;
 
+        world->a->generate();
+
         player->setxy(world->get_random_walkable_cell());
         player->setprevxy(player->getxy());
-
-        world->a->generate();
+        init_npcs();
 
         audio->initialize();
         audio->load_all_files();

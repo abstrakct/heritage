@@ -16,7 +16,6 @@ class NPC: public Actor {
                 ~NPC();
                 bool is_player() { return false; }
         private:
-                int health;
 };
 
 #endif

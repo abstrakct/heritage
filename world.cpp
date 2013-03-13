@@ -65,6 +65,7 @@ Cell::Cell()
         flags = 0;
         visible = false;
         this->set_floor();
+        inhabitant = NULL;
 }
 
 Cell::~Cell()
@@ -80,6 +81,8 @@ bool Cell::is_walkable()
                 case wall:
                 case door_closed:
                 case nothing:
+                        return false;
+                default:
                         return false;
         }
 
@@ -145,12 +148,21 @@ void Cell::set_visibility(bool b)
 
 void Cell::draw(int x, int y)
 {
-        display->putmap(x, y, this->c, this->fg, this->bg);
+        if(inhabitant) {
+                //dbg("drawing cell %d,%d - with inhabitant.", x, y);
+                inhabitant->draw();
+        } else {
+                //dbg("drawing cell %d,%d - without inhabitant.", x, y);
+                display->putmap(x, y, this->c, this->fg, this->bg);
+        }
 }
 
 void Cell::draw(int x, int y, TCODColor fg, TCODColor bg)
 {
-        display->putmap(x, y, this->c, fg, bg);
+        if(inhabitant)
+                inhabitant->draw(fg, bg);
+        else
+                display->putmap(x, y, this->c, fg, bg);
 }
 
 void Cell::set_color(TCODColor fg, TCODColor bg)
@@ -220,6 +232,7 @@ void Area::set_all_visible()
                         this->tcodmap->setProperties(x, y, true, cell[x][y].is_walkable());
                 }
         }
+        player->setfovradius(0);
 }
 
 void Area::update_visibility()
@@ -281,7 +294,6 @@ void Area::generate()
 {
         //direction d;
 
-        this->frame();
 
         // let's try to generate a house floor!
 
@@ -293,6 +305,7 @@ void Area::generate()
 
         bsp->splitRecursive(NULL, 5, 3, 3, 1.5f, 1.5f);
         bsp->traversePreOrder(new MyCallback(), NULL);
+        this->frame();
 
         this->build_tcodmap();
         lights_on = false;
@@ -418,7 +431,7 @@ void World::close_door(int x, int y)
 
 bool World::close_nearest_door(Actor *actor)
 {
-        // Close the door nearest to acto, start at northwest.
+        // Close the door nearest to actor, start at northwest.
         // Returns true if successfully closed a door.
 
         int x, y, dx, dy;
@@ -473,21 +486,42 @@ void World::update_fov()
         coord_t co;
 
         co = player->getxy();
-        a->tcodmap->computeFov(co.x, co.y, 9, true, FOV_BASIC);
+        a->tcodmap->computeFov(co.x, co.y, player->getfovradius(), true, FOV_BASIC);
 }
 
 coord_t World::get_random_walkable_cell()
 {
         coord_t co;
 
-        co.x = ri(1, AREA_MAX_X);
-        co.y = ri(1, AREA_MAX_Y);
+again:
+        co.x = ri(1, AREA_MAX_X-2);
+        co.y = ri(1, AREA_MAX_Y-2);
         while(!a->cell[co.x][co.y].is_walkable()) {
-                co.x = ri(1, AREA_MAX_X);
-                co.y = ri(1, AREA_MAX_Y);
+                co.x = ri(1, AREA_MAX_X-2);
+                co.y = ri(1, AREA_MAX_Y-2);
         }
 
-        return co;
+        if(a->cell[co.x][co.y].is_walkable())
+                return co;
+        else
+                goto again;
+}
+
+void World::set_inhabitant(Actor *actor)
+{
+        a->cell[actor->getx()][actor->gety()].inhabitant = actor;
+}
+
+const char *World::get_cell_type(int x, int y)
+{
+        switch(a->cell[x][y].get_type()) {
+                case floor: return "floor"; break;
+                case wall: return "wall"; break;
+                case nothing: return "nothing"; break;
+                case door_open: return "open door"; break;
+                case door_closed: return "closed door"; break;
+                default: return "unknown"; break;
+        }
 }
 
         
