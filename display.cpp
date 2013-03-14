@@ -145,17 +145,9 @@ void Display::update()
         if(!touched)
                 return;
 
-        dbg("display update yeah");
-
         this->draw_game_screen();
 
         world->draw_map();
-
-        //TCODConsole::blit(left, 0, 0, LEFT_W, LEFT_H, console, LEFT_X, LEFT_Y, 0.2, 0.2);
-        //TCODConsole::blit(map, 0, 0, MAP_W, MAP_H, console, MAP_X, MAP_Y, 0.2, 0.2);
-        //TCODConsole::blit(bottom, 0, 0, BOTTOM_W, BOTTOM_H, console, BOTTOM_X, BOTTOM_Y, 0.2, 0.2);
-
-        // Handling printing messages here!
 
         display->print_messages();
         
@@ -164,6 +156,10 @@ void Display::update()
         TCODConsole::flush();
 
         touched = false;
+
+        //TCODConsole::blit(left, 0, 0, LEFT_W, LEFT_H, console, LEFT_X, LEFT_Y, 0.2, 0.2);
+        //TCODConsole::blit(map, 0, 0, MAP_W, MAP_H, console, MAP_X, MAP_Y, 0.2, 0.2);
+        //TCODConsole::blit(bottom, 0, 0, BOTTOM_W, BOTTOM_H, console, BOTTOM_X, BOTTOM_Y, 0.2, 0.2);
 }
 
 void Display::put(int x, int y, int c, TCOD_bkgnd_flag_t flag)

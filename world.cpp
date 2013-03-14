@@ -27,25 +27,29 @@ class MyCallback : public ITCODBspCallback
 
                         world->a->make_room(node->x, node->y, node->x + node->w-2, node->y + node->h-2);
                         //dbg("made room from %d,%d to %d,%d", node->x, node->y, node->x+node->w-2, node->y+node->h-2);
-                        int x1 = node->x;
-                        int y1 = node->y;
-                        int x2 = node->x + node->w - 2;
-                        int y2 = node->y + node->h - 2;
 
                         if(node->horizontal) {
-                                int ypos = node->y + ri(1, node->h);
+                                /*int ypos = node->y + ri(1, node->h);
                                 while(ypos >= AREA_MAX_Y-2)
-                                        --ypos;
+                                        --ypos;*/
 
+                                int x1 = node->x - 2;
+                                int y1 = node->y - 2;
+                                int x2 = node->x + node->w - 2;
+                                int y2 = node->y + node->h - 2;
                                 world->a->make_door(x1, ri(y1, y2), false);
                                 world->a->make_door(x2, ri(y1, y2), false);
                                 //world->a->make_door(node->x, ypos, false);
                                 //world->a->make_door(node->x+node->w - ri(2, node->w-2), ypos, false);
                         } else {
-                                int xpos = node->x + ri(1, node->w);
+                                /*int xpos = node->x + ri(1, node->w);
                                 while(xpos >= AREA_MAX_X-2)
-                                        --xpos;
+                                        --xpos;*/
                                 
+                                int x1 = node->x;
+                                int y1 = node->y;
+                                int x2 = node->x + node->w - 2;
+                                int y2 = node->y + node->h - 2;
                                 world->a->make_door(ri(x1, x2), y1, false);
                                 world->a->make_door(ri(x1, x2), y2, false);
 
@@ -338,8 +342,13 @@ void Area::make_door(int x, int y, bool open)
 {
         //dbg("Making door at %d,%d (%s)", x, y, open ? "open" : "closed");
 
+        if(x <= 1)
+                return;
+        if(y <= 1)
+                return;
         if(cell[x][y].get_type() != wall)
                 return;
+
         if(open)
                 cell[x][y].set_door_open();
         else
