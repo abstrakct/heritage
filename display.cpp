@@ -115,6 +115,7 @@ void Display::draw_left_window()
         y = LEFT_Y+2;
 
         console->printEx(x+16, y, TCOD_BKGND_DEFAULT, TCOD_CENTER, "Time: 20:00"); y++; y++;
+        console->printEx(x+16, y, TCOD_BKGND_DEFAULT, TCOD_CENTER, "Area: %s", world->a->get_area_name()); y++; y++;
         console->print(x, y, "Name: %s", player->getname()); y++;
         y++;
         console->print(x, y, "Mind: %d", player->getstat(sMind)); y++;

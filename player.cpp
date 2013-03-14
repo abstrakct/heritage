@@ -12,7 +12,12 @@ using namespace std;
 #include "actor.h"
 #include "player.h"
 #include "common.h"
+#include "display.h"
+#include "world.h"
 
+extern World   *world;
+extern Player  *player;
+extern Display *display;
 
 Player::Player()
 {
@@ -38,5 +43,21 @@ Player::~Player()
         //dbg("Goodbye, cruel world.");
 }
 
+void Player::look()
+{
+        cell_type cell;
+
+        cell = world->get_cell_type(player->getxy());
+        switch(cell) {
+                case stairs_up:
+                        display->message("There is a staircase leading up here.");
+                        break;
+                case stairs_down:
+                        display->message("There is a staircase leading down here.");
+                        break;
+                default:
+                        break;
+        }
+}
 
 // vim: fdm=syntax guifont=Terminus\ 8

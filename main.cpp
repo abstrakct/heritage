@@ -70,13 +70,39 @@ void clean_up()
 void init_npcs()
 {
         for(int i=0; i < 12; ++i) {
-                npc[i].setxy(world->get_random_walkable_cell());
+                npc[i].setxy(world->get_random_walkable_cell(floor_1));
                 npc[i].setprevxy(npc[i].getxy());
                 world->set_inhabitant(&npc[i]);
                 npc[i].setai(AI_RANDOM);
                 
                 //dbg("NPC %d set x,y = %d,%d", i, npc[i].getx(), npc[i].gety());
         }
+}
+
+void init_areas()
+{
+        world->area[floor_1].generate(floor_1);
+        world->area[floor_2].generate(floor_2);
+        world->area[floor_3].generate(floor_3);
+        world->area[floor_4].generate(floor_4);
+        world->area[floor_5].generate(floor_5);
+        world->area[floor_6].generate(floor_6);
+        world->area[cellar_1].generate(cellar_1);
+        world->area[cellar_2].generate(cellar_2);
+        world->area[cellar_4].generate(cellar_3);
+        world->area[cellar_5].generate(cellar_4);
+        world->area[cellar_6].generate(cellar_5);
+        world->area[cellar_6].generate(cellar_6);
+        
+        world->current_area = (int)floor_1;
+        world->a = &world->area[(int)floor_1];
+}
+
+void init_player()
+{
+        player->setxy(world->get_random_walkable_cell(floor_1));
+        player->setprevxy(player->getxy());
+        world->set_inhabitant(player);
 }
 
 int main(int argc, char **argv)
@@ -90,11 +116,8 @@ int main(int argc, char **argv)
         world = new World;
         player = new Player;
 
-        world->a->generate();
-
-        player->setxy(world->get_random_walkable_cell());
-        player->setprevxy(player->getxy());
-        world->set_inhabitant(player);
+        init_areas();
+        init_player();
         init_npcs();
 
         audio->initialize();

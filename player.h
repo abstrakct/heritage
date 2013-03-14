@@ -19,6 +19,7 @@ class Player: public Actor {
                 Player();
                 ~Player();
                 bool is_player() { return true; }
+                void look();
         private:
                 // Stats
                 //int body;         // 1-20, how physically strong you are

@@ -17,6 +17,21 @@ using namespace std;
 extern Player *player;
 extern World *world;
 
+const char *area_name[] = {
+        "1st floor",
+        "2nd floor",
+        "3rd floor",
+        "4th floor",
+        "5th floor",
+        "6th floor",
+        "Cellar, level 1",
+        "Celler, level 2",
+        "Celler, level 3",
+        "Celler, level 4",
+        "Celler, level 5",
+        "Celler, level 6"
+};
+
 class MyCallback : public ITCODBspCallback
 {
         public :
@@ -84,6 +99,8 @@ bool Cell::is_walkable()
         switch(this->type) {
                 case floor:
                 case door_open:
+                case stairs_up:
+                case stairs_down:
                         return true;
                 case wall:
                 case door_closed:
@@ -101,6 +118,8 @@ bool Cell::is_transparent()
         switch(this->type) {
                 case floor:
                 case door_open:
+                case stairs_up:
+                case stairs_down:
                         return true;
                 case wall:
                 case door_closed:
@@ -130,6 +149,22 @@ void Cell::set_floor()
         this->fg = TCODColor::darkerGrey;
         this->bg = TCODColor::black;
         c = '.';
+}
+
+void Cell::set_stairs_up()
+{
+        this->type = stairs_up;
+        this->fg = TCODColor::yellow;
+        this->bg = TCODColor::black;
+        c = '<';
+}
+
+void Cell::set_stairs_down()
+{
+        this->type = stairs_down;
+        this->fg = TCODColor::yellow;
+        this->bg = TCODColor::black;
+        c = '>';
 }
 
 void Cell::set_door_closed()
@@ -301,22 +336,21 @@ direction Area::generate_starting_room()
         return d;
 }
 
-void Area::generate()
+void Area::generate(floor_id_type identifier)
 {
-        //direction d;
-
-
-        // let's try to generate a house floor!
-
-        //d = generate_starting_room();
-
-        /*switch(d) {
-                case north:
-                        generate_room_above(*/
-
+        world->a = &world->area[(int)identifier];
+        set_id(identifier);
         bsp->splitRecursive(NULL, 5, 3, 3, 1.5f, 1.5f);
         bsp->traversePreOrder(new MyCallback(), NULL);
         this->frame();
+
+        //for(int i = 0; i < MAX_AREAS-1; ++i) {
+        if(identifier != floor_6) {
+                coord_t co = world->get_random_walkable_cell(identifier);
+                make_stairs_up(co);
+                world->area[(int)identifier+1].make_stairs_down(co);
+        }
+        //}
 
         this->build_tcodmap();
         lights_on = false;
@@ -353,6 +387,18 @@ void Area::make_door(int x, int y, bool open)
                 cell[x][y].set_door_open();
         else
                 cell[x][y].set_door_closed();
+}
+
+void Area::make_stairs_up(coord_t co)
+{
+        cell[co.x][co.y].set_stairs_up();
+        stairs_up = co;
+}
+
+void Area::make_stairs_down(coord_t co)
+{
+        cell[co.x][co.y].set_stairs_down();
+        stairs_down = co;
 }
 
 void Area::horizontal_line(int y)
@@ -395,6 +441,14 @@ bool Area::cell_is_visible(int x, int y)
         //return cell[x][y].is_visible();
 }
 
+const char *Area::get_area_name()
+{
+        if(id >= 0 && id <= MAX_AREAS)
+                return area_name[(int) id];
+        else
+                return NULL;
+}
+
 
 
 /*
@@ -404,7 +458,7 @@ World::World()
 {
         area = new Area[MAX_AREAS];
         current_area = 0;
-        a = &area[current_area];
+        //a = &area[current_area];
 }
 
 World::~World()
@@ -506,19 +560,19 @@ void World::update_fov()
         a->tcodmap->computeFov(co.x, co.y, player->getfovradius(), true, FOV_BASIC);
 }
 
-coord_t World::get_random_walkable_cell()
+coord_t World::get_random_walkable_cell(floor_id_type id)
 {
         coord_t co;
 
 again:
         co.x = ri(1, AREA_MAX_X-2);
         co.y = ri(1, AREA_MAX_Y-2);
-        while(!a->cell[co.x][co.y].is_walkable()) {
+        while(!area[id].cell[co.x][co.y].is_walkable()) {
                 co.x = ri(1, AREA_MAX_X-2);
                 co.y = ri(1, AREA_MAX_Y-2);
         }
 
-        if(a->cell[co.x][co.y].is_walkable())
+        if(area[id].cell[co.x][co.y].is_walkable())
                 return co;
         else
                 goto again;
@@ -550,6 +604,10 @@ const char *World::get_cell_type(int x, int y)
         }
 }
 
+cell_type World::get_cell_type(coord_t co)
+{
+        return world->area[current_area].cell[co.x][co.y].get_type();
+}
         
 
 

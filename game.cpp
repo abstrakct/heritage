@@ -54,8 +54,11 @@ void Game::end_turn()
 {
         if(!ri(0,100))
                 player->decstat(sSanity);
+
         for(int i=0;i<12;i++)
                 npc[i].ai();
+
+        player->look();
 }
 
 void Game::loop()
@@ -111,7 +114,7 @@ void Game::loop()
                                 break;
                         case cmd_close_door:
                                 world->close_nearest_door(player);
-                                
+                                break;
                         case cmd_wait:
                                 end_turn();
                                 break;
