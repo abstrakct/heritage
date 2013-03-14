@@ -18,18 +18,18 @@ extern Player *player;
 extern World *world;
 
 const char *area_name[] = {
+        "Cellar, level 6",
+        "Cellar, level 5",
+        "Cellar, level 4",
+        "Cellar, level 3",
+        "Cellar, level 2",
+        "Cellar, level 1",
         "1st floor",
         "2nd floor",
         "3rd floor",
         "4th floor",
         "5th floor",
         "6th floor",
-        "Cellar, level 1",
-        "Celler, level 2",
-        "Celler, level 3",
-        "Celler, level 4",
-        "Celler, level 5",
-        "Celler, level 6"
 };
 
 class MyCallback : public ITCODBspCallback
@@ -526,10 +526,10 @@ void World::draw_map()
 
         for(i = 1; i < AREA_MAX_X-1; ++i) {
                 for(j = 1; j < AREA_MAX_Y-1; ++j) {
-                        if(a->cell_is_visible(i, j)) {
+                        if(area[current_area].cell_is_visible(i, j)) {
                                 draw_cell(i, j);
                         } else {
-                                if(!a->lights_on) {
+                                if(!area[current_area].lights_on) {
                                         draw_cell(i, j, TCODColor::black, TCODColor::black); 
                                 }
                         }
