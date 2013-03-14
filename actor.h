@@ -27,15 +27,18 @@ enum enum_stat {
 };
 
 #define AI_RANDOM 1
+#define AI_PATH 2
 
 class Actor;
 
 typedef void (Actor::*aifn)();
 
+#include "world.h"
+
 class Actor {
         public:
                 Actor();
-                virtual ~Actor() { /*dbg("This is the end....");*/ };
+                virtual ~Actor() {  };
                 virtual bool is_player() = 0;
                 
                 bool is_alive();
@@ -52,7 +55,6 @@ class Actor {
                 void setchar(char newc);
                 void setname(const char *name);
                 void setcolors(TCODColor fg, TCODColor bg);
-                void setai(int which);
                 char *getname();
 
                 const char *get_sanitydesc();
@@ -63,7 +65,7 @@ class Actor {
                 void setfovradius(int amount) { fovradius = amount; };
                 int  getfovradius() { return fovradius; };
 
-                void ai();
+                area_id_type area_id;
 
                 // Movement
                 void move_left();
@@ -76,8 +78,6 @@ class Actor {
                 void move_se();
         protected:
         private:
-                void random_ai();
-
                 bool alive;
                 char c;
                 char name[64];
@@ -86,7 +86,6 @@ class Actor {
                 e_role role;
                 TCODColor fg, bg;
                 int fovradius;
-                int which_ai;
 
                 // Stats
                 int stat[6];

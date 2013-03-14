@@ -9,9 +9,9 @@ using namespace std;
 
 #include <iostream>
 
+#include "actor.h"
 #include "world.h"
 #include "common.h"
-#include "actor.h"
 #include "player.h"
 
 extern Player *player;
@@ -99,11 +99,11 @@ bool Cell::is_walkable()
         switch(this->type) {
                 case floor:
                 case door_open:
+                case door_closed:
                 case stairs_up:
                 case stairs_down:
                         return true;
                 case wall:
-                case door_closed:
                 case nothing:
                         return false;
                 default:
@@ -336,7 +336,7 @@ direction Area::generate_starting_room()
         return d;
 }
 
-void Area::generate(floor_id_type identifier)
+void Area::generate(area_id_type identifier)
 {
         world->a = &world->area[(int)identifier];
         set_id(identifier);
@@ -560,7 +560,7 @@ void World::update_fov()
         a->tcodmap->computeFov(co.x, co.y, player->getfovradius(), true, FOV_BASIC);
 }
 
-coord_t World::get_random_walkable_cell(floor_id_type id)
+coord_t World::get_random_walkable_cell(area_id_type id)
 {
         coord_t co;
 
@@ -581,6 +581,7 @@ again:
 void World::set_inhabitant(Actor *actor)
 {
         a->cell[actor->getx()][actor->gety()].inhabitant = actor;
+        actor->area_id = a->get_id();
 }
 
 void World::clear_inhabitant(coord_t co)

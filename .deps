@@ -100,7 +100,7 @@ player.o: player.cpp actor.h common.h display.h include/libtcod.hpp \
  include/noise.hpp include/fov.hpp include/path.hpp include/lex.hpp \
  include/parser.hpp include/tree.hpp include/bsp.hpp \
  include/heightmap.hpp include/zip.hpp include/namegen.hpp \
- include/txtfield.hpp debug.h player.h
+ include/txtfield.hpp debug.h player.h world.h
 sound.o: sound.cpp actor.h common.h display.h include/libtcod.hpp \
  include/libtcod.h include/list.h include/color.h include/console.h \
  include/console_types.h include/image.h include/mouse.h \

@@ -69,11 +69,13 @@ void clean_up()
 
 void init_npcs()
 {
+        npc = new NPC[12];
+
         for(int i=0; i < 12; ++i) {
                 npc[i].setxy(world->get_random_walkable_cell(floor_1));
                 npc[i].setprevxy(npc[i].getxy());
                 world->set_inhabitant(&npc[i]);
-                npc[i].setai(AI_RANDOM);
+                npc[i].setai(AI_PATH);
                 
                 //dbg("NPC %d set x,y = %d,%d", i, npc[i].getx(), npc[i].gety());
         }
@@ -111,7 +113,6 @@ int main(int argc, char **argv)
         //srand(seed);
 
         game = new Game;
-        npc = new NPC[12];
         audio = new SoundEngine;
         world = new World;
         player = new Player;
