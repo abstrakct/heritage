@@ -102,6 +102,11 @@ void init_areas()
 
 void init_player()
 {
+        for(int i=0;i<80;++i)
+                cout << " " << endl;
+
+        player->create();
+
         player->setxy(world->get_random_walkable_cell(floor_1));
         player->setprevxy(player->getxy());
         world->set_inhabitant(player);
@@ -121,6 +126,7 @@ int main(int argc, char **argv)
         init_player();
         init_npcs();
 
+        display = new Display;
         audio->initialize();
         audio->load_all_files();
         

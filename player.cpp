@@ -8,7 +8,11 @@
 using namespace std;
 
 #include <iostream>
+#include <sstream>
+#include <string>
 
+#include "libtcod.hpp"
+#include "game.h"
 #include "actor.h"
 #include "player.h"
 #include "common.h"
@@ -18,6 +22,7 @@ using namespace std;
 extern World   *world;
 extern Player  *player;
 extern Display *display;
+extern Game *game;
 
 Player::Player()
 {
@@ -26,9 +31,9 @@ Player::Player()
         //fear = 0;
         //health = 100;
 
-        setstat(sBody, 10);
+        /*setstat(sBody, 10);
         setstat(sMind, 10);
-        setstat(sSoul, 10);
+        setstat(sSoul, 10);*/
         setstat(sSanity, 100);
         setstat(sFear, 0);
         setstat(sHealth, 100);
@@ -58,6 +63,61 @@ void Player::look()
                 default:
                         break;
         }
+}
+
+void Player::create()
+{
+        char *name_c;
+        string input;
+        char c, d;
+        int mind, body, soul;
+
+        cout << "Welcome to " << game->name << " - v" << game->version << endl << endl;
+        cout << "First, you will need to create your player character using this very simple character generator." <<endl;
+        cout << "What's your name? ";
+        getline(cin, input);
+        name_c = new char[input.size()+1];
+        name_c[input.size()] = 0;
+        memcpy(name_c, input.c_str(), input.size());
+        setname(name_c);
+        cout << "Now we will randomly generate your stats:" << endl;
+again:
+        if(0) {            // do each one 3 times and take average result - makes it less likely to get stats in the upper or lower end of the scale. might be good for a "difficult mode"?
+                mind = 0;
+                mind += 10 + ri(-9, 10);
+                mind += 10 + ri(-9, 10);
+                mind += 10 + ri(-9, 10);
+                mind /= 3;
+                body = 0;
+                body += 10 + ri(-9, 10);
+                body += 10 + ri(-9, 10);
+                body += 10 + ri(-9, 10);
+                body /= 3;
+                soul = 0;
+                soul += 10 + ri(-9, 10);
+                soul += 10 + ri(-9, 10);
+                soul += 10 + ri(-9, 10);
+                soul /= 3;
+        } else {
+                mind = 10 + ri(-9, 10);
+                body = 10 + ri(-9, 10);
+                soul = 10 + ri(-9, 10);
+        }
+
+        cout << "Mind (mental strength):    " << mind << endl;
+        cout << "Body (physical strength):  " << body << endl;
+        cout << "Soul (spiritual strength): " << soul << endl;
+        cout << "Are you happy with these results (Y/n)? ";
+        c = getchar();
+        if(c == '\n')
+                goto finish;
+        d = getchar();
+        if(c == 'n')
+                goto again;
+finish:
+        setstat(sBody, body);
+        setstat(sMind, mind);
+        setstat(sSoul, soul);
 }
 
 // vim: fdm=syntax guifont=Terminus\ 8

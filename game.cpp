@@ -25,9 +25,10 @@ extern World *world;
 
 Game::Game()
 {
-        display = new Display;
-
         init_commands(&this->cmd);
+
+        name = "The Heritage of Efraim Edevane - Chapter I: [TBA]";
+        version = "0.5.1";
 
         running = true;
 }

@@ -20,6 +20,9 @@ class Game {
                 void endgame();
                 void intro();
                 void end_turn();
+                
+                const char *name;  // the name of the game!
+                const char *version;
         protected:
         private:
                 Command cmd;
