@@ -109,6 +109,7 @@ void Actor::setchar(char newc)
 void Actor::setname(const char *name)
 {
         strcpy(this->name, name);
+//        dbg("set name %s", name);
 }
 
 void Actor::setcolors(TCODColor fg, TCODColor bg)
@@ -154,6 +155,12 @@ void Actor::move_left()
                 display->touch();
                 return;
         }
+
+        if(this->enemy && (this->enemy->getx() == this->co.x-1 && this->enemy->gety() == this->co.y)) {
+                display->message("%s attacks %s!", this->name, this->enemy->getname());
+                return;
+        }
+
         if(world->is_walkable(this->co.x - 1, this->co.y)) {
                 prev = co;
                 co.x -= 1;
@@ -167,9 +174,15 @@ void Actor::move_right()
 {
         if(world->is_closed_door(this->co.x + 1, this->co.y)) {
                 world->open_door(this->co.x + 1, this->co.y);
-                return;
                 display->touch();
+                return;
         }
+
+        if(this->enemy && (this->enemy->getx() == this->co.x+1 && this->enemy->gety() == this->co.y)) {
+                display->message("%s attacks %s!", this->name, this->enemy->getname());
+                return;
+        }
+
         if(world->is_walkable(this->co.x + 1, this->co.y)) {
                 prev = co;
                 co.x += 1;
@@ -183,9 +196,15 @@ void Actor::move_down()
 {
         if(world->is_closed_door(this->co.x, this->co.y + 1)) {
                 world->open_door(this->co.x, this->co.y + 1);
-                return;
                 display->touch();
+                return;
         }
+
+        if(this->enemy && (this->enemy->getx() == this->co.x && this->enemy->gety() == this->co.y+1)) {
+                display->message("%s attacks %s!", this->name, this->enemy->getname());
+                return;
+        }
+
         if(world->is_walkable(this->co.x, this->co.y + 1)) {
                 prev = co;
                 co.y += 1;
@@ -202,6 +221,12 @@ void Actor::move_up()
                 display->touch();
                 return;
         }
+
+        if(this->enemy && (this->enemy->getx() == this->co.x && this->enemy->gety() == this->co.y-1)) {
+                display->message("%s attacks %s!", this->name, this->enemy->getname());
+                return;
+        }
+
         
         if(world->is_walkable(this->co.x, this->co.y - 1)) {
                 prev = co;
@@ -219,6 +244,12 @@ void Actor::move_nw()
                 display->touch();
                 return;
         }
+
+        if(this->enemy && (this->enemy->getx() == this->co.x-1 && this->enemy->gety() == this->co.y-1)) {
+                display->message("%s attacks %s!", this->name, this->enemy->getname());
+                return;
+        }
+
         if(world->is_walkable(this->co.x - 1, this->co.y - 1)) {
                 prev = co;
                 co.x -= 1;
@@ -236,6 +267,12 @@ void Actor::move_ne()
                 display->touch();
                 return;
         }
+
+        if(this->enemy && (this->enemy->getx() == this->co.x+1 && this->enemy->gety() == this->co.y-1)) {
+                display->message("%s attacks %s!", this->name, this->enemy->getname());
+                return;
+        }
+
         if(world->is_walkable(this->co.x + 1, this->co.y - 1)) {
                 prev = co;
                 co.x += 1;
@@ -253,6 +290,12 @@ void Actor::move_sw()
                 display->touch();
                 return;
         }
+
+        if(this->enemy && (this->enemy->getx() == this->co.x-1 && this->enemy->gety() == this->co.y+1)) {
+                display->message("%s attacks %s!", this->name, this->enemy->getname());
+                return;
+        }
+
         if(world->is_walkable(this->co.x - 1, this->co.y + 1)) {
                 prev = co;
                 co.x -= 1;
@@ -270,6 +313,12 @@ void Actor::move_se()
                 display->touch();
                 return;
         }
+
+        if(this->enemy && (this->enemy->getx() == this->co.x+1 && this->enemy->gety() == this->co.y+1)) {
+                display->message("%s attacks %s!", this->name, this->enemy->getname());
+                return;
+        }
+
         if(world->is_walkable(this->co.x + 1, this->co.y + 1)) {
                 prev = co;
                 co.x += 1;

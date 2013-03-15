@@ -93,11 +93,11 @@ Cell::~Cell()
 
 bool Cell::is_walkable()
 {
-        if(this->inhabitant) {
+        /*if(this->inhabitant) {
                 if(this->inhabitant != player)
                         display->message("%s is in your way!", this->inhabitant->getname());
                 return false;
-        }
+        }*/
 
         switch(this->type) {
                 case floor:
@@ -194,10 +194,10 @@ void Cell::set_visibility(bool b)
 void Cell::draw(int x, int y)
 {
         if(inhabitant) {
-                //dbg("drawing cell %d,%d - with inhabitant.", x, y);
                 inhabitant->draw();
+                if(!inhabitant->is_player())
+                        display->print_npc_name(inhabitant->getx(), inhabitant->gety(), inhabitant->getname());
         } else {
-                //dbg("drawing cell %d,%d - without inhabitant.", x, y);
                 display->putmap(x, y, this->c, this->fg, this->bg);
         }
         display->touch();
@@ -206,8 +206,9 @@ void Cell::draw(int x, int y)
 void Cell::draw(int x, int y, TCODColor fore, TCODColor back)
 {
         if(inhabitant) {
-                //dbg("drawing cell %d,%d - with inhabitant.", x, y);
                 inhabitant->draw(fore, back);
+                if(!inhabitant->is_player())
+                        display->print_npc_name(inhabitant->getx(), inhabitant->gety(), inhabitant->getname(), fore, back);
         } else {
                 display->putmap(x, y, this->c, fore, back);
         }

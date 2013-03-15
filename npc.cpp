@@ -13,11 +13,14 @@ using namespace std;
 #include "display.h"
 #include "actor.h"
 #include "npc.h"
+#include "player.h"
 #include "common.h"
 #include "world.h"
 
 extern Display *display;
 extern World *world;
+extern NPC *npc;
+extern Player *player;
 
 const char *malegivenname[] = {
 "Aaron", "Abdul", "Abe", "Abel", "Abraham", "Abram", "Adalberto", "Adam", "Adan", "Adolfo", "Adolph", "Adrian", "Agustin",
@@ -484,6 +487,7 @@ NPC::NPC()
         setai(AI_RANDOM);
         path = new TCODPath(world->a->tcodmap, 1.0f);
         has_goal = false;
+        enemy = NULL;
         setgender(ri(0, 1));
         generate_name();
 }
@@ -554,48 +558,93 @@ void NPC::set_random_goal()
 {
         int type;
 
-        type = ri(1,4);
-        if(type == 1) {    // goal is random location on the level.
+        type = ri(1,100);
+        if(type <= 25) {    // goal is random location on the level.
                 set_goal(world->get_random_walkable_cell(this->area_id));
-        } else if(type == 2) {
+        }
+
+        if(type > 25 && type <= 50) {
+                clear_goal();
+        }
+        
+        if(type > 50 && type <= 70) {
                 set_goal(world->a->stairs_up);
-        } else if(type == 3) {
+        }
+        
+        if(type > 70 && type <= 90) {
                 set_goal(world->a->stairs_down);
-        } else if(type == 4) {
-                set_goal(world->get_random_walkable_cell(this->area_id));
+        }
+
+        if(type > 90 && type <= 96) {
+                if(enemy) {
+                        display->message("%s has decided to not kill %s!", this->getname(), this->enemy->getname());
+                        enemy = NULL;
+                }
+                clear_goal();
+        }
+
+        if(type > 96) {
+                int i = ri(0,12);
+                if(i == 12) {
+                        enemy = player;
+                        set_goal(player->getxy());
+                        display->message("%s has decided to kill YOU!!!!", this->getname());
+                } else {
+                        while(!npc[i].is_alive())
+                                i = ri(0,11);
+                        set_goal(npc[i].getxy());
+                        enemy = &npc[i];
+                        display->message("%s has decided to kill %s!", this->getname(), npc[i].getname());
+                }
         }
 }
 
+
+
+/*
+ * This is actually the standard AI, at least for NPC characters
+ */
 void NPC::path_ai()
 {
         if(!has_goal) {
                 set_random_goal();
         } else {
+                int chance = 50;
+                if(enemy) {
+                        set_goal(enemy->getxy());
+                        chance = 75;
+                }
                 // Let's walk the path!
+                int d;
                 int x, y;
-                coord_t c = this->getxy();
-                path->compute(c.x, c.y, goal.x, goal.y);
-                if(path->walk(&x, &y, true)) {
-                        // success
-                        if(x > c.x && y == c.y)
-                                move_right();
-                        if(x < c.x && y == c.y)
-                                move_left();
-                        if(x == c.x && y > c.y)
-                                move_down();
-                        if(x == c.x && y < c.y)
-                                move_up();
-                        if(x > c.x && y > c.y)
-                                move_se();
-                        if(x < c.x && y > c.y)
-                                move_sw();
-                        if(x < c.x && y < c.y)
-                                move_nw();
-                        if(x > c.x && y < c.y)
-                                move_ne();
-                } else {
-                        // walking the path failed - set new goal.
-                        has_goal = false;
+
+                d = ri(1, 100);
+
+                if(d < chance) {                                          // walk, or hang around?
+                        coord_t c = this->getxy();
+                        path->compute(c.x, c.y, goal.x, goal.y);
+                        if(path->walk(&x, &y, true)) {
+                                // success
+                                if(x > c.x && y == c.y)
+                                        move_right();
+                                if(x < c.x && y == c.y)
+                                        move_left();
+                                if(x == c.x && y > c.y)
+                                        move_down();
+                                if(x == c.x && y < c.y)
+                                        move_up();
+                                if(x > c.x && y > c.y)
+                                        move_se();
+                                if(x < c.x && y > c.y)
+                                        move_sw();
+                                if(x < c.x && y < c.y)
+                                        move_nw();
+                                if(x > c.x && y < c.y)
+                                        move_ne();
+                        } else {
+                                // walking the path failed - set new goal.
+                                has_goal = false;
+                        }
                 }
         }
 }

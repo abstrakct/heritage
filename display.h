@@ -8,8 +8,8 @@
 #ifndef _DISPLAY_H
 #define _DISPLAY_H
 
-#include "libtcod.hpp"
 #include <vector>
+#include "libtcod.hpp"
 
 #define CHARS_X 128
 #define CHARS_Y 75
@@ -55,6 +55,8 @@ class Display {
                 void touch() { touched = true; };
                 TCOD_key_t get_key(bool flush);
                 TCODColor get_random_color();
+                void print_npc_name(int x, int y, char *name);
+                void print_npc_name(int x, int y, char *name, TCODColor fg, TCODColor bg);
         protected:
         private:
                 bool touched;

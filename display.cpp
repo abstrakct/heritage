@@ -136,6 +136,11 @@ void Display::draw_left_window()
         console->setDefaultForeground(TCODColor::amber);
         console->print(x, y, "%d", player->getstat(sFear)); /*console->print(x+5, y, "(Fearless)");*/ y++;
         console->setDefaultForeground(TCODColor::white);
+
+        y++;
+        /*console->setDefaultForeground(TCODColor::amber);
+        console->print(x, y, "Visible entities and items:"); y++;
+        console->setDefaultForeground(TCODColor::white);*/
 }
 
 void Display::draw_game_screen()
@@ -181,6 +186,16 @@ void Display::putmap(int x, int y, int c, TCOD_bkgnd_flag_t flag)
 void Display::putmap(int x, int y, int c, TCODColor &fg, TCODColor &bg)
 {
         console->putCharEx(MAP_X + x, MAP_Y + y, c, fg, bg);
+}
+
+void Display::print_npc_name(int x, int y, char *name)
+{
+                //console->printEx(LEFT_X + 1, LEFT_Y + 20, TCOD_BKGND_DEFAULT, TCOD_LEFT, name);
+}
+
+void Display::print_npc_name(int x, int y, char *name, TCODColor fg, TCODColor bg)
+{
+                //console->printEx(LEFT_X + 1, LEFT_Y + 20, TCOD_BKGND_DEFAULT, TCOD_LEFT, name);
 }
 
 void Display::print_messages()

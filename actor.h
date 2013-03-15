@@ -46,11 +46,11 @@ class Actor {
                 void kill();
                 void draw();
                 void draw(TCODColor fg, TCODColor bg);
-                coord_t getxy();
                 void setxy(int x, int y);
                 void setxy(coord_t newco);
                 int  getx();
                 int  gety();
+                coord_t getxy();
                 void setprevxy(int x, int y);
                 void setprevxy(coord_t newco);
                 void setchar(char newc);
@@ -68,6 +68,7 @@ class Actor {
                 int  getfovradius() { return fovradius; };
 
                 area_id_type area_id;
+                Actor *enemy;              // public enemy haha!
 
                 // Movement
                 void move_left();
