@@ -19,6 +19,7 @@ class NPC: public Actor {
                 void setai(int which);
                 void ai();
                 void set_goal(coord_t c) { goal = c; has_goal = true; };
+                void generate_name();
 
                 bool has_goal;
                 int which_ai;

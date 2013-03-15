@@ -50,7 +50,7 @@ class Display {
                 void put(int x, int y, int c, TCOD_bkgnd_flag_t flag = TCOD_BKGND_DEFAULT);
                 void putmap(int x, int y, int c, TCOD_bkgnd_flag_t flag = TCOD_BKGND_DEFAULT);
                 void putmap(int x, int y, int c, TCODColor &fg, TCODColor &bg);
-                void message(const char *message);
+                void message(const char *message, ...);
                 void print_messages();
                 void touch() { touched = true; };
                 TCOD_key_t get_key(bool flush);

@@ -42,6 +42,7 @@ class Actor {
                 virtual bool is_player() = 0;
                 
                 bool is_alive();
+                bool is_male();
                 void kill();
                 void draw();
                 void draw(TCODColor fg, TCODColor bg);
@@ -55,6 +56,7 @@ class Actor {
                 void setchar(char newc);
                 void setname(const char *name);
                 void setcolors(TCODColor fg, TCODColor bg);
+                void setgender(int i) { male = i; };
                 char *getname();
 
                 const char *get_sanitydesc();
@@ -79,6 +81,7 @@ class Actor {
         protected:
         private:
                 bool alive;
+                bool male;
                 char c;
                 char name[64];
                 coord_t co;

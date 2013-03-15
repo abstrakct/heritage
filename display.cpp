@@ -9,6 +9,8 @@ using namespace std;
 
 #include <iostream>
 #include <vector>
+#include <cstdarg>
+#include <cstdio>
 
 #include "libtcod.hpp"
 #include "debug.h"
@@ -132,7 +134,7 @@ void Display::draw_left_window()
         console->setDefaultForeground(TCODColor::white);
         console->print(x, y, "Fear:"); y++;
         console->setDefaultForeground(TCODColor::amber);
-        console->print(x, y, "%d", player->getstat(sFear)); console->print(x+5, y, "(Fearless)"); y++;
+        console->print(x, y, "%d", player->getstat(sFear)); /*console->print(x+5, y, "(Fearless)");*/ y++;
         console->setDefaultForeground(TCODColor::white);
 }
 
@@ -197,12 +199,17 @@ void Display::print_messages()
         }
 }
 
-void Display::message(const char *message)
+void Display::message(const char *message, ...)
 {
+        va_list argp;
+        char s[1000];
         message_t item;
 
-        item.num = 0;
-        strcpy(item.message, message);
+        va_start(argp, message);
+        vsprintf(s, message, argp);
+        va_end(argp);
+
+        strcpy(item.message, s);
 
         message_list.push_back(item);
 

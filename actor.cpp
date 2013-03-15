@@ -55,6 +55,14 @@ bool Actor::is_alive()
                 return false;
 }
 
+bool Actor::is_male()
+{ 
+        if(male)
+                return true;
+        else
+                return false;
+};
+
 void Actor::kill()
 {
         alive = false;
@@ -271,7 +279,6 @@ void Actor::move_se()
                 display->touch();
         }
 }
-
 
 const char *Actor::get_sanitydesc()
 {

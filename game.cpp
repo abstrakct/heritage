@@ -28,7 +28,7 @@ Game::Game()
         init_commands(&this->cmd);
 
         name = "The Heritage of Efraim Edevane - Chapter I: [TBA]";
-        version = "0.5.1";
+        version = "0.5.2";
 
         running = true;
 }
@@ -53,9 +53,6 @@ void Game::intro()
 
 void Game::end_turn()
 {
-        if(!ri(0,100))
-                player->decstat(sSanity);
-
         for(int i=0;i<12;i++)
                 npc[i].ai();
 
