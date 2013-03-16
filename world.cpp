@@ -283,7 +283,7 @@ void Cell::activate()
                                                 if(x <= player->getstat(sMind)) {
                                                         display->message("As you flip through the book you come to a sudden realization about the soul and your own spirituality.");
                                                         display->message("Congratulations! You can now use the powers of your soul to help you make it through the night!");
-                                                        // TODO: add ability here.
+                                                        // TODO: add ability here!
                                                 } else {
                                                         display->message("You flip through the book, quickly concluding that it's just new age mumbo jumbo.");
                                                 }
