@@ -26,6 +26,11 @@ NPC *npc;
 World *world;
 SoundEngine *audio;
 
+signed int ability_modifier(int ab)
+{
+        return ((ab / 2) - 5);
+}
+
 bool fiftyfifty()
 {
         int i;

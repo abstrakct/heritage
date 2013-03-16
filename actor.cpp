@@ -7,11 +7,13 @@
 using namespace std;
 #include "common.h"
 #include "actor.h"
+#include "player.h"
 #include "display.h"
 #include "world.h"
 
 extern World *world;
 extern Display *display;
+extern Player *player;
 
 const char *sanitydesc[] = {
         "Member of WBC",              //  0 - 3
@@ -65,7 +67,14 @@ bool Actor::is_male()
 
 void Actor::kill()
 {
-        alive = false;
+        //display->message("%s dies at %d,%d!", name, this->co.x, this->co.y);
+        if(!this->is_player()) {
+                display->message("You hear a horrible, chilling scream!");
+                this->alive = false;
+                world->a->cell[this->co.x][this->co.y].set_corpse(this);
+        } else {
+                player->die();
+        }
 }
 
 void Actor::setxy(int x, int y)
@@ -148,6 +157,12 @@ void Actor::draw(TCODColor fg, TCODColor bg)
         }
 }
 
+void Actor::drawcorpse()
+{
+        display->putmap(this->co.x, this->co.y, 0xB6);
+        display->touch();
+}
+
 void Actor::move_left()
 {
         if(world->is_closed_door(this->co.x - 1, this->co.y)) {
@@ -157,7 +172,7 @@ void Actor::move_left()
         }
 
         if(this->enemy && (this->enemy->getx() == this->co.x-1 && this->enemy->gety() == this->co.y)) {
-                display->message("%s attacks %s!", this->name, this->enemy->getname());
+                attack(enemy);
                 return;
         }
 
@@ -179,7 +194,7 @@ void Actor::move_right()
         }
 
         if(this->enemy && (this->enemy->getx() == this->co.x+1 && this->enemy->gety() == this->co.y)) {
-                display->message("%s attacks %s!", this->name, this->enemy->getname());
+                attack(enemy);
                 return;
         }
 
@@ -201,7 +216,7 @@ void Actor::move_down()
         }
 
         if(this->enemy && (this->enemy->getx() == this->co.x && this->enemy->gety() == this->co.y+1)) {
-                display->message("%s attacks %s!", this->name, this->enemy->getname());
+                attack(enemy);
                 return;
         }
 
@@ -223,7 +238,7 @@ void Actor::move_up()
         }
 
         if(this->enemy && (this->enemy->getx() == this->co.x && this->enemy->gety() == this->co.y-1)) {
-                display->message("%s attacks %s!", this->name, this->enemy->getname());
+                attack(enemy);
                 return;
         }
 
@@ -246,7 +261,7 @@ void Actor::move_nw()
         }
 
         if(this->enemy && (this->enemy->getx() == this->co.x-1 && this->enemy->gety() == this->co.y-1)) {
-                display->message("%s attacks %s!", this->name, this->enemy->getname());
+                attack(enemy);
                 return;
         }
 
@@ -269,7 +284,7 @@ void Actor::move_ne()
         }
 
         if(this->enemy && (this->enemy->getx() == this->co.x+1 && this->enemy->gety() == this->co.y-1)) {
-                display->message("%s attacks %s!", this->name, this->enemy->getname());
+                attack(enemy);
                 return;
         }
 
@@ -292,7 +307,7 @@ void Actor::move_sw()
         }
 
         if(this->enemy && (this->enemy->getx() == this->co.x-1 && this->enemy->gety() == this->co.y+1)) {
-                display->message("%s attacks %s!", this->name, this->enemy->getname());
+                attack(enemy);
                 return;
         }
 
@@ -315,7 +330,7 @@ void Actor::move_se()
         }
 
         if(this->enemy && (this->enemy->getx() == this->co.x+1 && this->enemy->gety() == this->co.y+1)) {
-                display->message("%s attacks %s!", this->name, this->enemy->getname());
+                attack(enemy);
                 return;
         }
 
@@ -392,5 +407,94 @@ void Actor::decstat(enum_stat which, int amount)
 {
         this->stat[which] -= amount;
 }
+
+void Actor::incstat(enum_stat which, int amount)
+{
+        this->stat[which] += amount;
+}
+
+void Actor::incfear()
+{
+        // Increase fear, if appropriate.
+
+        if(fiftyfifty()) {
+                int amount = 1;
+
+                amount -= ability_modifier(getstat(sMind));
+                amount += getstat(sSanity) / 20;
+                if(amount <= 0)
+                        amount = 1;
+                incstat(sFear, amount);
+                display->message("You feel %s.", fiftyfifty() ? "scared" : "afraid");
+        }
+
+        if(getstat(sFear) > 100 && this->is_player()) {
+                display->message("You have been scared to death!!!");
+                player->kill();
+        }
+}
+
+void Actor::decfear()
+{
+        // Decrease fear, if appropriate.
+
+        if(getstat(sFear) > 0) {
+                if(fiftyfifty()) {
+                        int amount = 1;
+
+                        amount += ability_modifier(getstat(sMind));
+                        amount -= getstat(sSanity) / 20;
+                        if(amount <= 0)
+                                amount = 1;
+                        decstat(sFear, amount);
+                        if(ri(1,10) == 10)
+                                display->message("You feel %s.", fiftyfifty() ? "a little bit more relaxed" : "a little less afraid");
+                }
+        }
+}
+
+void Actor::attack_physical(Actor *target)
+{
+        int tohit = target->getstat(sBody);
+        int d = dice(1, 20, 0);
+        if(d >= tohit) {
+                int damage = dice(1, this->getstat(sBody), ability_modifier(this->getstat(sBody)));
+                if(damage <= 0)
+                        damage = 1;
+                if(!world->a->tcodmap->isInFov(target->getx(), target->gety())) {
+                        int x = ri(1,10);
+                        switch(x) {
+                                case 1: display->message("You hear a scream somewhere in the house."); player->incfear(); break;
+                                case 2: display->message("You hear the sounds of fighting somewhere in the house."); player->incfear(); break;
+                                case 3: display->message("You hear someone shout."); player->incfear(); break;
+                                case 4: display->message("You hear someone yell."); player->incfear(); break;
+                                case 5: display->message("You hear the sound of something breaking."); player->incfear(); break;
+                                default: break;
+                        }
+                }
+                //display->message("%s HIT %s! %d damage.", this->name, target->getname(), damage);
+                target->decstat(sHealth, damage);
+                if(target->getstat(sHealth) <= 0) {
+                        target->kill();
+                        this->enemy = NULL;
+
+                }
+        }
+}
+
+void Actor::attack(Actor *target, attack_type type)
+{
+        //display->message("%s attacks %s!", name, target->getname());
+        target->enemy = this;
+        switch(type) {
+                case body:
+                        attack_physical(target);
+                        break;
+                default:
+                        break;
+        }
+}
+
+
 
 // vim: fdm=syntax guifont=Terminus\ 8

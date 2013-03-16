@@ -21,6 +21,8 @@ class Player: public Actor {
                 bool is_player() { return true; }
                 void look();
                 void create();      // generate your player character.
+                void endturn();
+                void die();
         private:
                 // Stats
                 //int body;         // 1-20, how physically strong you are

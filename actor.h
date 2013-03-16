@@ -17,6 +17,13 @@ enum e_role {
         role_enemy,
 };
 
+enum attack_type {
+        body = 0,
+        mind,
+        soul,
+        other
+};
+
 enum enum_stat {
         sMind = 0,
         sBody,
@@ -46,6 +53,7 @@ class Actor {
                 void kill();
                 void draw();
                 void draw(TCODColor fg, TCODColor bg);
+                void drawcorpse();
                 void setxy(int x, int y);
                 void setxy(coord_t newco);
                 int  getx();
@@ -61,11 +69,17 @@ class Actor {
 
                 const char *get_sanitydesc();
                 void decstat(enum_stat which, int amount = 1);
+                void incstat(enum_stat which, int amount = 1);
                 void setstat(enum_stat which, int what);
                 int  getstat(enum_stat which);
+                void incfear();
+                void decfear();
 
                 void setfovradius(int amount) { fovradius = amount; };
                 int  getfovradius() { return fovradius; };
+
+                void attack(Actor *target, attack_type type = body);
+                void attack_physical(Actor *target);
 
                 area_id_type area_id;
                 Actor *enemy;              // public enemy haha!

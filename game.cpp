@@ -53,9 +53,12 @@ void Game::intro()
 
 void Game::end_turn()
 {
-        for(int i=0;i<12;i++)
-                npc[i].ai();
+        for(int i=0;i<12;i++) {
+                if(npc[i].is_alive())
+                        npc[i].ai();
+        }
 
+        player->endturn();
         player->look();
 }
 
@@ -134,6 +137,11 @@ void Game::loop()
                                 break;
                 }
         }
+
+
+        display->message("You have died...");
+        display->update();
+        display->get_key(true);
 }
 
 // vim: fdm=syntax guifont=Terminus\ 8

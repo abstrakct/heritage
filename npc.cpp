@@ -479,15 +479,22 @@ NPC::NPC()
         TCODColor fg, bg;
 
         setstat(sHealth, 100);
+        setstat(sSanity, 100);
+        setstat(sFear, 0);
+        setstat(sMind, ri(1,20));
+        setstat(sBody, ri(1,20));
+        setstat(sSoul, ri(1,20));
         setchar('@');
 
         fg = display->get_random_color();
         bg = TCODColor::black; // display->get_random_color();
         setcolors(fg, bg);
+
         setai(AI_RANDOM);
         path = new TCODPath(world->a->tcodmap, 1.0f);
         has_goal = false;
         enemy = NULL;
+
         setgender(ri(0, 1));
         generate_name();
 }
@@ -575,26 +582,26 @@ void NPC::set_random_goal()
                 set_goal(world->a->stairs_down);
         }
 
-        if(type > 90 && type <= 96) {
+        if(type > 90 && type <= 97) {
                 if(enemy) {
-                        display->message("%s has decided to not kill %s!", this->getname(), this->enemy->getname());
+                        //display->message("%s has decided to not kill %s!", this->getname(), this->enemy->getname());
                         enemy = NULL;
                 }
                 clear_goal();
         }
 
-        if(type > 96) {
+        if(type > 97) {
                 int i = ri(0,12);
                 if(i == 12) {
                         enemy = player;
                         set_goal(player->getxy());
-                        display->message("%s has decided to kill YOU!!!!", this->getname());
+                        //display->message("%s has decided to kill YOU!!!!", this->getname());
                 } else {
                         while(!npc[i].is_alive())
                                 i = ri(0,11);
                         set_goal(npc[i].getxy());
                         enemy = &npc[i];
-                        display->message("%s has decided to kill %s!", this->getname(), npc[i].getname());
+                        //display->message("%s has decided to kill %s!", this->getname(), npc[i].getname());
                 }
         }
 }

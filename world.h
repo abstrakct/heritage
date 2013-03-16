@@ -32,7 +32,6 @@ enum area_id_type {
         floor_6,
 };
 
-
 enum cell_type {
         nothing = 0,
         wall,
@@ -41,8 +40,8 @@ enum cell_type {
         door_closed,
         stairs_up,
         stairs_down,
+        cell_corpse,
 };
-
 
 class Cell {
         private:
@@ -57,9 +56,11 @@ class Cell {
                 ~Cell();
                 void set_wall();
                 void set_floor();
-                void set_color(TCODColor fg, TCODColor bg);
                 void set_door_closed();
                 void set_door_open();
+                void set_corpse(Actor *who);
+
+                void set_color(TCODColor fg, TCODColor bg);
                 void set_visibility(bool b);
                 void set_stairs_up();
                 void set_stairs_down();
@@ -73,7 +74,9 @@ class Cell {
                 bool is_visible();
                 bool is_transparent();
                 cell_type get_type();
-                Actor *inhabitant;
+
+                Actor       *inhabitant;
+                Actor       *corpse;
 };
 
 class Area {

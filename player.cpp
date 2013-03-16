@@ -39,7 +39,7 @@ Player::Player()
         setstat(sHealth, 100);
         setchar('@');
         setname("Boris Hoffman");
-        setcolors(TCODColor::darkAzure, TCODColor::black);
+        setcolors(TCODColor::darkBlue, TCODColor::white);
         setfovradius(9);
 }
 
@@ -50,19 +50,30 @@ Player::~Player()
 
 void Player::look()
 {
-        cell_type cell;
+        cell_type type;
 
-        cell = world->get_cell_type(player->getxy());
-        switch(cell) {
+        type = world->get_cell_type(player->getxy());
+        switch(type) {
                 case stairs_up:
                         display->message("There is a staircase leading up here.");
                         break;
                 case stairs_down:
                         display->message("There is a staircase leading down here.");
                         break;
+                case cell_corpse:
+                        display->message("You see here the corpse of %s. The sight fills you with horror.", world->a->cell[player->getx()][player->gety()].corpse->getname());
+                        incfear();
+                        break;
                 default:
                         break;
         }
+}
+
+void Player::die()
+{
+        display->message("You have died...");
+        display->update();
+        game->endgame();
 }
 
 void Player::create()
@@ -119,5 +130,12 @@ finish:
         setstat(sMind, mind);
         setstat(sSoul, soul);
 }
+
+void Player::endturn()
+{
+        decfear();
+}
+
+
 
 // vim: fdm=syntax guifont=Terminus\ 8

@@ -105,6 +105,7 @@ bool Cell::is_walkable()
                 case door_closed:
                 case stairs_up:
                 case stairs_down:
+                case cell_corpse:
                         return true;
                 case wall:
                 case nothing:
@@ -123,6 +124,7 @@ bool Cell::is_transparent()
                 case door_open:
                 case stairs_up:
                 case stairs_down:
+                case cell_corpse:
                         return true;
                 case wall:
                 case door_closed:
@@ -186,6 +188,15 @@ void Cell::set_door_open()
         c = '\\';
 }
 
+void Cell::set_corpse(Actor *who)
+{
+        this->type = cell_corpse;
+        this->fg = TCODColor::black;
+        this->bg = TCODColor::red;
+        c = 0x0F;
+        corpse = who;
+}
+
 void Cell::set_visibility(bool b)
 {
         this->visible = b;
@@ -193,10 +204,8 @@ void Cell::set_visibility(bool b)
 
 void Cell::draw(int x, int y)
 {
-        if(inhabitant) {
+        if(inhabitant && inhabitant->is_alive()) {
                 inhabitant->draw();
-                if(!inhabitant->is_player())
-                        display->print_npc_name(inhabitant->getx(), inhabitant->gety(), inhabitant->getname());
         } else {
                 display->putmap(x, y, this->c, this->fg, this->bg);
         }
@@ -205,10 +214,8 @@ void Cell::draw(int x, int y)
 
 void Cell::draw(int x, int y, TCODColor fore, TCODColor back)
 {
-        if(inhabitant) {
+        if(inhabitant && inhabitant->is_alive()) {
                 inhabitant->draw(fore, back);
-                if(!inhabitant->is_player())
-                        display->print_npc_name(inhabitant->getx(), inhabitant->gety(), inhabitant->getname(), fore, back);
         } else {
                 display->putmap(x, y, this->c, fore, back);
         }

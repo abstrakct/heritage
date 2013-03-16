@@ -37,6 +37,7 @@ enum direction {
 bool fiftyfifty();
 int dice(int num, int sides, signed int modifier);
 int ri(int a, int b);
+signed int ability_modifier(int ab);
 
 #endif
 
