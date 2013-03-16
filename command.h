@@ -28,6 +28,7 @@ enum command_type {
         cmd_wait,
         cmd_close_door,
         cmd_stairs,
+        cmd_activate,
 
         // debug / developement commands
         cmd_all_visible,

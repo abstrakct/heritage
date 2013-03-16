@@ -63,6 +63,8 @@ void Actor::kill()
         //display->message("%s dies at %d,%d!", name, this->co.x, this->co.y);
         if(!this->is_player()) {
                 display->message("You hear a horrible, chilling scream!");
+                player->incfear();
+                player->incfear();
                 this->alive = false;
                 world->a->cell[this->co.x][this->co.y].set_corpse(this);
         } else {

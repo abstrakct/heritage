@@ -41,6 +41,11 @@ enum cell_type {
         stairs_up,
         stairs_down,
         cell_corpse,
+        cell_bookcase,
+        cell_table,
+        cell_chair,
+        cell_coffin,
+        cell_candle,
 };
 
 class Cell {
@@ -48,6 +53,7 @@ class Cell {
                 cell_type    type;
                 int          flags;
                 bool         visible;
+                bool         activated;
         protected:
         public:
                 Cell();
@@ -56,6 +62,9 @@ class Cell {
                 void set_floor();
                 void set_door_closed();
                 void set_door_open();
+                void set_bookcase();
+                void set_chair();
+                void set_table();
                 void set_corpse(Actor *who);
 
                 void set_color(TCODColor fg, TCODColor bg);
@@ -72,6 +81,8 @@ class Cell {
                 bool is_visible();
                 bool is_transparent();
                 cell_type get_type();
+
+                void activate();
 
                 Actor       *inhabitant;
                 Actor       *corpse;
@@ -90,6 +101,7 @@ class Area {
                 ~Area();
                 void generate(area_id_type identifier);
                 direction generate_starting_room();
+                void place_furniture(area_id_type identifier);
                 void horizontal_line(int y);
                 void horizontal_line(int x, int y, int x2);
                 void vertical_line(int x);

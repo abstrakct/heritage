@@ -66,6 +66,7 @@ Cell::Cell()
 {
         flags = 0;
         visible = false;
+        activated = false;
         this->set_floor();
         inhabitant = NULL;
 }
@@ -89,6 +90,11 @@ bool Cell::is_walkable()
                 case stairs_up:
                 case stairs_down:
                 case cell_corpse:
+                case cell_bookcase:
+                case cell_table:
+                case cell_chair:
+                case cell_coffin:
+                case cell_candle:
                         return true;
                 case wall:
                 case nothing:
@@ -108,14 +114,19 @@ bool Cell::is_transparent()
                 case stairs_up:
                 case stairs_down:
                 case cell_corpse:
+                case cell_bookcase:
+                case cell_table:
+                case cell_chair:
+                case cell_coffin:
+                case cell_candle:
                         return true;
                 case wall:
                 case door_closed:
                 case nothing:
                         return false;
+                default:
+                        return true;
         }
-
-        return false;
 }
 
 bool Cell::is_visible()
@@ -180,6 +191,30 @@ void Cell::set_corpse(Actor *who)
         corpse = who;
 }
 
+void Cell::set_bookcase()
+{
+        this->type = cell_bookcase;
+        this->fg = TCODColor::lightestAzure;
+        this->bg = TCODColor::black;
+        c = 'H';
+}
+
+void Cell::set_chair()
+{
+        this->type = cell_chair;
+        this->fg = TCODColor::azure;
+        this->bg = TCODColor::black;
+        c = 'h';
+}
+
+void Cell::set_table()
+{
+        this->type = cell_table;
+        this->fg = TCODColor::lightFlame;
+        this->bg = TCODColor::black;
+        c = 'T';
+}
+
 void Cell::set_visibility(bool b)
 {
         this->visible = b;
@@ -224,6 +259,52 @@ cell_type Cell::get_type()
         return this->type;
 }
 
+void Cell::activate()
+{
+        int i, book, x;
+        switch(this->type) {
+                case cell_bookcase:
+                        if(activated) {
+                                display->message("You find nothing more of interest in this bookcase.");
+                                break;
+                        }
+
+                        display->message("You spend a little while browsing the books in this bookcase, looking for something interesting.");
+                        i = dice(1, 20, 0);
+                        if(i <= 8) {
+                                book = ri(1, 5);
+                                switch(book) {
+                                        case 1:
+                                        case 2:
+                                        case 3:
+                                        case 4:
+                                                display->message("You find a small book called Mysteries of the Soul, written by Marvin E. A. Edeef.");
+                                                x = dice(1, 20, 0);
+                                                if(x <= player->getstat(sMind)) {
+                                                        display->message("As you flip through the book you come to a sudden realization about the soul and your own spirituality.");
+                                                        display->message("Congratulations! You can now use the powers of your soul to help you make it through the night!");
+                                                        // TODO: add ability here.
+                                                } else {
+                                                        display->message("You flip through the book, quickly concluding that it's just new age mumbo jumbo.");
+                                                }
+                                                display->message(" ");
+                                                break;
+                                        default:
+                                                display->message("The only book which looks interesting is unfortunately written in some language you don't even recognize.");
+                                                display->message(" ");
+                                                break;
+                                }
+                        } else {
+                                display->message("After a while, you conclude that there's nothing here that interests you.");
+                                display->message(" ");
+                        }
+                        activated = true;
+                        break;
+                default:
+                        break;
+        }
+        display->touch();
+}
 
 
 /*
@@ -358,7 +439,19 @@ void Area::generate(area_id_type identifier)
         this->build_tcodmap();
         lights_on = false;
 
+        place_furniture(identifier);
         delete callback;
+}
+
+void Area::place_furniture(area_id_type identifier)
+{
+        // bookcases
+        for(int i = 0; i < 10; ++i) {
+                if(fiftyfifty()) {
+                        coord_t c = world->get_random_walkable_cell(identifier);
+                        this->cell[c.x][c.y].set_bookcase();
+                }
+        }
 }
 
 void Area::frame()

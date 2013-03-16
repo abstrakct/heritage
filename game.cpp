@@ -120,6 +120,9 @@ void Game::loop()
                                 player->use_stairs();
                                 end_turn();
                                 break;
+                        case cmd_activate:
+                                player->area->cell[player->getx()][player->gety()].activate();
+                                break;
                         case cmd_wait:
                                 end_turn();
                                 break;

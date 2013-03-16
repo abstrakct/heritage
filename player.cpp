@@ -38,9 +38,8 @@ Player::Player()
         setstat(sFear, 0);
         setstat(sHealth, 100);
         setchar('@');
-        setname("Boris Hoffman");
-        setcolors(TCODColor::darkBlue, TCODColor::white);
-        setfovradius(9);
+        setcolors(TCODColor::black, TCODColor::red);
+        setfovradius(17);
 }
 
 Player::~Player()
@@ -64,9 +63,14 @@ void Player::look()
                         display->message("You see here the corpse of %s. The sight fills you with horror.", world->a->cell[player->getx()][player->gety()].corpse->getname());
                         incfear();
                         break;
+                case cell_bookcase:
+                        display->message("You see a bookcase here, filled with all kinds of old-looking books.");
+                        break;
                 default:
                         break;
         }
+        //if(world->a->cell[this->getx()][this->gety()].inhabitant != this)
+        //        display->message("You are standing next to %s (%d,%d).", this->area->cell[this->getx()][this->gety()].inhabitant->getname(), this->getx(), this->gety());
 }
 
 void Player::die()
