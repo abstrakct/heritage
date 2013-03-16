@@ -128,22 +128,22 @@ void Display::draw_left_window()
         console->print(x, y, "Soul: %d", player->getstat(sSoul)); y++;
         y++;
         console->print(x, y, "Health:"); y++;
-        console->setDefaultForeground(TCODColor::amber);
+        console->setDefaultForeground(TCODColor::azure);
         console->print(x, y, "%d", player->getstat(sHealth)); y++;
         console->setDefaultForeground(TCODColor::white);
         console->print(x, y, "Sanity:"); y++;
-        console->setDefaultForeground(TCODColor::amber);
+        console->setDefaultForeground(TCODColor::azure);
         console->print(x, y, "%d", player->getstat(sSanity)); console->print(x+5, y, "(%s)", player->get_sanitydesc()); y++;
         console->setDefaultForeground(TCODColor::white);
         console->print(x, y, "Fear:"); y++;
-        console->setDefaultForeground(TCODColor::amber);
+        console->setDefaultForeground(TCODColor::azure);
         console->print(x, y, "%d", player->getstat(sFear)); /*console->print(x+5, y, "(Fearless)");*/ y++;
         console->setDefaultForeground(TCODColor::white);
 
         y++;
-        /*console->setDefaultForeground(TCODColor::amber);
-        console->print(x, y, "Visible entities and items:"); y++;
-        console->setDefaultForeground(TCODColor::white);*/
+        console->setDefaultForeground(TCODColor::green);
+        console->print(x, y, "Special abilities:"); y++;
+        console->setDefaultForeground(TCODColor::white);
 }
 
 void Display::draw_game_screen()
