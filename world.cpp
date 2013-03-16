@@ -271,12 +271,45 @@ void Cell::activate()
 
                         display->message("You spend a little while browsing the books in this bookcase, looking for something interesting.");
                         i = dice(1, 20, 0);
-                        if(i <= 8) {
+                        if(i <= 10) {
                                 book = ri(1, 5);
                                 switch(book) {
                                         case 1:
+                                                display->message("An old book titled \"Unlocking Your Brain's True Potential - Vol. I\" catches your eye. It's written by Dr. Evan Hoffman.");
+                                                x = dice(1, 20, 0);
+                                                if(x <= player->getstat(sMind)) {
+                                                        display->message("You open the book at \"Chapter XIII - Telekinetics and related subjects\" and read for a while.");
+                                                        display->message("Congratulations! You can now employ your mind to cause minor destruction!");
+                                                        player->special[2] = special_mindblast;
+                                                } else {
+                                                        display->message("You flip randomly through the book, but the medical terminology goes straight over your head. You put the book back on the shelf.");
+                                                }
+                                                display->message(" ");
                                         case 2:
+                                                display->message("You come across a book called \"How To Fight - A Manual\". It looks interesting.");
+                                                x = dice(1, 20, 0);
+                                                if(x <= player->getstat(sMind)) {
+                                                        display->message("You read through the book, picking up a few useful fighting techniques.");
+                                                        display->message("Congratulations! You can now use a special move in physical combat!");
+                                                        player->special[3] = special_powerfist;
+                                                } else {
+                                                        display->message("You flip through the book, but see nothing you don't already know.");
+                                                }
+                                                display->message(" ");
+                                                break;
                                         case 3:
+                                                display->message("Your gaze stops at a book titled \"Physical Excercises for Modern Men and Women\".");
+                                                x = dice(1, 20, 0);
+                                                if(x <= player->getstat(sMind)) {
+                                                        display->message("Inside the book are pictures and descriptions of various physical excercises. You take notice of some of these.");
+                                                        display->message("Congratulations! You feel more prepared for physical combat.");
+                                                        player->incstat(sBody, 1);
+                                                } else {
+                                                        display->message("Inside the book are pictures and descriptions of various physical excercises.");
+                                                        display->message("You discard the book. Books are no substitute for real physical excercise!");
+                                                }
+                                                display->message(" ");
+                                                break;
                                         case 4:
                                                 display->message("You find a small book called \"Mysteries of the Soul\", written by Marvin E. A. Edeef.");
                                                 x = dice(1, 20, 0);
@@ -434,6 +467,12 @@ void Area::generate(area_id_type identifier)
                 coord_t co = world->get_random_floor_cell(identifier);
                 make_stairs_up(co);
                 world->area[(int)identifier+1].make_stairs_down(co);
+
+                // Make two sets of stairs! TODO: implement correctly ;)
+                /*
+                co = world->get_random_floor_cell(identifier);
+                make_stairs_up(co);
+                world->area[(int)identifier+1].make_stairs_down(co);*/
         }
 
         this->build_tcodmap();

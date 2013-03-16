@@ -15,6 +15,19 @@ extern World *world;
 extern Display *display;
 extern Player *player;
 
+const char *special_name[] = {
+        "(none)",
+        "Mindblast",
+        "Soulcrush",
+        "Powerfist",
+        "Special 4",
+        "Special 5",
+        "Special 6",
+        "Special 7",
+        "Special 8",
+        "Special 9",
+};
+
 const char *sanitydesc[] = {
         "Member of WBC",              //  0 - 3
         "Completely insane",          //  3 - 10

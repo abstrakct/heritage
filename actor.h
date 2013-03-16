@@ -37,7 +37,16 @@ enum special_type {
         special_none = 0,
         special_mindblast,
         special_soulcrush,
+        special_powerfist,
+        special_4,
+        special_5,
+        special_6,
+        special_7,
+        special_8,
+        special_9,
 };
+
+extern const char *special_name[];
 
 #define AI_RANDOM 1
 #define AI_PATH 2

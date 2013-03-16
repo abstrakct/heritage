@@ -16,6 +16,7 @@ using namespace std;
 #include "debug.h"
 #include "display.h"
 #include "common.h"
+#include "actor.h"
 #include "player.h"
 #include "npc.h"
 #include "world.h"
@@ -143,6 +144,13 @@ void Display::draw_left_window()
         y++;
         console->setDefaultForeground(TCODColor::green);
         console->print(x, y, "Special abilities:"); y++;
+        console->setDefaultForeground(TCODColor::white);
+        for(int i=1;i<10;++i) {
+                if(player->special[i] != special_none) {
+                        console->setDefaultForeground(TCODColor::azure);
+                        console->print(x, y, "%d. %s", i, special_name[(int)player->special[i]]); y++;
+                }
+        }
         console->setDefaultForeground(TCODColor::white);
 }
 
