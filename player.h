@@ -23,6 +23,7 @@ class Player: public Actor {
                 void create();      // generate your player character.
                 void endturn();
                 void die();
+                void use_stairs();
         private:
                 // Stats
                 //int body;         // 1-20, how physically strong you are

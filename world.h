@@ -47,9 +47,7 @@ class Cell {
         private:
                 cell_type    type;
                 int          flags;
-                TCODColor    fg, bg;
                 bool         visible;
-                char         c;
         protected:
         public:
                 Cell();
@@ -77,6 +75,8 @@ class Cell {
 
                 Actor       *inhabitant;
                 Actor       *corpse;
+                char         c;
+                TCODColor    fg, bg;
 };
 
 class Area {
@@ -97,6 +97,7 @@ class Area {
                 void frame();
                 void build_tcodmap();
                 bool cell_is_visible(int x, int y);
+                bool is_walkable(int x, int y);
                 void make_room(int x1, int y1, int x2, int y2);
                 void make_door(int x, int y, bool open);
                 void make_stairs_up(coord_t co);
@@ -125,7 +126,7 @@ class World {
                 ~World();
                 const char *get_cell_type(int x, int y);
                 cell_type get_cell_type(coord_t co);
-                bool is_walkable(int x, int y);
+                bool is_walkable(Area *where, int x, int y);
                 bool is_closed_door(int x, int y);
                 bool is_open_door(int x, int y);
                 void open_door(int x, int y);
@@ -138,12 +139,14 @@ class World {
                 void draw_cell(int x, int y, TCODColor fg, TCODColor bg);
                 void update_fov();
                 coord_t get_random_walkable_cell(area_id_type id);
+                coord_t get_random_floor_cell(area_id_type id);
                 void set_inhabitant(Actor *actor);
                 void clear_inhabitant(coord_t co);
+                Area *get_current_area() { return &area[current_area]; };
 
                 int current_area;
-                Area *area;
-                Area *a;
+                Area *area;       // becomes array of areas. the actual areas in the game.
+                Area *a;          // should always point to area[current_area]
 
                 friend class Cell;
 };

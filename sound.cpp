@@ -34,6 +34,14 @@ SoundEngine::SoundEngine()
 SoundEngine::~SoundEngine()
 {
         Mix_CloseAudio();
+        for(int i = 0; i < NUM_SOUNDS; i++) {
+                if(sound_defs[i].type == effect)
+                        Mix_FreeChunk(s[i].chunk);
+                if(sound_defs[i].type == music)
+                        Mix_FreeMusic(s[i].music);
+        }
+
+        SDL_Quit();
 }
 
 /*void SoundEngine::load_file(const char *filename)

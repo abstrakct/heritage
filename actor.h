@@ -47,8 +47,9 @@ class Actor {
                 Actor();
                 virtual ~Actor() {  };
                 virtual bool is_player() = 0;
+                virtual void use_stairs();
                 
-                bool is_alive();
+                bool is_alive() { return alive; };
                 bool is_male();
                 void kill();
                 void draw();
@@ -81,9 +82,6 @@ class Actor {
                 void attack(Actor *target, attack_type type = body);
                 void attack_physical(Actor *target);
 
-                area_id_type area_id;
-                Actor *enemy;              // public enemy haha!
-
                 // Movement
                 void move_left();
                 void move_right();
@@ -93,9 +91,13 @@ class Actor {
                 void move_ne();
                 void move_sw();
                 void move_se();
+
+                area_id_type area_id;
+                Actor *enemy;              // public enemy haha!
+                Area *area;                // in which area is this actor?
+                bool alive;
         protected:
         private:
-                bool alive;
                 bool male;
                 char c;
                 char name[64];

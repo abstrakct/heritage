@@ -37,39 +37,22 @@ class MyCallback : public ITCODBspCallback
         public :
                 bool visitNode(TCODBsp *node, void *userData)
                 {
-                        //dbg("trying to make room from %d,%d to %d,%d", node->x, node->y, node->x+node->w, node->y+node->h);
-                        //dbg("making room: x=%d y=%d w=%d h=%d position=%d horizontal=%s", node->x, node->y, node->w, node->h, node->position, node->horizontal ? "true" : "false");
-
                         world->a->make_room(node->x, node->y, node->x + node->w-2, node->y + node->h-2);
-                        //dbg("made room from %d,%d to %d,%d", node->x, node->y, node->x+node->w-2, node->y+node->h-2);
 
                         if(node->horizontal) {
-                                /*int ypos = node->y + ri(1, node->h);
-                                while(ypos >= AREA_MAX_Y-2)
-                                        --ypos;*/
-
                                 int x1 = node->x - 2;
                                 int y1 = node->y - 2;
                                 int x2 = node->x + node->w - 2;
                                 int y2 = node->y + node->h - 2;
                                 world->a->make_door(x1, ri(y1, y2), false);
                                 world->a->make_door(x2, ri(y1, y2), false);
-                                //world->a->make_door(node->x, ypos, false);
-                                //world->a->make_door(node->x+node->w - ri(2, node->w-2), ypos, false);
                         } else {
-                                /*int xpos = node->x + ri(1, node->w);
-                                while(xpos >= AREA_MAX_X-2)
-                                        --xpos;*/
-                                
                                 int x1 = node->x;
                                 int y1 = node->y;
                                 int x2 = node->x + node->w - 2;
                                 int y2 = node->y + node->h - 2;
                                 world->a->make_door(ri(x1, x2), y1, false);
                                 world->a->make_door(ri(x1, x2), y2, false);
-
-                                //world->a->make_door(xpos, node->y, false);
-                                //world->a->make_door(xpos, node->y + node->h, false);
                         }
 
                         return true;
@@ -204,8 +187,12 @@ void Cell::set_visibility(bool b)
 
 void Cell::draw(int x, int y)
 {
-        if(inhabitant && inhabitant->is_alive()) {
-                inhabitant->draw();
+        if(inhabitant) {
+                if(inhabitant->alive) {
+                        if(inhabitant->area == world->a) {
+                                inhabitant->draw();
+                        }
+                }
         } else {
                 display->putmap(x, y, this->c, this->fg, this->bg);
         }
@@ -214,8 +201,12 @@ void Cell::draw(int x, int y)
 
 void Cell::draw(int x, int y, TCODColor fore, TCODColor back)
 {
-        if(inhabitant && inhabitant->is_alive()) {
-                inhabitant->draw(fore, back);
+        if(inhabitant) {
+                if(inhabitant->alive) {
+                        if(inhabitant->area == world->a) {
+                                inhabitant->draw(fore, back);
+                        }
+                }
         } else {
                 display->putmap(x, y, this->c, fore, back);
         }
@@ -252,10 +243,12 @@ Area::Area()
 
 Area::~Area()
 {
-        for(int i = 0; i < AREA_MAX_Y; ++i)
+        for(int i = 0; i < AREA_MAX_X; ++i)
                 delete [] cell[i];
 
         delete [] cell;
+        delete tcodmap;
+        delete bsp;
 }
 
 void Area::build_tcodmap()
@@ -349,22 +342,23 @@ direction Area::generate_starting_room()
 
 void Area::generate(area_id_type identifier)
 {
+        MyCallback *callback = new MyCallback;
         world->a = &world->area[(int)identifier];
         set_id(identifier);
         bsp->splitRecursive(NULL, 5, 3, 3, 1.5f, 1.5f);
-        bsp->traversePreOrder(new MyCallback(), NULL);
+        bsp->traversePreOrder(callback, NULL);
         this->frame();
 
-        //for(int i = 0; i < MAX_AREAS-1; ++i) {
         if(identifier != floor_6) {
-                coord_t co = world->get_random_walkable_cell(identifier);
+                coord_t co = world->get_random_floor_cell(identifier);
                 make_stairs_up(co);
                 world->area[(int)identifier+1].make_stairs_down(co);
         }
-        //}
 
         this->build_tcodmap();
         lights_on = false;
+
+        delete callback;
 }
 
 void Area::frame()
@@ -460,6 +454,11 @@ const char *Area::get_area_name()
                 return NULL;
 }
 
+bool Area::is_walkable(int x, int y)
+{
+        return this->cell[x][y].is_walkable();
+}
+
 
 
 /*
@@ -477,9 +476,9 @@ World::~World()
         delete [] area;
 }
 
-bool World::is_walkable(int x, int y)
+bool World::is_walkable(Area *where, int x, int y)
 {
-        return a->cell[x][y].is_walkable();
+        return where->cell[x][y].is_walkable();
 }
 
 bool World::is_closed_door(int x, int y)
@@ -546,11 +545,21 @@ void World::draw_map()
                         }
                 }
         }               
+        display->touch();
 }
 
 void World::draw_cell(int x, int y)
 {
-        a->cell[x][y].draw(x, y);
+       // a->cell[x][y].draw(x, y);
+        if(a->cell[x][y].inhabitant) {
+                if(a->cell[x][y].inhabitant->alive) {
+                        if(a->cell[x][y].inhabitant->area == world->a) {
+                                a->cell[x][y].inhabitant->draw();
+                        }
+                }
+        } else {
+                display->putmap(x, y, a->cell[x][y].c, a->cell[x][y].fg, a->cell[x][y].bg);
+        }
 }
 
 void World::draw_cell(coord_t co)
@@ -560,7 +569,16 @@ void World::draw_cell(coord_t co)
 
 void World::draw_cell(int x, int y, TCODColor fg, TCODColor bg)
 {
-        a->cell[x][y].draw(x, y, fg, bg);
+        //a->cell[x][y].draw(x, y, fg, bg);
+        if(a->cell[x][y].inhabitant) {
+                if(a->cell[x][y].inhabitant->alive) {
+                        if(a->cell[x][y].inhabitant->area == world->a) {
+                                a->cell[x][y].inhabitant->draw(fg, bg);
+                        }
+                }
+        } else {
+                display->putmap(x, y, a->cell[x][y].c, fg, bg);
+        }
 }
 
 void World::update_fov()
@@ -589,10 +607,28 @@ again:
                 goto again;
 }
 
+coord_t World::get_random_floor_cell(area_id_type id)
+{
+        coord_t co;
+
+again:
+        co.x = ri(1, AREA_MAX_X-2);
+        co.y = ri(1, AREA_MAX_Y-2);
+        while(area[id].cell[co.x][co.y].get_type() != floor) {
+                co.x = ri(1, AREA_MAX_X-2);
+                co.y = ri(1, AREA_MAX_Y-2);
+        }
+
+        if(area[id].cell[co.x][co.y].get_type() == floor)
+                return co;
+        else
+                goto again;
+}
+
 void World::set_inhabitant(Actor *actor)
 {
-        a->cell[actor->getx()][actor->gety()].inhabitant = actor;
-        actor->area_id = a->get_id();
+        actor->area->cell[actor->getx()][actor->gety()].inhabitant = actor;
+        actor->area_id = actor->area->get_id();
 }
 
 void World::clear_inhabitant(coord_t co)

@@ -575,11 +575,11 @@ void NPC::set_random_goal()
         }
         
         if(type > 50 && type <= 70) {
-                set_goal(world->a->stairs_up);
+                set_goal(this->area->stairs_up);
         }
         
         if(type > 70 && type <= 90) {
-                set_goal(world->a->stairs_down);
+                set_goal(this->area->stairs_down);
         }
 
         if(type > 90 && type <= 97) {
@@ -593,20 +593,45 @@ void NPC::set_random_goal()
         if(type > 97) {
                 int i = ri(0,12);
                 if(i == 12) {
-                        enemy = player;
-                        set_goal(player->getxy());
+                        if(player->area == this->area) {   // to avoid 3D pathfinding, only attack stuff on one's own level/floor/area
+                                enemy = player;
+                                set_goal(player->getxy());
+                        }
                         //display->message("%s has decided to kill YOU!!!!", this->getname());
                 } else {
                         while(!npc[i].is_alive())
                                 i = ri(0,11);
-                        set_goal(npc[i].getxy());
-                        enemy = &npc[i];
+                        if(npc[i].area == this->area) {
+                                set_goal(npc[i].getxy());
+                                enemy = &npc[i];
+                        }
                         //display->message("%s has decided to kill %s!", this->getname(), npc[i].getname());
                 }
         }
 }
 
-
+void NPC::use_stairs()
+{
+        if(this->area->cell[this->getx()][this->gety()].get_type() == stairs_up) {
+                world->clear_inhabitant(this->getxy());
+                display->message("%s is moving up some stairs from area %d!", this->getname(), this->area_id);
+                int a = (int) this->area_id;
+                a++;
+                this->area_id = (area_id_type) a;
+                this->area = &world->area[this->area_id];
+                display->message("area id is now %d", this->area_id);
+                world->set_inhabitant(this);
+        } else if(world->area[world->current_area].cell[this->getx()][this->gety()].get_type() == stairs_down) {
+                world->clear_inhabitant(this->getxy());
+                display->message("%s is moving down some stairs from area %d!", this->getname(), this->area_id);
+                int a = (int) this->area_id;
+                a--;
+                this->area_id = (area_id_type) a;
+                this->area = &world->area[this->area_id];
+                display->message("area id is now %d", this->area_id);
+                world->set_inhabitant(this);
+        } 
+}
 
 /*
  * This is actually the standard AI, at least for NPC characters
@@ -614,12 +639,17 @@ void NPC::set_random_goal()
 void NPC::path_ai()
 {
         if(!has_goal) {
+                coord_t c = this->getxy();
+                if(world->get_cell_type(c) == stairs_up || world->get_cell_type(c) == stairs_down) {
+                        this->use_stairs();
+                        has_goal = false;
+                }
                 set_random_goal();
         } else {
-                int chance = 50;
+                int chance = 60;
                 if(enemy) {
                         set_goal(enemy->getxy());
-                        chance = 75;
+                        chance = 80;
                 }
                 // Let's walk the path!
                 int d;
@@ -629,6 +659,7 @@ void NPC::path_ai()
 
                 if(d < chance) {                                          // walk, or hang around?
                         coord_t c = this->getxy();
+
                         path->compute(c.x, c.y, goal.x, goal.y);
                         if(path->walk(&x, &y, true)) {
                                 // success

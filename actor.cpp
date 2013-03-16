@@ -35,6 +35,7 @@ Actor::Actor()
         c = ' ';
         co.x = co.y = 0;
         alive = true;
+        enemy = NULL;
 }
 
 /*Actor::~Actor()
@@ -48,14 +49,6 @@ Actor::Actor()
         else
                 return false;
 }*/
-
-bool Actor::is_alive()
-{
-        if(alive)
-                return true;
-        else
-                return false;
-}
 
 bool Actor::is_male()
 { 
@@ -140,8 +133,8 @@ coord_t Actor::getxy()
 void Actor::draw()
 {
         if(world->a->cell_is_visible(co.x, co.y)) {
-                if(prev.x != co.x || prev.y != co.y || (prev.x != co.x && prev.y != co.y))
-                        world->draw_cell(this->prev);
+         //       if(prev.x != co.x || prev.y != co.y || (prev.x != co.x && prev.y != co.y))
+         //               world->draw_cell(this->prev);
                 display->putmap(this->co.x, this->co.y, this->c, this->fg, this->bg);
                 display->touch();
         }
@@ -150,8 +143,8 @@ void Actor::draw()
 void Actor::draw(TCODColor fg, TCODColor bg)
 {
         if(world->a->cell_is_visible(co.x, co.y)) {
-                if(prev.x != co.x || prev.y != co.y || (prev.x != co.x && prev.y != co.y))
-                        world->draw_cell(this->prev);
+                //if(prev.x != co.x || prev.y != co.y || (prev.x != co.x && prev.y != co.y))
+                //        world->draw_cell(this->prev);
                 display->putmap(this->co.x, this->co.y, this->c, fg, bg);
                 display->touch();
         }
@@ -171,12 +164,14 @@ void Actor::move_left()
                 return;
         }
 
-        if(this->enemy && (this->enemy->getx() == this->co.x-1 && this->enemy->gety() == this->co.y)) {
-                attack(enemy);
-                return;
+        if(this->enemy) {
+                if(this->enemy->getx() == this->co.x-1 && this->enemy->gety() == this->co.y) {
+                        attack(enemy);
+                        return;
+                }
         }
 
-        if(world->is_walkable(this->co.x - 1, this->co.y)) {
+        if(this->area->is_walkable(this->co.x - 1, this->co.y)) {
                 prev = co;
                 co.x -= 1;
                 world->clear_inhabitant(prev);
@@ -193,12 +188,14 @@ void Actor::move_right()
                 return;
         }
 
-        if(this->enemy && (this->enemy->getx() == this->co.x+1 && this->enemy->gety() == this->co.y)) {
-                attack(enemy);
-                return;
+        if(this->enemy) {
+                if(this->enemy->getx() == this->co.x+1 && this->enemy->gety() == this->co.y) {
+                        attack(enemy);
+                        return;
+                }
         }
 
-        if(world->is_walkable(this->co.x + 1, this->co.y)) {
+        if(this->area->is_walkable(this->co.x + 1, this->co.y)) {
                 prev = co;
                 co.x += 1;
                 world->clear_inhabitant(prev);
@@ -215,12 +212,14 @@ void Actor::move_down()
                 return;
         }
 
-        if(this->enemy && (this->enemy->getx() == this->co.x && this->enemy->gety() == this->co.y+1)) {
-                attack(enemy);
-                return;
+        if(this->enemy) {
+                if(this->enemy->getx() == this->co.x && this->enemy->gety() == this->co.y+1) {
+                        attack(enemy);
+                        return;
+                }
         }
 
-        if(world->is_walkable(this->co.x, this->co.y + 1)) {
+        if(this->area->is_walkable(this->co.x, this->co.y + 1)) {
                 prev = co;
                 co.y += 1;
                 world->clear_inhabitant(prev);
@@ -237,13 +236,15 @@ void Actor::move_up()
                 return;
         }
 
-        if(this->enemy && (this->enemy->getx() == this->co.x && this->enemy->gety() == this->co.y-1)) {
-                attack(enemy);
-                return;
+        if(this->enemy) {
+                if(this->enemy->getx() == this->co.x && this->enemy->gety() == this->co.y-1) {
+                        attack(enemy);
+                        return;
+                }
         }
 
         
-        if(world->is_walkable(this->co.x, this->co.y - 1)) {
+        if(this->area->is_walkable(this->co.x, this->co.y - 1)) {
                 prev = co;
                 co.y -= 1;
                 world->clear_inhabitant(prev);
@@ -260,12 +261,14 @@ void Actor::move_nw()
                 return;
         }
 
-        if(this->enemy && (this->enemy->getx() == this->co.x-1 && this->enemy->gety() == this->co.y-1)) {
-                attack(enemy);
-                return;
+        if(this->enemy) {
+                if(this->enemy->getx() == this->co.x-1 && this->enemy->gety() == this->co.y-1) {
+                        attack(enemy);
+                        return;
+                }
         }
 
-        if(world->is_walkable(this->co.x - 1, this->co.y - 1)) {
+        if(this->area->is_walkable(this->co.x - 1, this->co.y - 1)) {
                 prev = co;
                 co.x -= 1;
                 co.y -= 1;
@@ -283,12 +286,14 @@ void Actor::move_ne()
                 return;
         }
 
-        if(this->enemy && (this->enemy->getx() == this->co.x+1 && this->enemy->gety() == this->co.y-1)) {
-                attack(enemy);
-                return;
+        if(this->enemy) {
+                if(this->enemy->getx() == this->co.x+1 && this->enemy->gety() == this->co.y-1) {
+                        attack(enemy);
+                        return;
+                }
         }
 
-        if(world->is_walkable(this->co.x + 1, this->co.y - 1)) {
+        if(this->area->is_walkable(this->co.x + 1, this->co.y - 1)) {
                 prev = co;
                 co.x += 1;
                 co.y -= 1;
@@ -306,12 +311,14 @@ void Actor::move_sw()
                 return;
         }
 
-        if(this->enemy && (this->enemy->getx() == this->co.x-1 && this->enemy->gety() == this->co.y+1)) {
-                attack(enemy);
-                return;
+        if(this->enemy) {
+                if(this->enemy->getx() == this->co.x-1 && this->enemy->gety() == this->co.y+1) {
+                        attack(enemy);
+                        return;
+                }
         }
 
-        if(world->is_walkable(this->co.x - 1, this->co.y + 1)) {
+        if(this->area->is_walkable(this->co.x - 1, this->co.y + 1)) {
                 prev = co;
                 co.x -= 1;
                 co.y += 1;
@@ -329,12 +336,14 @@ void Actor::move_se()
                 return;
         }
 
-        if(this->enemy && (this->enemy->getx() == this->co.x+1 && this->enemy->gety() == this->co.y+1)) {
-                attack(enemy);
-                return;
+        if(this->enemy) {
+                if(this->enemy->getx() == this->co.x+1 && this->enemy->gety() == this->co.y+1) {
+                        attack(enemy);
+                        return;
+                }
         }
 
-        if(world->is_walkable(this->co.x + 1, this->co.y + 1)) {
+        if(this->area->is_walkable(this->co.x + 1, this->co.y + 1)) {
                 prev = co;
                 co.x += 1;
                 co.y += 1;
@@ -451,6 +460,10 @@ void Actor::decfear()
                                 display->message("You feel %s.", fiftyfifty() ? "a little bit more relaxed" : "a little less afraid");
                 }
         }
+}
+
+void Actor::use_stairs()
+{
 }
 
 void Actor::attack_physical(Actor *target)

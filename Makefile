@@ -1,5 +1,6 @@
 CXX = g++ 
-CXXFLAGS = -Wall -g -ggdb3 -I. -Iinclude
+CXXFLAGS = -Wall -I. -Iinclude -g -ggdb
+DEBUGFLAGS = -g -ggdb
 LIBS = -lm -ltcodxx -lSDL -lSDL_mixer -Llib -Wl,-rpath=lib
 LDFLAGS=$(LIBS)     #,-rpath=lib 
 DEFINES =
@@ -10,6 +11,9 @@ OBJS    = main.o actor.o display.o game.o command.o player.o sound.o npc.o world
 
 heritage: $(OBJS)
 	$(CXX) $(DEFINES) $(LDFLAGS) -o $@ $(OBJS)
+
+heritage-debug: $(OBJS)
+	$(CXX) $(DEBUGFLAGS) $(DEFINES) $(LDFLAGS) -o $@ $(OBJS)
 
 .: $(SOURCES) $(HEADERS)
 	$(CXX) $(CXXFLAGS) $(DEFINES) -o $@ $(SOURCES)

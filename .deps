@@ -12,7 +12,7 @@ actor.o: actor.cpp common.h display.h include/libtcod.hpp \
  include/noise.hpp include/fov.hpp include/path.hpp include/lex.hpp \
  include/parser.hpp include/tree.hpp include/bsp.hpp \
  include/heightmap.hpp include/zip.hpp include/namegen.hpp \
- include/txtfield.hpp debug.h actor.h world.h
+ include/txtfield.hpp debug.h actor.h world.h player.h
 command.o: command.cpp include/libtcod.hpp include/libtcod.h \
  include/list.h include/color.h include/console.h include/console_types.h \
  include/image.h include/mouse.h include/mouse_types.h include/sys.h \
@@ -85,7 +85,8 @@ npc.o: npc.cpp include/libtcod.hpp include/libtcod.h include/list.h \
  include/noise.hpp include/fov.hpp include/path.hpp include/lex.hpp \
  include/parser.hpp include/tree.hpp include/bsp.hpp \
  include/heightmap.hpp include/zip.hpp include/namegen.hpp \
- include/txtfield.hpp display.h actor.h common.h debug.h world.h npc.h
+ include/txtfield.hpp display.h actor.h common.h debug.h world.h npc.h \
+ player.h
 player.o: player.cpp include/libtcod.hpp include/libtcod.h include/list.h \
  include/color.h include/console.h include/console_types.h \
  include/image.h include/mouse.h include/mouse_types.h include/sys.h \

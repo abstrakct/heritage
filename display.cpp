@@ -66,9 +66,12 @@ Display::Display()
         console->root->setCustomFont(FONT, TCOD_FONT_TYPE_GRAYSCALE | TCOD_FONT_LAYOUT_ASCII_INROW, 16, 16);
         console->root->setKeyboardRepeat(200, 50);
 
-        //map =     new TCODConsole(MAP_W, MAP_H);
-        //left =    new TCODConsole(LEFT_W, LEFT_H);
-        //bottom =  new TCODConsole(BOTTOM_W, BOTTOM_H);
+        for(int i = 0; i<13; ++i) {
+                message_t item;
+                item.num = 0;
+                strcpy(item.message, "");
+                message_list.push_back(item);
+        }
         touched = true;
 }
 

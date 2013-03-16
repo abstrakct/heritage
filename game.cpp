@@ -117,17 +117,7 @@ void Game::loop()
                                 world->close_nearest_door(player);
                                 break;
                         case cmd_stairs:
-                                if(world->area[world->current_area].cell[player->getx()][player->gety()].get_type() == stairs_up) {
-                                        display->message("moving up!");
-                                        world->current_area++;
-                                        world->a = &world->area[world->current_area];
-                                } else if(world->area[world->current_area].cell[player->getx()][player->gety()].get_type() == stairs_down) {
-                                        display->message("moving down!");
-                                        world->current_area--;
-                                        world->a = &world->area[world->current_area];
-                                } else {
-                                        display->message("There are no stairs here!");
-                                }
+                                player->use_stairs();
                                 end_turn();
                                 break;
                         case cmd_wait:

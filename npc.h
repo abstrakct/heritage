@@ -21,6 +21,7 @@ class NPC: public Actor {
                 void set_goal(coord_t c) { goal = c; has_goal = true; };
                 void clear_goal() { has_goal = false; };
                 void generate_name();
+                void use_stairs();
 
                 bool has_goal;
                 int which_ai;

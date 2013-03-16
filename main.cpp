@@ -70,6 +70,7 @@ void clean_up()
         delete audio;
         delete [] npc;
         delete game;
+        delete display;
 }
 
 void init_npcs()
@@ -79,6 +80,7 @@ void init_npcs()
         for(int i=0; i < 12; ++i) {
                 npc[i].setxy(world->get_random_walkable_cell(floor_1));
                 npc[i].setprevxy(npc[i].getxy());
+                npc[i].area = world->get_current_area();
                 world->set_inhabitant(&npc[i]);
                 npc[i].setai(AI_PATH);
                 
@@ -114,6 +116,7 @@ void init_player()
 
         player->setxy(world->get_random_walkable_cell(floor_1));
         player->setprevxy(player->getxy());
+        player->area = world->get_current_area();
         world->set_inhabitant(player);
 }
 
