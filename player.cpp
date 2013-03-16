@@ -124,10 +124,11 @@ again:
         cout << "Soul (spiritual strength): " << soul << endl;
         cout << "Are you happy with these results (Y/n)? ";
         c = getchar();
+        d = c;
         if(c == '\n')
                 goto finish;
-        d = getchar();
-        if(c == 'n')
+        c = getchar();
+        if(d == 'n')
                 goto again;
 finish:
         setstat(sBody, body);

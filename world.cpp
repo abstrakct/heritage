@@ -278,14 +278,14 @@ void Cell::activate()
                                         case 2:
                                         case 3:
                                         case 4:
-                                                display->message("You find a small book called Mysteries of the Soul, written by Marvin E. A. Edeef.");
+                                                display->message("You find a small book called \"Mysteries of the Soul\", written by Marvin E. A. Edeef.");
                                                 x = dice(1, 20, 0);
                                                 if(x <= player->getstat(sMind)) {
                                                         display->message("As you flip through the book you come to a sudden realization about the soul and your own spirituality.");
-                                                        display->message("Congratulations! You can now use the powers of your soul to help you make it through the night!");
-                                                        // TODO: add ability here!
+                                                        display->message("Congratulations! You can now use some of the powers of your soul to help you make it through the night!");
+                                                        player->special[1] = special_soulcrush;
                                                 } else {
-                                                        display->message("You flip through the book, quickly concluding that it's just new age mumbo jumbo.");
+                                                        display->message("You flip through the book, quickly concluding that it's just New-Age mumbo jumbo.");
                                                 }
                                                 display->message(" ");
                                                 break;

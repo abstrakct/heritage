@@ -36,6 +36,8 @@ Actor::Actor()
         co.x = co.y = 0;
         alive = true;
         enemy = NULL;
+        for(int i=0;i<10;++i)
+                special[i] = special_none;
 }
 
 /*Actor::~Actor()

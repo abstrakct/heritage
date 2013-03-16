@@ -33,6 +33,12 @@ enum enum_stat {
         sHealth
 };
 
+enum special_type {
+        special_none = 0,
+        special_mindblast,
+        special_soulcrush,
+};
+
 #define AI_RANDOM 1
 #define AI_PATH 2
 
@@ -96,6 +102,7 @@ class Actor {
                 Actor *enemy;              // public enemy haha!
                 Area *area;                // in which area is this actor?
                 bool alive;
+                special_type special[10];
         protected:
         private:
                 bool male;
