@@ -29,6 +29,15 @@ enum command_type {
         cmd_close_door,
         cmd_stairs,
         cmd_activate,
+        cmd_special_1,
+        cmd_special_2,
+        cmd_special_3,
+        cmd_special_4,
+        cmd_special_5,
+        cmd_special_6,
+        cmd_special_7,
+        cmd_special_8,
+        cmd_special_9,
 
         // debug / developement commands
         cmd_all_visible,

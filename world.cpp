@@ -259,79 +259,84 @@ cell_type Cell::get_type()
         return this->type;
 }
 
+void Cell::activate_bookcase()
+{
+        if(activated) {
+                display->message("You find nothing more of interest in this bookcase.");
+                break;
+        }
+
+        display->message("You spend a little while browsing the books in this bookcase, looking for something interesting.");
+        i = dice(1, 20, 0);
+        if(i <= 10) {
+                book = ri(1, 5);
+                switch(book) {
+                        case 1:
+                                display->message("An old book titled \"Unlocking Your Brain's True Potential - Vol. I\" catches your eye. It's written by Dr. Evan Hoffman.");
+                                x = dice(1, 20, 0);
+                                if(x <= player->getstat(sMind)) {
+                                        display->message("You open the book at \"Chapter XIII - Telekinetics and related subjects\" and read for a while.");
+                                        display->message("Congratulations! You can now employ your mind to cause minor destruction!");
+                                        player->special[2] = special_mindblast;
+                                } else {
+                                        display->message("You flip randomly through the book, but the medical terminology goes straight over your head. You put the book back on the shelf.");
+                                }
+                                display->message(" ");
+                        case 2:
+                                display->message("You come across a book called \"How To Fight - A Manual\". It looks interesting.");
+                                x = dice(1, 20, 0);
+                                if(x <= player->getstat(sMind)) {
+                                        display->message("You read through the book, picking up a few useful fighting techniques.");
+                                        display->message("Congratulations! You can now use a special move in physical combat!");
+                                        player->special[3] = special_powerfist;
+                                } else {
+                                        display->message("You flip through the book, but see nothing you don't already know.");
+                                }
+                                display->message(" ");
+                                break;
+                        case 3:
+                                display->message("Your gaze stops at a book titled \"Physical Excercises for Modern Men and Women\".");
+                                x = dice(1, 20, 0);
+                                if(x <= player->getstat(sMind)) {
+                                        display->message("Inside the book are pictures and descriptions of various physical excercises. You take notice of some of these.");
+                                        display->message("Congratulations! You feel more prepared for physical combat.");
+                                        player->incstat(sBody, 1);
+                                } else {
+                                        display->message("Inside the book are pictures and descriptions of various physical excercises.");
+                                        display->message("You discard the book. Books are no substitute for real physical excercise!");
+                                }
+                                display->message(" ");
+                                break;
+                        case 4:
+                                display->message("You find a small book called \"Mysteries of the Soul\", written by Marvin E. A. Edeef.");
+                                x = dice(1, 20, 0);
+                                if(x <= player->getstat(sMind)) {
+                                        display->message("As you flip through the book you come to a sudden realization about the soul and your own spirituality.");
+                                        display->message("Congratulations! You can now use some of the powers of your soul to help you make it through the night!");
+                                        player->special[1] = special_soulcrush;
+                                } else {
+                                        display->message("You flip through the book, quickly concluding that it's just New-Age mumbo jumbo.");
+                                }
+                                display->message(" ");
+                                break;
+                        default:
+                                display->message("The only book which looks interesting is unfortunately written in some language you don't even recognize.");
+                                display->message(" ");
+                                break;
+                }
+        } else {
+                display->message("After a while, you conclude that there's nothing here that interests you.");
+                display->message(" ");
+        }
+        activated = true;
+}
+
 void Cell::activate()
 {
         int i, book, x;
         switch(this->type) {
                 case cell_bookcase:
-                        if(activated) {
-                                display->message("You find nothing more of interest in this bookcase.");
-                                break;
-                        }
-
-                        display->message("You spend a little while browsing the books in this bookcase, looking for something interesting.");
-                        i = dice(1, 20, 0);
-                        if(i <= 10) {
-                                book = ri(1, 5);
-                                switch(book) {
-                                        case 1:
-                                                display->message("An old book titled \"Unlocking Your Brain's True Potential - Vol. I\" catches your eye. It's written by Dr. Evan Hoffman.");
-                                                x = dice(1, 20, 0);
-                                                if(x <= player->getstat(sMind)) {
-                                                        display->message("You open the book at \"Chapter XIII - Telekinetics and related subjects\" and read for a while.");
-                                                        display->message("Congratulations! You can now employ your mind to cause minor destruction!");
-                                                        player->special[2] = special_mindblast;
-                                                } else {
-                                                        display->message("You flip randomly through the book, but the medical terminology goes straight over your head. You put the book back on the shelf.");
-                                                }
-                                                display->message(" ");
-                                        case 2:
-                                                display->message("You come across a book called \"How To Fight - A Manual\". It looks interesting.");
-                                                x = dice(1, 20, 0);
-                                                if(x <= player->getstat(sMind)) {
-                                                        display->message("You read through the book, picking up a few useful fighting techniques.");
-                                                        display->message("Congratulations! You can now use a special move in physical combat!");
-                                                        player->special[3] = special_powerfist;
-                                                } else {
-                                                        display->message("You flip through the book, but see nothing you don't already know.");
-                                                }
-                                                display->message(" ");
-                                                break;
-                                        case 3:
-                                                display->message("Your gaze stops at a book titled \"Physical Excercises for Modern Men and Women\".");
-                                                x = dice(1, 20, 0);
-                                                if(x <= player->getstat(sMind)) {
-                                                        display->message("Inside the book are pictures and descriptions of various physical excercises. You take notice of some of these.");
-                                                        display->message("Congratulations! You feel more prepared for physical combat.");
-                                                        player->incstat(sBody, 1);
-                                                } else {
-                                                        display->message("Inside the book are pictures and descriptions of various physical excercises.");
-                                                        display->message("You discard the book. Books are no substitute for real physical excercise!");
-                                                }
-                                                display->message(" ");
-                                                break;
-                                        case 4:
-                                                display->message("You find a small book called \"Mysteries of the Soul\", written by Marvin E. A. Edeef.");
-                                                x = dice(1, 20, 0);
-                                                if(x <= player->getstat(sMind)) {
-                                                        display->message("As you flip through the book you come to a sudden realization about the soul and your own spirituality.");
-                                                        display->message("Congratulations! You can now use some of the powers of your soul to help you make it through the night!");
-                                                        player->special[1] = special_soulcrush;
-                                                } else {
-                                                        display->message("You flip through the book, quickly concluding that it's just New-Age mumbo jumbo.");
-                                                }
-                                                display->message(" ");
-                                                break;
-                                        default:
-                                                display->message("The only book which looks interesting is unfortunately written in some language you don't even recognize.");
-                                                display->message(" ");
-                                                break;
-                                }
-                        } else {
-                                display->message("After a while, you conclude that there's nothing here that interests you.");
-                                display->message(" ");
-                        }
-                        activated = true;
+                        this->activate_bookcase();
                         break;
                 default:
                         break;

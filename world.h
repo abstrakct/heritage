@@ -83,6 +83,7 @@ class Cell {
                 cell_type get_type();
 
                 void activate();
+                void activate_bookcase();
 
                 Actor       *inhabitant;
                 Actor       *corpse;

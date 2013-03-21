@@ -44,6 +44,16 @@ command_t command_set_normal[] = {
         { { TCODK_CHAR,  'c', 1, 0, 0, 0, 0, 0 }, cmd_close_door },
         { { TCODK_CHAR,  '<', 1, 0, 0, 0, 0, 0 }, cmd_stairs },
         { { TCODK_CHAR,  'a', 1, 0, 0, 0, 0, 0 }, cmd_activate },
+        // Special moves!
+        { { TCODK_CHAR,  '1', 1, 0, 0, 0, 0, 0 }, cmd_special_1 },
+        { { TCODK_CHAR,  '2', 1, 0, 0, 0, 0, 0 }, cmd_special_2 },
+        { { TCODK_CHAR,  '3', 1, 0, 0, 0, 0, 0 }, cmd_special_3 },
+        { { TCODK_CHAR,  '4', 1, 0, 0, 0, 0, 0 }, cmd_special_4 },
+        { { TCODK_CHAR,  '5', 1, 0, 0, 0, 0, 0 }, cmd_special_5 },
+        { { TCODK_CHAR,  '6', 1, 0, 0, 0, 0, 0 }, cmd_special_6 },
+        { { TCODK_CHAR,  '7', 1, 0, 0, 0, 0, 0 }, cmd_special_7 },
+        { { TCODK_CHAR,  '8', 1, 0, 0, 0, 0, 0 }, cmd_special_8 },
+        { { TCODK_CHAR,  '9', 1, 0, 0, 0, 0, 0 }, cmd_special_9 },
 
         // debug / development commands
         { { TCODK_F1,     0,  1, 0, 0, 0, 0, 0 }, cmd_all_visible },

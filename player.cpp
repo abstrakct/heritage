@@ -38,7 +38,7 @@ Player::Player()
         setstat(sFear, 0);
         setstat(sHealth, 100);
         setchar('@');
-        setcolors(TCODColor::black, TCODColor::red);
+        setcolors(TCODColor::white, TCODColor::red);
         setfovradius(17);
 }
 
