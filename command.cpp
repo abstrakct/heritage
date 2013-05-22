@@ -57,6 +57,7 @@ command_t command_set_normal[] = {
 
         // debug / development commands
         { { TCODK_F1,     0,  1, 0, 0, 0, 0, 0 }, cmd_all_visible },
+        { { TCODK_F2,     0,  1, 0, 0, 0, 0, 0 }, cmd_incfear },
 };
 
 Command::Command()

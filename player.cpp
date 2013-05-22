@@ -54,17 +54,17 @@ void Player::look()
         type = world->get_cell_type(player->getxy());
         switch(type) {
                 case stairs_up:
-                        display->message("There is a staircase leading up here.");
+                        display->messagec(COLOR_INFO, "There is a staircase leading up here.");
                         break;
                 case stairs_down:
-                        display->message("There is a staircase leading down here.");
+                        display->messagec(COLOR_INFO, "There is a staircase leading down here.");
                         break;
                 case cell_corpse:
-                        display->message("You see here the corpse of %s. The sight fills you with horror.", world->a->cell[player->getx()][player->gety()].corpse->getname());
+                        display->messagec(COLOR_HORROR, "You see here the corpse of %s. The sight fills you with horror.", world->a->cell[player->getx()][player->gety()].corpse->getname());
                         incfear();
                         break;
                 case cell_bookcase:
-                        display->message("You see a bookcase here, filled with all kinds of old-looking books.");
+                        display->messagec(COLOR_INFO, "You see a bookcase here, filled with all kinds of old-looking books.");
                         break;
                 default:
                         break;
@@ -75,7 +75,7 @@ void Player::look()
 
 void Player::die()
 {
-        display->message("You have died...");
+        display->messagec(COLOR_FATAL, "You have died...");
         display->update();
         game->endgame();
 }
@@ -139,17 +139,21 @@ finish:
 void Player::use_stairs()
 {
         if(player->area->cell[player->getx()][player->gety()].get_type() == stairs_up) {
-                display->message("moving up!");
+                //display->message("moving up!");
                 world->current_area++;
                 world->a = &world->area[world->current_area];
                 player->area = world->a;
+                display->clear();
+                display->update();
         } else if(player->area->cell[player->getx()][player->gety()].get_type() == stairs_down) {
-                display->message("moving down!");
+                //display->message("moving down!");
                 world->current_area--;
                 world->a = &world->area[world->current_area];
                 player->area = world->a;
+                display->clear();
+                display->update();
         } else {
-                display->message("There are no stairs here!");
+                display->messagec(COLOR_ERROR, "There are no stairs here!");
         }
 }
 

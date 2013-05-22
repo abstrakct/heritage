@@ -65,6 +65,7 @@ void Game::end_turn()
 void Game::loop()
 {
         command_type c;
+        TCOD_key_t key;
 
         //console.print(10, 10, "Welcome to game!!");
 
@@ -109,10 +110,6 @@ void Game::loop()
                                 player->move_se();
                                 end_turn();
                                 break;
-                        case cmd_all_visible:
-                                world->a->set_all_visible();
-                                world->update_fov();
-                                break;
                         case cmd_close_door:
                                 world->close_nearest_door(player);
                                 break;
@@ -126,15 +123,27 @@ void Game::loop()
                         case cmd_wait:
                                 end_turn();
                                 break;
+
+                                // Debug/development commands:
+                        case cmd_all_visible:
+                                world->a->set_all_visible();
+                                world->update_fov();
+                                break;
+                        case cmd_incfear:
+                                player->incfear();
+                                end_turn();
+                                break;
                         default:
                                 break;
                 }
         }
 
-
-        display->message("You have died...");
+        display->messagec(COLOR_FATAL, "Game over. Press ESC to exit.");
         display->update();
-        display->get_key(true);
+
+        key = display->get_key(true);
+        while(key.vk != TCODK_ESCAPE)
+                key = display->get_key(true);
 }
 
 // vim: fdm=syntax guifont=Terminus\ 8

@@ -41,6 +41,7 @@ enum command_type {
 
         // debug / developement commands
         cmd_all_visible,
+        cmd_incfear,
 };
 
 struct command_t {

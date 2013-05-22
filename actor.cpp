@@ -77,7 +77,7 @@ void Actor::kill()
 {
         //display->message("%s dies at %d,%d!", name, this->co.x, this->co.y);
         if(!this->is_player()) {
-                display->message("You hear a horrible, chilling scream!");
+                display->messagec(COLOR_FATAL, "You hear a horrible, chilling scream!");
                 player->incfear();
                 player->incfear();
                 this->alive = false;
@@ -451,11 +451,14 @@ void Actor::incfear()
                 if(amount <= 0)
                         amount = 1;
                 incstat(sFear, amount);
-                display->message("You feel %s.", fiftyfifty() ? "scared" : "afraid");
+                display->messagec(COLOR_FEAR, "You feel %s.", fiftyfifty() ? "scared" : "afraid");
         }
 
+        if(getstat(sFear) > 80 && this->is_player() && fiftyfifty())
+                display->messagec(COLOR_FEAR, "You are %s!", fiftyfifty() ? "very afraid" : "terrified");
+
         if(getstat(sFear) > 100 && this->is_player()) {
-                display->message("You have been scared to death!!!");
+                display->messagec(COLOR_FATAL, "You have been scared to death!");
                 player->kill();
         }
 }
@@ -474,7 +477,7 @@ void Actor::decfear()
                                 amount = 1;
                         decstat(sFear, amount);
                         if(ri(1,10) == 10)
-                                display->message("You feel %s.", fiftyfifty() ? "a little bit more relaxed" : "a little less afraid");
+                                display->messagec(COLOR_LESSFEAR, "You feel %s.", fiftyfifty() ? "a little bit more relaxed" : "a little less afraid");
                 }
         }
 }
@@ -494,11 +497,16 @@ void Actor::attack_physical(Actor *target)
                 if(!world->a->tcodmap->isInFov(target->getx(), target->gety())) {
                         int x = ri(1,10);
                         switch(x) {
-                                case 1: display->message("You hear a scream somewhere in the house."); player->incfear(); break;
-                                case 2: display->message("You hear the sounds of fighting somewhere in the house."); player->incfear(); break;
-                                case 3: display->message("You hear someone shout."); player->incfear(); break;
-                                case 4: display->message("You hear someone yell."); player->incfear(); break;
-                                case 5: display->message("You hear the sound of something breaking."); player->incfear(); break;
+                                case  1: display->messagec(COLOR_FEAR, "You hear a scream somewhere in the house."); player->incfear(); break;
+                                case  2: display->messagec(COLOR_FEAR, "You hear the sounds of fighting somewhere in the house."); player->incfear(); break;
+                                case  3: display->messagec(COLOR_FEAR, "You hear someone shout."); player->incfear(); break;
+                                case  4: display->messagec(COLOR_FEAR, "You hear someone yell."); player->incfear(); break;
+                                case  5: display->messagec(COLOR_FEAR, "You hear the sound of something breaking."); player->incfear(); break;
+                                case  6: display->messagec(COLOR_FEAR, "You hear the sound of someone crying."); player->incfear(); break;
+                                case  7: display->messagec(COLOR_FEAR, "You hear someone wailing."); player->incfear(); break;
+                                case  8: display->messagec(COLOR_FEAR, "You hear a bloodcurdling shriek from somewhere in the house."); player->incfear(); break;
+                                case  9: display->messagec(COLOR_FEAR, "You hear a horrible howl from somewhere in the house."); player->incfear(); break;
+                                case 10: display->messagec(COLOR_FEAR, "You hear weird, muffled noises from somewhere in the house."); player->incfear(); break;
                                 default: break;
                         }
                 }

@@ -35,6 +35,7 @@
 struct message_t {
         int num;
         char message[MAX_MESSAGE_SIZE];
+        TCODColor color;
 };
 
 class Display {
@@ -51,8 +52,10 @@ class Display {
                 void putmap(int x, int y, int c, TCOD_bkgnd_flag_t flag = TCOD_BKGND_DEFAULT);
                 void putmap(int x, int y, int c, TCODColor &fg, TCODColor &bg);
                 void message(const char *message, ...);
+                void messagec(TCODColor c, const char *message, ...);
                 void print_messages();
                 void touch() { touched = true; };
+                void clear();
                 TCOD_key_t get_key(bool flush);
                 TCODColor get_random_color();
                 void print_npc_name(int x, int y, char *name);
@@ -69,6 +72,15 @@ class Display {
                 TCODConsole *bottom;
                 vector <struct message_t> message_list;
 };
+
+#define COLOR_FEAR      TCODColor::flame
+#define COLOR_LESSFEAR  TCODColor::lime
+#define COLOR_FATAL     TCODColor::darkFuchsia
+#define COLOR_INFO      TCODColor::amber
+#define COLOR_HORROR    TCODColor::crimson
+#define COLOR_ERROR     TCODColor::red
+#define COLOR_BOOK      TCODColor::azure
+#define COLOR_GOOD      TCODColor::green
 
 #endif
 

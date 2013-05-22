@@ -219,7 +219,9 @@ void Display::print_messages()
                 if(y < 1)
                         break;
                 if(strcmp(i->message, "")) {
+                        console->setDefaultForeground(i->color);
                         console->print(BOTTOM_X + 1, BOTTOM_Y + y, i->message);
+                        console->setDefaultForeground(TCODColor::white);
                         --y;
                 }
         }
@@ -236,12 +238,35 @@ void Display::message(const char *message, ...)
         va_end(argp);
 
         strcpy(item.message, s);
+        item.color = TCODColor::white;
 
         message_list.push_back(item);
 
         //console->print(BOTTOM_X + 1, BOTTOM_Y + 13, message);
 }
 
+void Display::messagec(TCODColor c, const char *message, ...)
+{
+        va_list argp;
+        char s[1000];
+        message_t item;
+
+        va_start(argp, message);
+        vsprintf(s, message, argp);
+        va_end(argp);
+
+        strcpy(item.message, s);
+        item.color = c;
+
+        message_list.push_back(item);
+
+        //console->print(BOTTOM_X + 1, BOTTOM_Y + 13, message);
+}
+
+void Display::clear()
+{
+        console->clear();
+}
 
 
 // vim: fdm=syntax guifont=Terminus\ 8
