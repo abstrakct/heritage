@@ -90,6 +90,7 @@ class Actor {
                 int  getstat(enum_stat which);
                 void incfear();
                 void decfear();
+                void decsanity();
 
                 void setfovradius(int amount) { fovradius = amount; };
                 int  getfovradius() { return fovradius; };

@@ -439,6 +439,22 @@ void Actor::incstat(enum_stat which, int amount)
         this->stat[which] += amount;
 }
 
+void Actor::decsanity()
+{
+        // Decrease sanity, if appropriate.
+
+        if(fiftyfifty()) {
+                int amount = 1;
+
+                amount -= ability_modifier(getstat(sMind));
+                amount += getstat(sFear) / 20;
+                if(amount <= 0)
+                        amount = 1;
+                decstat(sSanity, amount);
+                display->messagec(COLOR_FEAR, "You feel %s.", fiftyfifty() ? "less sane" : "a little out of whack");
+        }
+}
+
 void Actor::incfear()
 {
         // Increase fear, if appropriate.
@@ -454,8 +470,9 @@ void Actor::incfear()
                 display->messagec(COLOR_FEAR, "You feel %s.", fiftyfifty() ? "scared" : "afraid");
         }
 
-        if(getstat(sFear) > 80 && this->is_player() && fiftyfifty())
+        if(getstat(sFear) > 80 && this->is_player() && fiftyfifty()) {
                 display->messagec(COLOR_FEAR, "You are %s!", fiftyfifty() ? "very afraid" : "terrified");
+        }
 
         if(getstat(sFear) > 100 && this->is_player()) {
                 display->messagec(COLOR_FATAL, "You have been scared to death!");
