@@ -77,11 +77,9 @@ Cell::~Cell()
 
 bool Cell::is_walkable()
 {
-        /*if(this->inhabitant) {
-                if(this->inhabitant != player)
-                        display->message("%s is in your way!", this->inhabitant->getname());
+        if(this->inhabitant) {
                 return false;
-        }*/
+        }
 
         switch(this->type) {
                 case floor:

@@ -175,6 +175,13 @@ void Actor::drawcorpse()
 
 void Actor::move(int dx, int dy)
 {
+        if(this->area->cell[this->co.x + dx][this->co.y + dy].inhabitant) {
+                if(this == player) {
+                        display->message("%s is standing in your way!", this->area->cell[this->co.x + dx][this->co.y + dy].inhabitant->getname());
+                }
+                return;
+        }
+
         if(world->is_closed_door(this->area, this->co.x + dx, this->co.y + dy)) {
                 world->open_door(this->area, this->co.x + dx, this->co.y + dy);
                 display->touch();

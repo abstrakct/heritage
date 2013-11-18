@@ -11,13 +11,14 @@
 #include "SDL/SDL.h"
 #include "SDL/SDL_mixer.h"
 
-#define SOUND_EFFECT_x 0
-#define SOUND_EFFECT_Y 1
-#define SOUND_MUSIC_1  2
+#define SOUND_MUSIC_HOUSE_OF_LEAVES  0
+#define SOUND_EFFECT_STORM01  1
+#define SOUND_EFFECT_RAIN01   2
+
 
 enum soundtype {
         music = 0,
-        effect = 1
+        effect
 };
 
 struct sound_def {

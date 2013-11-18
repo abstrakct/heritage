@@ -139,14 +139,12 @@ finish:
 void Player::use_stairs()
 {
         if(player->area->cell[player->getx()][player->gety()].get_type() == stairs_up) {
-                //display->message("moving up!");
                 world->current_area++;
                 world->a = &world->area[world->current_area];
                 player->area = world->a;
                 display->clear();
                 display->update();
         } else if(player->area->cell[player->getx()][player->gety()].get_type() == stairs_down) {
-                //display->message("moving down!");
                 world->current_area--;
                 world->a = &world->area[world->current_area];
                 player->area = world->a;

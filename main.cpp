@@ -138,8 +138,8 @@ int main(int argc, char **argv)
         audio->initialize();
         audio->load_all_files();
         
-        //audio->play_music(2);
-        //audio->play_sound(0, 5000);
+        //audio->play_music(SOUND_MUSIC_HOUSE_OF_LEAVES);
+        audio->play_sound(SOUND_EFFECT_STORM01, 0);
 
         display->message("");     // "kickstart" the messaging system!
         game->loop();

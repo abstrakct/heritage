@@ -17,9 +17,10 @@ using namespace std;
 #include "sound.h"
 
 struct sound_def sound_defs[NUM_SOUNDS] = {
-        { 0, effect, "sound/120400__adamlhumphreys__storm01.wav"},
-        { 1, effect, "sound/127202__adamlhumphreys__rain10.wav"},
-        { 2, music,  "sound/music/The House of Leaves.mp3"},
+        { SOUND_MUSIC_HOUSE_OF_LEAVES, music,  "sound/music/The House of Leaves.mp3"},
+        { SOUND_EFFECT_STORM01, effect, "sound/120400__adamlhumphreys__storm01.wav"},
+        { SOUND_EFFECT_RAIN01, effect, "sound/127202__adamlhumphreys__rain10.wav"},
+        //{ SOUND_EFFECT_CREAKING, effect, "sound/105288__mbezzola__knarrender-holzboden-in-orgel.wav"},
 };
         
 SoundEngine::SoundEngine()
@@ -58,13 +59,18 @@ void SoundEngine::load_sound_def(int i)
 {
         if(sound_defs[i].type == effect) {
                 s[i].chunk = Mix_LoadWAV(sound_defs[i].filename);
+                sounds_count++;
                 if(s[i].chunk == NULL) {
                         fprintf(stderr, "Unable to load WAV file %s: %s\n", sound_defs[i].filename, Mix_GetError());
+                        sounds_count--;
                 }
         } else if(sound_defs[i].type == music) {
                 s[i].music = Mix_LoadMUS(sound_defs[i].filename);
-                if(!s[i].music)
+                sounds_count++;
+                if(!s[i].music) {
                         dbg("Failed to load music file %s: %s\n", sound_defs[i].filename, Mix_GetError());
+                        sounds_count--;
+                }
         }
 }
 
@@ -97,18 +103,6 @@ void SoundEngine::play_sound(int sound)
 
 }
 
-void SoundEngine::play_sound_infinite_loop(int sound)
-{
-        if(sound > sounds_count) {
-                dbg("Tried to play unloaded sound!");
-                return;
-        }
-        s[sound].channel = Mix_PlayChannel(-1, s[sound].chunk, -1);
-        if(s[sound].channel == -1) {
-                fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
-        }
-}
-
 void SoundEngine::play_sound(int sound, int ms)
 {
         if(sound > sounds_count) {
@@ -120,6 +114,18 @@ void SoundEngine::play_sound(int sound, int ms)
                 fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
         }
 
+}
+
+void SoundEngine::play_sound_infinite_loop(int sound)
+{
+        if(sound > sounds_count) {
+                dbg("Tried to play unloaded sound!");
+                return;
+        }
+        s[sound].channel = Mix_PlayChannel(-1, s[sound].chunk, -1);
+        if(s[sound].channel == -1) {
+                fprintf(stderr, "Unable to play WAV file: %s\n", Mix_GetError());
+        }
 }
 
 void SoundEngine::pause_sound(int sound)
