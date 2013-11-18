@@ -99,6 +99,7 @@ class Actor {
                 void attack_physical(Actor *target);
 
                 // Movement
+                void move(int dx, int dy);
                 void move_left();
                 void move_right();
                 void move_up();

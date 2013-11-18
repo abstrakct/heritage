@@ -39,7 +39,7 @@ Player::Player()
         setstat(sHealth, 100);
         setchar('@');
         setcolors(TCODColor::white, TCODColor::red);
-        setfovradius(17);
+        setfovradius(33);
 }
 
 Player::~Player()

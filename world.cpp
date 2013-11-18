@@ -620,9 +620,9 @@ bool World::is_walkable(Area *where, int x, int y)
         return where->cell[x][y].is_walkable();
 }
 
-bool World::is_closed_door(int x, int y)
+bool World::is_closed_door(Area *where, int x, int y)
 {
-        if(a->cell[x][y].get_type() == door_closed)
+        if(where->cell[x][y].get_type() == door_closed)
                 return true;
         else
                 return false;

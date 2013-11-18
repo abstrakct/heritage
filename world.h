@@ -140,7 +140,7 @@ class World {
                 const char *get_cell_type(int x, int y);
                 cell_type get_cell_type(coord_t co);
                 bool is_walkable(Area *where, int x, int y);
-                bool is_closed_door(int x, int y);
+                bool is_closed_door(Area *where, int x, int y);
                 bool is_open_door(int x, int y);
                 void open_door(int x, int y);
                 void close_door(int x, int y);

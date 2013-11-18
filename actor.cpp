@@ -173,201 +173,71 @@ void Actor::drawcorpse()
         display->touch();
 }
 
-void Actor::move_left()
+void Actor::move(int dx, int dy)
 {
-        if(world->is_closed_door(this->co.x - 1, this->co.y)) {
-                world->open_door(this->co.x - 1, this->co.y);
+        if(world->is_closed_door(this->area, this->co.x + dx, this->co.y + dy)) {
+                world->open_door(this->co.x + dx, this->co.y + dy);
                 display->touch();
                 return;
         }
 
         if(this->enemy) {
-                if(this->enemy->getx() == this->co.x-1 && this->enemy->gety() == this->co.y) {
-                        attack(enemy);
-                        return;
+                if(this->enemy->area == this->area) {
+                        if(this->enemy->getx() == this->co.x + dx && this->enemy->gety() == this->co.y + dy) {
+                                attack(enemy);
+                                return;
+                        }
                 }
         }
 
-        if(this->area->is_walkable(this->co.x - 1, this->co.y)) {
+        if(this->area->is_walkable(this->co.x + dx, this->co.y + dy)) {
                 prev = co;
-                co.x -= 1;
+                co.x += dx;
+                co.y += dy;
                 world->clear_inhabitant(prev);
                 world->set_inhabitant(this);
                 display->touch();
         }
+}
+
+void Actor::move_left()
+{
+        this->move(-1, 0);
 }
 
 void Actor::move_right()
 {
-        if(world->is_closed_door(this->co.x + 1, this->co.y)) {
-                world->open_door(this->co.x + 1, this->co.y);
-                display->touch();
-                return;
-        }
-
-        if(this->enemy) {
-                if(this->enemy->getx() == this->co.x+1 && this->enemy->gety() == this->co.y) {
-                        attack(enemy);
-                        return;
-                }
-        }
-
-        if(this->area->is_walkable(this->co.x + 1, this->co.y)) {
-                prev = co;
-                co.x += 1;
-                world->clear_inhabitant(prev);
-                world->set_inhabitant(this);
-                display->touch();
-        }
+        this->move(1, 0);
 }
 
 void Actor::move_down()
 {
-        if(world->is_closed_door(this->co.x, this->co.y + 1)) {
-                world->open_door(this->co.x, this->co.y + 1);
-                display->touch();
-                return;
-        }
-
-        if(this->enemy) {
-                if(this->enemy->getx() == this->co.x && this->enemy->gety() == this->co.y+1) {
-                        attack(enemy);
-                        return;
-                }
-        }
-
-        if(this->area->is_walkable(this->co.x, this->co.y + 1)) {
-                prev = co;
-                co.y += 1;
-                world->clear_inhabitant(prev);
-                world->set_inhabitant(this);
-                display->touch();
-        }
+        this->move(0, 1);
 }
 
 void Actor::move_up()
 {
-        if(world->is_closed_door(this->co.x, this->co.y - 1)) {
-                world->open_door(this->co.x, this->co.y - 1);
-                display->touch();
-                return;
-        }
-
-        if(this->enemy) {
-                if(this->enemy->getx() == this->co.x && this->enemy->gety() == this->co.y-1) {
-                        attack(enemy);
-                        return;
-                }
-        }
-
-        
-        if(this->area->is_walkable(this->co.x, this->co.y - 1)) {
-                prev = co;
-                co.y -= 1;
-                world->clear_inhabitant(prev);
-                world->set_inhabitant(this);
-                display->touch();
-        }
+        this->move(0, -1);
 }
 
 void Actor::move_nw()
 {
-        if(world->is_closed_door(this->co.x - 1, this->co.y - 1)) {
-                world->open_door(this->co.x - 1, this->co.y - 1);
-                display->touch();
-                return;
-        }
-
-        if(this->enemy) {
-                if(this->enemy->getx() == this->co.x-1 && this->enemy->gety() == this->co.y-1) {
-                        attack(enemy);
-                        return;
-                }
-        }
-
-        if(this->area->is_walkable(this->co.x - 1, this->co.y - 1)) {
-                prev = co;
-                co.x -= 1;
-                co.y -= 1;
-                world->clear_inhabitant(prev);
-                world->set_inhabitant(this);
-                display->touch();
-        }
+        this->move(-1, -1);
 }
 
 void Actor::move_ne()
 {
-        if(world->is_closed_door(this->co.x + 1, this->co.y - 1)) {
-                world->open_door(this->co.x + 1, this->co.y - 1);
-                display->touch();
-                return;
-        }
-
-        if(this->enemy) {
-                if(this->enemy->getx() == this->co.x+1 && this->enemy->gety() == this->co.y-1) {
-                        attack(enemy);
-                        return;
-                }
-        }
-
-        if(this->area->is_walkable(this->co.x + 1, this->co.y - 1)) {
-                prev = co;
-                co.x += 1;
-                co.y -= 1;
-                world->clear_inhabitant(prev);
-                world->set_inhabitant(this);
-                display->touch();
-        }
+        this->move(1, -1);
 }
 
 void Actor::move_sw()
 {
-        if(world->is_closed_door(this->co.x - 1, this->co.y + 1)) {
-                world->open_door(this->co.x - 1, this->co.y + 1);
-                display->touch();
-                return;
-        }
-
-        if(this->enemy) {
-                if(this->enemy->getx() == this->co.x-1 && this->enemy->gety() == this->co.y+1) {
-                        attack(enemy);
-                        return;
-                }
-        }
-
-        if(this->area->is_walkable(this->co.x - 1, this->co.y + 1)) {
-                prev = co;
-                co.x -= 1;
-                co.y += 1;
-                world->clear_inhabitant(prev);
-                world->set_inhabitant(this);
-                display->touch();
-        }
+        this->move(-1, 1);
 }
 
 void Actor::move_se()
 {
-        if(world->is_closed_door(this->co.x + 1, this->co.y + 1)) {
-                world->open_door(this->co.x + 1, this->co.y + 1);
-                display->touch();
-                return;
-        }
-
-        if(this->enemy) {
-                if(this->enemy->getx() == this->co.x+1 && this->enemy->gety() == this->co.y+1) {
-                        attack(enemy);
-                        return;
-                }
-        }
-
-        if(this->area->is_walkable(this->co.x + 1, this->co.y + 1)) {
-                prev = co;
-                co.x += 1;
-                co.y += 1;
-                world->clear_inhabitant(prev);
-                world->set_inhabitant(this);
-                display->touch();
-        }
+        this->move(1, 1);
 }
 
 const char *Actor::get_sanitydesc()
