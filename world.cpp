@@ -268,7 +268,7 @@ void Cell::activate_bookcase()
         display->messagec(COLOR_BOOK, "You spend a little while browsing the books in this bookcase, looking for something interesting.");
         i = dice(1, 20, 0);
         if(i <= 10) {
-                book = ri(1, 5);
+                book = ri(1, 7);
                 switch(book) {
                         case 1:
                                 display->messagec(COLOR_BOOK, "An old book titled \"Unlocking Your Brain's True Potential - Vol. I\" catches your eye.");
@@ -296,19 +296,6 @@ void Cell::activate_bookcase()
                                 display->message(" ");
                                 break;
                         case 3:
-                                display->messagec(COLOR_BOOK, "Your gaze stops at a book titled \"Physical Excercises for Modern Men and Women\".");
-                                x = dice(1, 20, 0);
-                                if(x <= player->getstat(sMind)) {
-                                        display->messagec(COLOR_BOOK, "Inside the book are pictures and descriptions of various physical excercises. You take notice of some of these.");
-                                        display->messagec(COLOR_GOOD, "Congratulations! You feel more prepared for physical combat.");
-                                        player->incstat(sBody, 1);
-                                } else {
-                                        display->messagec(COLOR_BOOK, "Inside the book are pictures and descriptions of various physical excercises.");
-                                        display->messagec(COLOR_BOOK, "You discard the book. Books are no substitute for real physical excercise!");
-                                }
-                                display->message(" ");
-                                break;
-                        case 4:
                                 display->messagec(COLOR_BOOK, "You find a small book called \"Mysteries of the Soul\", written by Marvin E. A. Edeef.");
                                 x = dice(1, 20, 0);
                                 if(x <= player->getstat(sMind)) {
@@ -317,6 +304,45 @@ void Cell::activate_bookcase()
                                         player->special[1] = special_soulcrush;
                                 } else {
                                         display->messagec(COLOR_BOOK, "You flip through the book, quickly concluding that it's just New-Age mumbo jumbo.");
+                                }
+                                display->message(" ");
+                                break;
+                        case 4:
+                                display->messagec(COLOR_BOOK, "Your gaze stops at a book titled \"Physical Excercises for Modern Men and Women\".");
+                                x = dice(1, 20, 0);
+                                if(x <= player->getstat(sMind)) {
+                                        display->messagec(COLOR_BOOK, "Inside the book are pictures and descriptions of various physical excercises. You take notice of some of these.");
+                                        display->messagec(COLOR_GOOD, "Congratulations! You feel more prepared for physical combat.");
+                                        player->incstat(sBody, dice(1,3,0));
+                                } else {
+                                        display->messagec(COLOR_BOOK, "Inside the book are pictures and descriptions of various physical excercises.");
+                                        display->messagec(COLOR_BOOK, "You discard the book. Books are no substitute for real physical excercise!");
+                                }
+                                display->message(" ");
+                                break;
+                        case 5:
+                                display->messagec(COLOR_BOOK, "You discover an issue of a magazine entitled \"Chess Puzzles Monthly\".");
+                                x = dice(1, 20, 0);
+                                if(x <= player->getstat(sMind)) {
+                                        display->messagec(COLOR_BOOK, "You spend some time solving a few of the puzzles inside - even some of the hard ones!");
+                                        display->messagec(COLOR_GOOD, "Congratulations! You can literally feel your brain expanding.");
+                                        player->incstat(sMind, dice(1,3,0));
+                                } else {
+                                        display->messagec(COLOR_BOOK, "You try to solve some of the puzzles, but fail miserably at each and every one.");
+                                        display->messagec(COLOR_BOOK, "Frustrated, you tear the magazine apart and throw it away.");
+                                }
+                                display->message(" ");
+                                break;
+                        case 6:
+                                display->messagec(COLOR_BOOK, "Amongst a nice collection of pulp novels, you come across a thick tome called \"Religions and Rituals - Then and Now\". The author is Ann Theodorette Ropos.");
+                                x = dice(1, 20, 0);
+                                if(x <= player->getstat(sMind)) {
+                                        display->messagec(COLOR_BOOK, "The tome is quite academic in style, but you manage to understand some of the main principles and ideas.");
+                                        display->messagec(COLOR_GOOD, "Congratulations! You feel that there is hope for your soul after all.");
+                                        player->incstat(sSoul, dice(1,3,0));
+                                } else {
+                                        display->messagec(COLOR_BOOK, "The tome is quite academic in style, and obviously not meant to be understandable for laymen.");
+                                        display->messagec(COLOR_BOOK, "You gain nothing from reading the long sentences with too many commas and obscure words which overpopulate this book.");
                                 }
                                 display->message(" ");
                                 break;
