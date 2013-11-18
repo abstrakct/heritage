@@ -129,8 +129,10 @@ void NPC::set_random_goal()
 
         if(type > 25 && type <= 50) {  // abandon goal, set a new goal
                 //display->message("%s has abandoned goal.", this->getname());
-                clear_goal();
-                set_random_goal();
+                if(this->pass_roll(sSoul)) {
+                        clear_goal();
+                        set_random_goal();
+                }
         }
         
         if(type > 50 && type <= 70) {

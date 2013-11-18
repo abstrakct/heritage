@@ -179,6 +179,7 @@ void Actor::move(int dx, int dy)
                 if(this == player) {
                         display->message("%s is standing in your way!", this->area->cell[this->co.x + dx][this->co.y + dy].inhabitant->getname());
                 }
+                
                 return;
         }
 
@@ -276,29 +277,6 @@ const char *Actor::get_sanitydesc()
 int Actor::getstat(enum_stat which)
 {
         return this->stat[(int)which];
-
-        /*switch(which) {
-                case sMind:
-                        return this->mind;
-                        break;
-                case sBody:
-                        return this->body;
-                        break;
-                case sSoul:
-                        return this->soul;
-                        break;
-                case sSanity:
-                        return this->sanity;
-                        break;
-                case sFear:
-                        return this->fear;
-                        break;
-                case sHealth:
-                        return this->health;
-                        break;
-                default:
-                        return 0;
-        }*/
 }
 
 void Actor::setstat(enum_stat which, int what)
@@ -378,6 +356,17 @@ void Actor::decfear()
 
 void Actor::use_stairs()
 {
+}
+
+bool Actor::pass_roll(enum_stat stat)
+{
+        int x;
+
+        x = dice(1,20,0);
+        if(x <= this->getstat(stat))
+                return true;
+        else
+                return false;
 }
 
 void Actor::attack_physical(Actor *target)

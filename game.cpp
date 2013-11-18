@@ -123,8 +123,19 @@ void Game::loop()
                         case cmd_wait:
                                 end_turn();
                                 break;
-
-                                // Debug/development commands:
+                        case cmd_special_1:
+                                display->message("SPECIAL ATTACK 1");
+                                display->touch();
+                                break;
+                        case cmd_special_2:
+                                display->message("SPECIAL ATTACK 2");
+                                display->touch();
+                                break;
+                        case cmd_special_3:
+                                display->message("SPECIAL ATTACK 3");
+                                display->touch();
+                                break;
+                // Debug/development commands:
                         case cmd_all_visible:
                                 world->a->set_all_visible();
                                 world->update_fov();

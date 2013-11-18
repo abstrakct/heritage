@@ -98,6 +98,8 @@ class Actor {
                 void attack(Actor *target, attack_type type = body);
                 void attack_physical(Actor *target);
 
+                bool pass_roll(enum_stat stat);
+
                 // Movement
                 void move(int dx, int dy);
                 void move_left();

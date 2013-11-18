@@ -259,12 +259,13 @@ cell_type Cell::get_type()
 
 void Cell::activate_bookcase()
 {
-        int i, book, x;
+        int i, book;
         if(activated) {
                 display->messagec(COLOR_INFO, "You find nothing more of interest in this bookcase.");
                 return;
         }
 
+        display->message(" ");
         display->messagec(COLOR_BOOK, "You spend a little while browsing the books in this bookcase, looking for something interesting.");
         i = dice(1, 20, 0);
         if(i <= 10) {
@@ -273,8 +274,7 @@ void Cell::activate_bookcase()
                         case 1:
                                 display->messagec(COLOR_BOOK, "An old book titled \"Unlocking Your Brain's True Potential - Vol. I\" catches your eye.");
                                 display->messagec(COLOR_BOOK, "The book is written by Dr. Evan Hoffman.");
-                                x = dice(1, 20, 0);
-                                if(x <= player->getstat(sMind)) {
+                                if(player->pass_roll(sMind)) {
                                         display->messagec(COLOR_BOOK, "You open the book at \"Chapter XIII - Telekinetics and related subjects\" and read for a while.");
                                         display->messagec(COLOR_GOOD, "Congratulations! You can now employ your mind to cause minor destruction!");
                                         player->special[2] = special_mindblast;
@@ -285,8 +285,7 @@ void Cell::activate_bookcase()
                                 break;
                         case 2:
                                 display->messagec(COLOR_BOOK, "You come across a book called \"How To Fight - A Manual\". It looks interesting.");
-                                x = dice(1, 20, 0);
-                                if(x <= player->getstat(sMind)) {
+                                if(player->pass_roll(sMind)) {
                                         display->messagec(COLOR_BOOK, "You read through the book, picking up a few useful fighting techniques.");
                                         display->messagec(COLOR_GOOD, "Congratulations! You can now use a special move in physical combat!");
                                         player->special[3] = special_powerfist;
@@ -297,8 +296,7 @@ void Cell::activate_bookcase()
                                 break;
                         case 3:
                                 display->messagec(COLOR_BOOK, "You find a small book called \"Mysteries of the Soul\", written by Marvin E. A. Edeef.");
-                                x = dice(1, 20, 0);
-                                if(x <= player->getstat(sMind)) {
+                                if(player->pass_roll(sMind)) {
                                         display->messagec(COLOR_BOOK, "As you flip through the book you come to a sudden realization about the soul and your own spirituality.");
                                         display->messagec(COLOR_GOOD, "Congratulations! You can now use some of the powers of your soul to help you make it through the night!");
                                         player->special[1] = special_soulcrush;
@@ -309,8 +307,7 @@ void Cell::activate_bookcase()
                                 break;
                         case 4:
                                 display->messagec(COLOR_BOOK, "Your gaze stops at a book titled \"Physical Excercises for Modern Men and Women\".");
-                                x = dice(1, 20, 0);
-                                if(x <= player->getstat(sMind)) {
+                                if(player->pass_roll(sMind)) {
                                         display->messagec(COLOR_BOOK, "Inside the book are pictures and descriptions of various physical excercises. You take notice of some of these.");
                                         display->messagec(COLOR_GOOD, "Congratulations! You feel more prepared for physical combat.");
                                         player->incstat(sBody, dice(1,3,0));
@@ -322,8 +319,7 @@ void Cell::activate_bookcase()
                                 break;
                         case 5:
                                 display->messagec(COLOR_BOOK, "You discover an issue of a magazine entitled \"Chess Puzzles Monthly\".");
-                                x = dice(1, 20, 0);
-                                if(x <= player->getstat(sMind)) {
+                                if(player->pass_roll(sMind)) {
                                         display->messagec(COLOR_BOOK, "You spend some time solving a few of the puzzles inside - even some of the hard ones!");
                                         display->messagec(COLOR_GOOD, "Congratulations! You can literally feel your brain expanding.");
                                         player->incstat(sMind, dice(1,3,0));
@@ -335,8 +331,7 @@ void Cell::activate_bookcase()
                                 break;
                         case 6:
                                 display->messagec(COLOR_BOOK, "Amongst a nice collection of pulp novels, you come across a thick tome called \"Religions and Rituals - Then and Now\". The author is Ann Theodorette Ropos.");
-                                x = dice(1, 20, 0);
-                                if(x <= player->getstat(sMind)) {
+                                if(player->pass_roll(sMind)) {
                                         display->messagec(COLOR_BOOK, "The tome is quite academic in style, but you manage to understand some of the main principles and ideas.");
                                         display->messagec(COLOR_GOOD, "Congratulations! You feel that there is hope for your soul after all.");
                                         player->incstat(sSoul, dice(1,3,0));
