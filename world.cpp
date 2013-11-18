@@ -709,10 +709,10 @@ void World::draw_cell(int x, int y, TCODColor fg, TCODColor bg)
         //a->cell[x][y].draw(x, y, fg, bg);
         if(player->area->cell[x][y].inhabitant) {
                 if(player->area->cell[x][y].inhabitant->alive) {
-                        a->cell[x][y].inhabitant->draw(fg, bg);
+                        player->area->cell[x][y].inhabitant->draw(fg, bg);
                 }
         } else {
-                display->putmap(x, y, a->cell[x][y].c, fg, bg);
+                display->putmap(x, y, player->area->cell[x][y].c, fg, bg);
         }
 }
 

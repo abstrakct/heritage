@@ -11,6 +11,16 @@
 #include "libtcod.hpp"
 #include "actor.h"
 
+enum goal_type_e {
+        no_goal = 0,
+        move_random,
+        move_upstairs,
+        move_downstairs,
+        kill_player,
+        kill_npc
+};
+        
+
 class NPC: public Actor {
         public:
                 NPC();
@@ -19,12 +29,13 @@ class NPC: public Actor {
                 void setai(int which);
                 void ai();
                 void set_goal(coord_t c) { goal = c; has_goal = true; };
-                void clear_goal() { has_goal = false; };
+                void clear_goal() { has_goal = false; goal_type = no_goal; };
                 void generate_name();
                 void use_stairs();
 
                 bool has_goal;
-                int which_ai;
+                goal_type_e goal_type;
+                int  which_ai;
                 TCODPath *path;
         private:
                 void random_ai();

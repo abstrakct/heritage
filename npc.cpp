@@ -47,6 +47,7 @@ NPC::NPC()
         setai(AI_RANDOM);
         path = new TCODPath(world->a->tcodmap, 1.0f);
         has_goal = false;
+        goal_type = no_goal;
         enemy = NULL;
 
         setgender(ri(0, 1));
@@ -122,26 +123,34 @@ void NPC::set_random_goal()
         type = ri(1,100);
         if(type <= 25) {    // goal is random location on the level.
                 set_goal(world->get_random_walkable_cell(this->area_id));
+                //display->message("%s has a goal: to walk to %d,%d", this->getname(), this->goal.x, this->goal.y);
+                this->goal_type = move_random;
         }
 
-        if(type > 25 && type <= 50) {
+        if(type > 25 && type <= 50) {  // abandon goal, set a new goal
+                //display->message("%s has abandoned goal.", this->getname());
                 clear_goal();
+                set_random_goal();
         }
         
         if(type > 50 && type <= 70) {
+                //display->message("%s has a goal: to go upstairs", this->getname());
                 set_goal(this->area->stairs_up);
+                this->goal_type = move_upstairs;
         }
         
         if(type > 70 && type <= 90) {
+                //display->message("%s has a goal: to go downstairs", this->getname());
                 set_goal(this->area->stairs_down);
+                this->goal_type = move_downstairs;
         }
 
         if(type > 90 && type <= 97) {
                 if(enemy) {
-                        //display->message("%s has decided to not kill %s!", this->getname(), this->enemy->getname());
+                        //display->message("%s has decided to NOT kill %s after all!", this->getname(), this->enemy->getname());
+                        clear_goal();
                         enemy = NULL;
                 }
-                clear_goal();
         }
 
         if(type > 97) {
@@ -150,6 +159,7 @@ void NPC::set_random_goal()
                         if(player->area == this->area) {   // to avoid 3D pathfinding, only attack stuff on one's own level/floor/area
                                 enemy = player;
                                 set_goal(player->getxy());
+                                this->goal_type = kill_player;
                         }
                         //display->message("%s has decided to kill YOU!!!!", this->getname());
                 } else {
@@ -158,6 +168,7 @@ void NPC::set_random_goal()
                         if(npc[i].area == this->area) {
                                 set_goal(npc[i].getxy());
                                 enemy = &npc[i];
+                                this->goal_type = kill_npc;
                         }
                         //display->message("%s has decided to kill %s!", this->getname(), npc[i].getname());
                 }
@@ -175,6 +186,8 @@ void NPC::use_stairs()
                 this->area = &world->area[this->area_id];
                 //display->message("area id is now %d", this->area_id);
                 world->set_inhabitant(this);
+                delete path;
+                path = new TCODPath(this->area->tcodmap, 1.0f);
         } else if(world->area[world->current_area].cell[this->getx()][this->gety()].get_type() == stairs_down) {
                 world->clear_inhabitant(this->area, this->getxy());
                 //display->message("%s is moving down some stairs from area %d!", this->getname(), this->area_id);
@@ -184,6 +197,8 @@ void NPC::use_stairs()
                 this->area = &world->area[this->area_id];
                 //display->message("area id is now %d", this->area_id);
                 world->set_inhabitant(this);
+                delete path;
+                path = new TCODPath(this->area->tcodmap, 1.0f);
         } 
 }
 
@@ -192,9 +207,9 @@ void NPC::use_stairs()
  */
 void NPC::path_ai()
 {
+        coord_t curr = this->getxy();
         if(!has_goal) {
-                coord_t c = this->getxy();
-                if(world->get_cell_type(this->area, c) == stairs_up || world->get_cell_type(this->area, c) == stairs_down) {
+                if(world->get_cell_type(this->area, curr) == stairs_up || world->get_cell_type(this->area, curr) == stairs_down) {
                         this->use_stairs();
                         has_goal = false;
                 }
@@ -202,36 +217,38 @@ void NPC::path_ai()
         } else {
                 int chance = 60;
                 if(enemy) {
+
                         set_goal(enemy->getxy());
                         chance = 80;
                 }
+
                 // Let's walk the path!
                 int d;
                 int x, y;
 
                 d = ri(1, 100);
 
+                path->compute(curr.x, curr.y, goal.x, goal.y);
                 if(d < chance) {                                          // walk, or hang around?
-                        coord_t c = this->getxy();
+                        curr = this->getxy();
 
-                        path->compute(c.x, c.y, goal.x, goal.y);
                         if(path->walk(&x, &y, true)) {
                                 // success
-                                if(x > c.x && y == c.y)
+                                if(x > curr.x && y == curr.y)
                                         move_right();
-                                if(x < c.x && y == c.y)
+                                if(x < curr.x && y == curr.y)
                                         move_left();
-                                if(x == c.x && y > c.y)
+                                if(x == curr.x && y > curr.y)
                                         move_down();
-                                if(x == c.x && y < c.y)
+                                if(x == curr.x && y < curr.y)
                                         move_up();
-                                if(x > c.x && y > c.y)
+                                if(x > curr.x && y > curr.y)
                                         move_se();
-                                if(x < c.x && y > c.y)
+                                if(x < curr.x && y > curr.y)
                                         move_sw();
-                                if(x < c.x && y < c.y)
+                                if(x < curr.x && y < curr.y)
                                         move_nw();
-                                if(x > c.x && y < c.y)
+                                if(x > curr.x && y < curr.y)
                                         move_ne();
                         } else {
                                 // walking the path failed - set new goal.
