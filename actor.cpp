@@ -176,7 +176,7 @@ void Actor::drawcorpse()
 void Actor::move(int dx, int dy)
 {
         if(world->is_closed_door(this->area, this->co.x + dx, this->co.y + dy)) {
-                world->open_door(this->co.x + dx, this->co.y + dy);
+                world->open_door(this->area, this->co.x + dx, this->co.y + dy);
                 display->touch();
                 return;
         }
@@ -194,7 +194,7 @@ void Actor::move(int dx, int dy)
                 prev = co;
                 co.x += dx;
                 co.y += dy;
-                world->clear_inhabitant(prev);
+                world->clear_inhabitant(this->area, prev);
                 world->set_inhabitant(this);
                 display->touch();
         }

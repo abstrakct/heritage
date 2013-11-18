@@ -167,7 +167,7 @@ void NPC::set_random_goal()
 void NPC::use_stairs()
 {
         if(this->area->cell[this->getx()][this->gety()].get_type() == stairs_up) {
-                world->clear_inhabitant(this->getxy());
+                world->clear_inhabitant(this->area, this->getxy());
                 //display->message("%s is moving up some stairs from area %d!", this->getname(), this->area_id);
                 int a = (int) this->area_id;
                 a++;
@@ -176,7 +176,7 @@ void NPC::use_stairs()
                 //display->message("area id is now %d", this->area_id);
                 world->set_inhabitant(this);
         } else if(world->area[world->current_area].cell[this->getx()][this->gety()].get_type() == stairs_down) {
-                world->clear_inhabitant(this->getxy());
+                world->clear_inhabitant(this->area, this->getxy());
                 //display->message("%s is moving down some stairs from area %d!", this->getname(), this->area_id);
                 int a = (int) this->area_id;
                 a--;
@@ -194,7 +194,7 @@ void NPC::path_ai()
 {
         if(!has_goal) {
                 coord_t c = this->getxy();
-                if(world->get_cell_type(c) == stairs_up || world->get_cell_type(c) == stairs_down) {
+                if(world->get_cell_type(this->area, c) == stairs_up || world->get_cell_type(this->area, c) == stairs_down) {
                         this->use_stairs();
                         has_goal = false;
                 }

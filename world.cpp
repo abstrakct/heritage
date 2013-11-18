@@ -628,24 +628,24 @@ bool World::is_closed_door(Area *where, int x, int y)
                 return false;
 }
 
-bool World::is_open_door(int x, int y)
+bool World::is_open_door(Area *where, int x, int y)
 {
-        if(a->cell[x][y].get_type() == door_open)
+        if(where->cell[x][y].get_type() == door_open)
                 return true;
         else
                 return false;
 }
 
-void World::open_door(int x, int y)
+void World::open_door(Area *where, int x, int y)
 {
-        a->cell[x][y].set_door_open();
-        a->build_tcodmap();
+        where->cell[x][y].set_door_open();
+        where->build_tcodmap();
 }
 
-void World::close_door(int x, int y)
+void World::close_door(Area *where, int x, int y)
 {
-        a->cell[x][y].set_door_closed();
-        a->build_tcodmap();
+        where->cell[x][y].set_door_closed();
+        where->build_tcodmap();
 }
 
 bool World::close_nearest_door(Actor *actor)
@@ -659,8 +659,8 @@ bool World::close_nearest_door(Actor *actor)
         y = actor->gety();
         for(dx=-1; dx <= 1; dx++) {
                 for(dy=-1; dy <= 1; dy++) {
-                        if(is_open_door(x+dx, y+dy)) {
-                                close_door(x+dx, y+dy);
+                        if(is_open_door(actor->area, x+dx, y+dy)) {
+                                close_door(actor->area, x+dx, y+dy);
                                 return true;
                         }
                 }
@@ -675,10 +675,10 @@ void World::draw_map()
 
         for(i = 1; i < AREA_MAX_X-1; ++i) {
                 for(j = 1; j < AREA_MAX_Y-1; ++j) {
-                        if(area[current_area].cell_is_visible(i, j)) {
+                        if(player->area->cell_is_visible(i, j)) {
                                 draw_cell(i, j);
                         } else {
-                                if(!area[current_area].lights_on) {
+                                if(!player->area->lights_on) {
                                         draw_cell(i, j, TCODColor::black, TCODColor::black); 
                                 }
                         }
@@ -690,11 +690,9 @@ void World::draw_map()
 void World::draw_cell(int x, int y)
 {
        // a->cell[x][y].draw(x, y);
-        if(a->cell[x][y].inhabitant) {
-                if(a->cell[x][y].inhabitant->alive) {
-                        if(a->cell[x][y].inhabitant->area == world->a) {
-                                a->cell[x][y].inhabitant->draw();
-                        }
+        if(player->area->cell[x][y].inhabitant) {
+                if(player->area->cell[x][y].inhabitant->alive) {
+                        player->area->cell[x][y].inhabitant->draw();
                 }
         } else {
                 display->putmap(x, y, a->cell[x][y].c, a->cell[x][y].fg, a->cell[x][y].bg);
@@ -703,17 +701,15 @@ void World::draw_cell(int x, int y)
 
 void World::draw_cell(coord_t co)
 {
-        a->cell[co.x][co.y].draw(co.x, co.y);
+        player->area->cell[co.x][co.y].draw(co.x, co.y);
 }
 
 void World::draw_cell(int x, int y, TCODColor fg, TCODColor bg)
 {
         //a->cell[x][y].draw(x, y, fg, bg);
-        if(a->cell[x][y].inhabitant) {
-                if(a->cell[x][y].inhabitant->alive) {
-                        if(a->cell[x][y].inhabitant->area == world->a) {
-                                a->cell[x][y].inhabitant->draw(fg, bg);
-                        }
+        if(player->area->cell[x][y].inhabitant) {
+                if(player->area->cell[x][y].inhabitant->alive) {
+                        a->cell[x][y].inhabitant->draw(fg, bg);
                 }
         } else {
                 display->putmap(x, y, a->cell[x][y].c, fg, bg);
@@ -725,7 +721,7 @@ void World::update_fov()
         coord_t co;
 
         co = player->getxy();
-        a->tcodmap->computeFov(co.x, co.y, player->getfovradius(), true, FOV_BASIC);
+        player->area->tcodmap->computeFov(co.x, co.y, player->getfovradius(), true, FOV_BASIC);
 }
 
 coord_t World::get_random_walkable_cell(area_id_type id)
@@ -770,18 +766,18 @@ void World::set_inhabitant(Actor *actor)
         actor->area_id = actor->area->get_id();
 }
 
-void World::clear_inhabitant(coord_t co)
+void World::clear_inhabitant(Area *where, coord_t co)
 {
-        a->cell[co.x][co.y].inhabitant = NULL;
-        if(a->cell_is_visible(co.x, co.y))
-                a->cell[co.x][co.y].draw(co.x, co.y);
+        where->cell[co.x][co.y].inhabitant = NULL;
+        if(where->cell_is_visible(co.x, co.y))
+                where->cell[co.x][co.y].draw(co.x, co.y);
         else
-                a->cell[co.x][co.y].draw(co.x, co.y, TCODColor::black, TCODColor::black);
+                where->cell[co.x][co.y].draw(co.x, co.y, TCODColor::black, TCODColor::black);
 }
 
-const char *World::get_cell_type(int x, int y)
+const char *World::get_cell_type(Area *where, int x, int y)
 {
-        switch(a->cell[x][y].get_type()) {
+        switch(where->cell[x][y].get_type()) {
                 case floor: return "floor"; break;
                 case wall: return "wall"; break;
                 case nothing: return "nothing"; break;
@@ -791,9 +787,9 @@ const char *World::get_cell_type(int x, int y)
         }
 }
 
-cell_type World::get_cell_type(coord_t co)
+cell_type World::get_cell_type(Area *where, coord_t co)
 {
-        return world->area[current_area].cell[co.x][co.y].get_type();
+        return where->cell[co.x][co.y].get_type();
 }
         
 

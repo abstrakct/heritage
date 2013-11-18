@@ -51,7 +51,7 @@ void Player::look()
 {
         cell_type type;
 
-        type = world->get_cell_type(player->getxy());
+        type = world->get_cell_type(player->area, player->getxy());
         switch(type) {
                 case stairs_up:
                         display->messagec(COLOR_INFO, "There is a staircase leading up here.");

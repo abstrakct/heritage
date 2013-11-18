@@ -137,13 +137,13 @@ class World {
         public:
                 World();
                 ~World();
-                const char *get_cell_type(int x, int y);
-                cell_type get_cell_type(coord_t co);
+                const char *get_cell_type(Area *where, int x, int y);
+                cell_type get_cell_type(Area *where, coord_t co);
                 bool is_walkable(Area *where, int x, int y);
                 bool is_closed_door(Area *where, int x, int y);
-                bool is_open_door(int x, int y);
-                void open_door(int x, int y);
-                void close_door(int x, int y);
+                bool is_open_door(Area *where, int x, int y);
+                void open_door(Area *where, int x, int y);
+                void close_door(Area *where, int x, int y);
                 bool close_nearest_door(Actor *actor);
 
                 void draw_map();
@@ -154,7 +154,7 @@ class World {
                 coord_t get_random_walkable_cell(area_id_type id);
                 coord_t get_random_floor_cell(area_id_type id);
                 void set_inhabitant(Actor *actor);
-                void clear_inhabitant(coord_t co);
+                void clear_inhabitant(Area *where, coord_t co);
                 Area *get_current_area() { return &area[current_area]; };
 
                 int current_area;
