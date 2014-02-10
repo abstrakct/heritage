@@ -57,6 +57,22 @@ typedef void (Actor::*aifn)();
 
 #include "world.h"
 
+#define SPECIAL_ADD_FAIL     0
+#define SPECIAL_ADD_SUCCESS  1
+#define SPECIAL_ADD_INCREASE 2
+
+class SpecialAttack {
+        public:
+                SpecialAttack();
+                SpecialAttack(special_type t);
+                ~SpecialAttack() {
+                };
+
+                special_type type;
+                char name[20];
+                int level;
+};
+
 class Actor {
         public:
                 Actor();
@@ -95,10 +111,13 @@ class Actor {
                 void setfovradius(int amount) { fovradius = amount; };
                 int  getfovradius() { return fovradius; };
 
+                bool can_see(Actor *target);
+
                 void attack(Actor *target, attack_type type = body);
                 void attack_physical(Actor *target);
 
                 bool pass_roll(enum_stat stat);
+                int  add_special_attack(special_type t); 
 
                 // Movement
                 void move(int dx, int dy);
@@ -115,7 +134,8 @@ class Actor {
                 Actor *enemy;              // public enemy haha!
                 Area *area;                // in which area is this actor?
                 bool alive;
-                special_type special[10];
+                vector <SpecialAttack> special;
+                //special_type special[10];
         protected:
         private:
                 bool male;

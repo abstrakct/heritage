@@ -23,6 +23,7 @@ class Game {
                 
                 const char *name;  // the name of the game!
                 const char *version;
+                bool wizmode;
         protected:
         private:
                 Command cmd;

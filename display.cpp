@@ -145,12 +145,20 @@ void Display::draw_left_window()
         console->setDefaultForeground(TCODColor::green);
         console->print(x, y, "Special abilities:"); y++;
         console->setDefaultForeground(TCODColor::white);
-        for(int i=1;i<10;++i) {
+        /*for(int i=1;i<10;++i) {
                 if(player->special[i] != special_none) {
                         console->setDefaultForeground(TCODColor::azure);
                         console->print(x, y, "%d. %s", i, special_name[(int)player->special[i]]); y++;
                 }
+        }*/
+        vector<SpecialAttack>::iterator it;
+        int i;
+        for(it = player->special.begin(), i = 1; it != player->special.end(); ++it, ++i) {
+                console->setDefaultForeground(TCODColor::azure);
+                console->print(x, y, "%d. %s %d", i, it->name, it->level); y++;
         }
+
+
         console->setDefaultForeground(TCODColor::white);
 }
 
@@ -243,6 +251,24 @@ void Display::message(const char *message, ...)
         message_list.push_back(item);
 
         //console->print(BOTTOM_X + 1, BOTTOM_Y + 13, message);
+}
+
+bool Display::askyn()
+{
+again: 
+        TCOD_key_t key = display->get_key(true);
+        if(key.vk == TCODK_CHAR) {
+                if(key.c == 'y' || key.c == 'Y') {
+                        return true;
+                } else if(key.c == 'n' || key.c == 'N') {
+                        return false;
+                } else {
+                        display->message("Please choose [y]es or [n]o.");
+                        display->print_messages();
+                        goto again;
+                }
+        }
+        return false;
 }
 
 void Display::messagec(TCODColor c, const char *message, ...)

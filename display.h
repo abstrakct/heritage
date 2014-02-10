@@ -53,6 +53,7 @@ class Display {
                 void putmap(int x, int y, int c, TCODColor &fg, TCODColor &bg);
                 void message(const char *message, ...);
                 void messagec(TCODColor c, const char *message, ...);
+                bool askyn();
                 void print_messages();
                 void touch() { touched = true; };
                 void clear();

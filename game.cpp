@@ -28,7 +28,8 @@ Game::Game()
         init_commands(&this->cmd);
 
         name = "The Heritage of Efraim Edevane - Chapter I: [TBA]";
-        version = "0.5.3";
+        version = "0.5.5";
+        wizmode = false;
 
         running = true;
 }
@@ -54,8 +55,11 @@ void Game::intro()
 void Game::end_turn()
 {
         for(int i=0;i<12;i++) {
-                if(npc[i].is_alive())
+                if(npc[i].is_alive()) {
+                        if(player->can_see(&npc[i]))
+                                display->message("You can see %s!", npc[i].getname());
                         npc[i].ai();
+                }
         }
 
         player->endturn();
@@ -139,6 +143,7 @@ void Game::loop()
                         case cmd_all_visible:
                                 world->a->set_all_visible();
                                 world->update_fov();
+                                wizmode = true;
                                 break;
                         case cmd_incfear:
                                 player->incfear();

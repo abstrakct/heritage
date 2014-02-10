@@ -128,10 +128,12 @@ void NPC::set_random_goal()
         }
 
         if(type > 25 && type <= 50) {  // abandon goal, set a new goal
-                //display->message("%s has abandoned goal.", this->getname());
-                if(this->pass_roll(sSoul)) {
-                        clear_goal();
-                        set_random_goal();
+                if(has_goal) {
+                        if(this->pass_roll(sSoul)) {
+                                display->message("%s has abandoned goal.", this->getname());
+                                clear_goal();
+                                set_random_goal();
+                        }
                 }
         }
         
@@ -149,7 +151,7 @@ void NPC::set_random_goal()
 
         if(type > 90 && type <= 97) {
                 if(enemy) {
-                        //display->message("%s has decided to NOT kill %s after all!", this->getname(), this->enemy->getname());
+                        display->message("%s has decided to NOT kill %s after all!", this->getname(), this->enemy->getname());
                         clear_goal();
                         enemy = NULL;
                 }
@@ -163,7 +165,7 @@ void NPC::set_random_goal()
                                 set_goal(player->getxy());
                                 this->goal_type = kill_player;
                         }
-                        //display->message("%s has decided to kill YOU!!!!", this->getname());
+                        display->message("%s has decided to kill YOU!!!!", this->getname());
                 } else {
                         while(!npc[i].is_alive())
                                 i = ri(0,11);
@@ -172,7 +174,7 @@ void NPC::set_random_goal()
                                 enemy = &npc[i];
                                 this->goal_type = kill_npc;
                         }
-                        //display->message("%s has decided to kill %s!", this->getname(), npc[i].getname());
+                        display->message("%s has decided to kill %s!", this->getname(), npc[i].getname());
                 }
         }
 }
@@ -210,18 +212,29 @@ void NPC::use_stairs()
 void NPC::path_ai()
 {
         coord_t curr = this->getxy();
-        if(!has_goal) {
-                if(world->get_cell_type(this->area, curr) == stairs_up || world->get_cell_type(this->area, curr) == stairs_down) {
-                        this->use_stairs();
-                        has_goal = false;
+
+        if(has_goal) {
+                if(this->goal_type == move_upstairs || this->goal_type == move_downstairs) {
+                        if(world->get_cell_type(this->area, curr) == stairs_up || world->get_cell_type(this->area, curr) == stairs_down) {
+                                this->use_stairs();
+                                has_goal = false;
+                        }
                 }
+        }
+
+        if(!has_goal) {
                 set_random_goal();
         } else {
                 int chance = 60;
-                if(enemy) {
 
-                        set_goal(enemy->getxy());
-                        chance = 80;
+                if(enemy) {
+                        if(this->area == enemy->area) {
+                                set_goal(enemy->getxy());
+                                chance = 80;
+                        } else {
+                                has_goal = false;
+                                set_random_goal();
+                        }
                 }
 
                 // Let's walk the path!

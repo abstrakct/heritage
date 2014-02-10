@@ -9,11 +9,13 @@ using namespace std;
 #include "actor.h"
 #include "player.h"
 #include "display.h"
+#include "game.h"
 #include "world.h"
 
 extern World *world;
 extern Display *display;
 extern Player *player;
+extern Game *game;
 
 const char *special_name[] = {
         "(none)",
@@ -49,8 +51,6 @@ Actor::Actor()
         co.x = co.y = 0;
         alive = true;
         enemy = NULL;
-        for(int i=0;i<10;++i)
-                special[i] = special_none;
 }
 
 /*Actor::~Actor()
@@ -77,7 +77,10 @@ void Actor::kill()
 {
         //display->message("%s dies at %d,%d!", name, this->co.x, this->co.y);
         if(!this->is_player()) {
-                display->messagec(COLOR_FATAL, "You hear a horrible, chilling scream!");
+                if(!player->can_see(this))
+                        display->messagec(COLOR_FATAL, "You hear a horrible, chilling scream!");
+                else
+                        display->messagec(COLOR_FATAL, "%s has been killed!", this->getname());
                 player->incfear();
                 player->incfear();
                 this->alive = false;
@@ -178,6 +181,23 @@ void Actor::move(int dx, int dy)
         if(this->area->cell[this->co.x + dx][this->co.y + dy].inhabitant) {
                 if(this == player) {
                         display->message("%s is standing in your way!", this->area->cell[this->co.x + dx][this->co.y + dy].inhabitant->getname());
+                        display->message("Do you want to attack %s [y/n]?", this->area->cell[this->co.x + dx][this->co.y + dy].inhabitant->getname());
+                        display->touch();
+                        display->print_messages();
+                        display->touch();
+                        if(display->askyn()) {
+                                display->message("oh yizz");
+                                display->touch();
+                        }
+                } else {
+                        if(this->enemy) {
+                                if(this->enemy->area == this->area) {
+                                        if(this->enemy->getx() == this->co.x + dx && this->enemy->gety() == this->co.y + dy) {
+                                                attack(enemy);
+                                                return;
+                                        }
+                                }
+                        }
                 }
                 
                 return;
@@ -189,13 +209,15 @@ void Actor::move(int dx, int dy)
                 return;
         }
 
-        if(this->enemy) {
-                if(this->enemy->area == this->area) {
-                        if(this->enemy->getx() == this->co.x + dx && this->enemy->gety() == this->co.y + dy) {
-                                attack(enemy);
-                                return;
-                        }
-                }
+
+        if(game->wizmode && this == player) {
+                prev = co;
+                co.x += dx;
+                co.y += dy;
+                world->clear_inhabitant(this->area, prev);
+                world->set_inhabitant(this);
+                display->touch();
+                return;
         }
 
         if(this->area->is_walkable(this->co.x + dx, this->co.y + dy)) {
@@ -405,7 +427,7 @@ void Actor::attack_physical(Actor *target)
 
 void Actor::attack(Actor *target, attack_type type)
 {
-        //display->message("%s attacks %s!", name, target->getname());
+        display->message("%s attacks %s!", name, target->getname());
         target->enemy = this;
         switch(type) {
                 case body:
@@ -416,6 +438,40 @@ void Actor::attack(Actor *target, attack_type type)
         }
 }
 
+bool Actor::can_see(Actor *target)
+{
+        return this->area->cell_is_visible(target->co.x, target->co.y);
+}
 
+int  Actor::add_special_attack(special_type t)
+{
+        vector<SpecialAttack>::iterator it;
+        SpecialAttack *s;
 
+        for(it = this->special.begin(); it != this->special.end(); ++it) {
+                if(it->type == t) {
+                        it->level++;
+                        return SPECIAL_ADD_INCREASE;
+                }
+        }
+
+        s = new SpecialAttack(t);
+        this->special.push_back(*s);
+        delete s;
+        return SPECIAL_ADD_SUCCESS;
+}
+
+SpecialAttack::SpecialAttack()
+{
+        type = special_none;
+        level = 0;
+        name[0] = '\0';
+}
+
+SpecialAttack::SpecialAttack(special_type t)
+{
+        type = t;
+        level = 1;
+        strcpy(name, special_name[(int) t]);
+}
 // vim: fdm=syntax guifont=Terminus\ 8

@@ -36,6 +36,7 @@ bool fiftyfifty()
         int i;
 
         i = 1 + (rand() % 100);
+        fprintf(stderr, "fiftyfifty(): i = %d\n", i);
 
         if(i <= 50)
                 return true;
@@ -148,4 +149,4 @@ int main(int argc, char **argv)
         return 0;
 }
 
-// vim: fdm=syntax guifont=Terminus\ 8
+// vim: fdm=syntax
