@@ -66,6 +66,18 @@ void Player::look()
                 case cell_bookcase:
                         display->messagec(COLOR_INFO, "You see a bookcase here, filled with all kinds of old-looking books.");
                         break;
+                case cell_chair:
+                        display->messagec(COLOR_INFO, "There is a chair here.");
+                        break;
+                case cell_table:
+                        display->messagec(COLOR_INFO, "There is a table here.");
+                        break;
+                case cell_coffin:
+                        display->messagec(COLOR_INFO, "There is a coffin here! How macabre!");
+                        break;
+                case cell_candle:
+                        display->messagec(COLOR_INFO, "There is a large candle holder here, with lit candles in it.");
+                        break;
                 default:
                         break;
         }

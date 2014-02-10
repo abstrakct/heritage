@@ -183,24 +183,20 @@ void NPC::use_stairs()
 {
         if(this->area->cell[this->getx()][this->gety()].get_type() == stairs_up) {
                 world->clear_inhabitant(this->area, this->getxy());
-                //display->message("%s is moving up some stairs from area %d!", this->getname(), this->area_id);
                 int a = (int) this->area_id;
                 a++;
                 this->area_id = (area_id_type) a;
                 this->area = &world->area[this->area_id];
                 this->setxy(world->area[this->area_id].stairs_down);
-                //display->message("area id is now %d", this->area_id);
                 world->set_inhabitant(this);
                 delete path;
                 path = new TCODPath(this->area->tcodmap, 1.0f);
         } else if(world->area[world->current_area].cell[this->getx()][this->gety()].get_type() == stairs_down) {
                 world->clear_inhabitant(this->area, this->getxy());
-                //display->message("%s is moving down some stairs from area %d!", this->getname(), this->area_id);
                 int a = (int) this->area_id;
                 a--;
                 this->area_id = (area_id_type) a;
                 this->area = &world->area[this->area_id];
-                //display->message("area id is now %d", this->area_id);
                 this->setxy(world->area[this->area_id].stairs_up);
                 world->set_inhabitant(this);
                 delete path;

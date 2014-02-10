@@ -66,6 +66,8 @@ class Cell {
                 void set_bookcase();
                 void set_chair();
                 void set_table();
+                void set_coffin();
+                void set_candle();
                 void set_corpse(Actor *who);
 
                 void set_color(TCODColor fg, TCODColor bg);
@@ -83,6 +85,7 @@ class Cell {
                 bool is_walkable();
                 bool is_visible();
                 bool is_transparent();
+                void set_type(cell_type t);
                 cell_type get_type();
 
                 void activate();
@@ -108,8 +111,10 @@ class Area {
                 void place_furniture(area_id_type identifier);
                 void horizontal_line(int y);
                 void horizontal_line(int x, int y, int x2);
+                void horizontal_line(int x, int y, int x2, cell_type t);
                 void vertical_line(int x);
                 void vertical_line(int x, int y, int y2);
+                void vertical_line(int x, int y, int y2, cell_type t);
                 void frame();
                 void build_tcodmap();
                 bool cell_is_visible(int x, int y);
