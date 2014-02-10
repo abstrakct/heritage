@@ -440,12 +440,24 @@ void Actor::attack(Actor *target, attack_type type)
 
 bool Actor::can_see(Actor *target)
 {
-        return this->area->tcodmap->isInFov(target->getx(), target->gety());
+        bool result;
+
+        result = this->area->tcodmap->isInFov(target->getx(), target->gety());
+        if(result && this == player)
+                this->area->cell[target->getx()][target->gety()].seen();
+        
+        return result;
 }
 
 bool Actor::can_see(int x, int y)
 {
-        return this->area->tcodmap->isInFov(x, y);
+        bool result;
+
+        result = this->area->tcodmap->isInFov(x, y);
+        if(result && this == player)
+                this->area->cell[x][y].seen();
+        
+        return result;
 }
 
 int  Actor::add_special_attack(special_type t)

@@ -67,6 +67,7 @@ Cell::Cell()
         flags = 0;
         visible = false;
         activated = false;
+        cell_seen = false;
         this->set_floor();
         inhabitant = NULL;
 }
@@ -458,6 +459,7 @@ void Area::set_all_visible()
         for(x = 0; x < AREA_MAX_X; ++x) {
                 for(y = 0; y < AREA_MAX_Y; ++y) {
                         this->tcodmap->setProperties(x, y, true, cell[x][y].is_walkable());
+                        this->cell[x][y].seen();
                 }
         }
         player->setfovradius(0);
@@ -745,21 +747,26 @@ void World::draw_map()
         player->area->tcodmap->computeFov(player->getx(), player->gety(), player->getfovradius(), true, FOV_BASIC);
         for(i = 1; i < AREA_MAX_X-1; ++i) {
                 for(j = 1; j < AREA_MAX_Y-1; ++j) {
-                        if(player->can_see(i, j)) {
+                        if(player->can_see(i, j) || player->area->cell[i][j].is_seen()) {
                                 draw_cell(i, j);
                         } else {
                                 if(!player->area->lights_on) {
                                         draw_cell(i, j, TCODColor::black, TCODColor::black); 
                                 }
                         }
+
+                        if(player->can_see(i, j) && player->area->cell[i][j].inhabitant) {
+                                if(player->area->cell[i][j].inhabitant->alive) {
+                                        player->area->cell[i][j].inhabitant->draw();
+                                }
+                        }
                 }
-        }               
+        }
         display->touch();
 }
 
 void World::draw_cell(int x, int y)
 {
-       // a->cell[x][y].draw(x, y);
         if(player->area->cell[x][y].inhabitant) {
                 if(player->area->cell[x][y].inhabitant->alive) {
                         player->area->cell[x][y].inhabitant->draw();
@@ -771,25 +778,12 @@ void World::draw_cell(int x, int y)
 
 void World::draw_cell(coord_t co)
 {
-        if(player->area->cell[co.x][co.y].inhabitant) {
-                if(player->area->cell[co.x][co.y].inhabitant->alive) {
-                        player->area->cell[co.x][co.y].inhabitant->draw();
-                }
-        } else {
-                display->putmap(co.x, co.y, a->cell[co.x][co.y].c, a->cell[co.x][co.y].fg, a->cell[co.x][co.y].bg);
-        }
+        display->putmap(co.x, co.y, a->cell[co.x][co.y].c, a->cell[co.x][co.y].fg, a->cell[co.x][co.y].bg);
 }
 
 void World::draw_cell(int x, int y, TCODColor fg, TCODColor bg)
 {
-        //a->cell[x][y].draw(x, y, fg, bg);
-        if(player->area->cell[x][y].inhabitant) {
-                if(player->area->cell[x][y].inhabitant->alive) {
-                        player->area->cell[x][y].inhabitant->draw(fg, bg);
-                }
-        } else {
-                display->putmap(x, y, player->area->cell[x][y].c, fg, bg);
-        }
+        display->putmap(x, y, player->area->cell[x][y].c, fg, bg);
 }
 
 void World::update_fov()

@@ -54,6 +54,7 @@ class Cell {
                 int          flags;
                 bool         visible;
                 bool         activated;
+                bool         cell_seen;
         protected:
         public:
                 Cell();
@@ -73,6 +74,8 @@ class Cell {
                 void set_stairs_down();
                 void setfg(TCODColor color) { fg = color; };
                 void setbg(TCODColor color) { bg = color; };
+                void seen() { cell_seen = true; };
+                bool is_seen() { return cell_seen; };
                 TCODColor getfg() { return fg; };
 
                 void draw(int x, int y);

@@ -139,6 +139,7 @@ finish:
 void Player::use_stairs()
 {
         if(player->area->cell[player->getx()][player->gety()].get_type() == stairs_up) {
+                world->clear_inhabitant(player->area, player->getxy());
                 world->current_area++;
                 world->a = &world->area[world->current_area];
                 player->area = world->a;
@@ -147,6 +148,7 @@ void Player::use_stairs()
                 display->clear();
                 display->update();
         } else if(player->area->cell[player->getx()][player->gety()].get_type() == stairs_down) {
+                world->clear_inhabitant(player->area, player->getxy());
                 world->current_area--;
                 world->a = &world->area[world->current_area];
                 player->area = world->a;

@@ -26,7 +26,6 @@ extern Player *player;
 extern NPC *npc;
 
 TCODColor colorlist[] = {
-        //TCODColor::black,
         TCODColor::white,
         TCODColor::red,
         TCODColor::flame,
@@ -51,7 +50,6 @@ TCODColor colorlist[] = {
         TCODColor::peach,
         TCODColor::celadon,
         TCODColor::grey,
-        TCODColor::sepia,
 };
 
 Display::Display()
