@@ -56,8 +56,8 @@ void Game::end_turn()
 {
         for(int i=0;i<12;i++) {
                 if(npc[i].is_alive()) {
-                        if(player->can_see(&npc[i]))
-                                display->message("You can see %s!", npc[i].getname());
+                        //if(player->can_see(npc[i].getx(), npc[i].gety()))
+                        //        display->message("You can see %s!", npc[i].getname());
                         npc[i].ai();
                 }
         }

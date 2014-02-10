@@ -113,14 +113,15 @@ class Area {
                 bool is_walkable(int x, int y);
                 void make_room(int x1, int y1, int x2, int y2);
                 void make_door(int x, int y, bool open);
-                void make_stairs_up(coord_t co);
-                void make_stairs_down(coord_t co);
+                void make_stairs_up();
+                void make_stairs_down();
                 void set_all_visible();
                 void set_all_invisible();
                 void update_visibility();
                 void set_id(area_id_type identifier) { id = identifier; };
                 area_id_type get_id() { return id; };
                 const char *get_area_name();
+                coord_t get_random_floor_cell();
 
                 Cell    **cell;
                 TCODMap *tcodmap;
@@ -156,6 +157,7 @@ class World {
                 void set_inhabitant(Actor *actor);
                 void clear_inhabitant(Area *where, coord_t co);
                 Area *get_current_area() { return &area[current_area]; };
+                void generate_stairs();
 
                 int current_area;
                 Area *area;       // becomes array of areas. the actual areas in the game.

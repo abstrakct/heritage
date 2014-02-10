@@ -527,18 +527,6 @@ void Area::generate(area_id_type identifier)
         bsp->traversePreOrder(callback, NULL);
         this->frame();
 
-        if(identifier != floor_6) {
-                coord_t co = world->get_random_floor_cell(identifier);
-                make_stairs_up(co);
-                world->area[(int)identifier+1].make_stairs_down(co);
-
-                // Make two sets of stairs! TODO: implement correctly ;)
-                /*
-                co = world->get_random_floor_cell(identifier);
-                make_stairs_up(co);
-                world->area[(int)identifier+1].make_stairs_down(co);*/
-        }
-
         this->build_tcodmap();
         lights_on = false;
 
@@ -590,16 +578,40 @@ void Area::make_door(int x, int y, bool open)
                 cell[x][y].set_door_closed();
 }
 
-void Area::make_stairs_up(coord_t co)
+void Area::make_stairs_up()
 {
+        coord_t co;
+
+        co = this->get_random_floor_cell();
         cell[co.x][co.y].set_stairs_up();
         stairs_up = co;
 }
 
-void Area::make_stairs_down(coord_t co)
+void Area::make_stairs_down()
 {
+        coord_t co;
+
+        co = this->get_random_floor_cell();
         cell[co.x][co.y].set_stairs_down();
         stairs_down = co;
+}
+
+coord_t Area::get_random_floor_cell()
+{
+        coord_t co;
+
+again:
+        co.x = ri(1, AREA_MAX_X-2);
+        co.y = ri(1, AREA_MAX_Y-2);
+        while(this->cell[co.x][co.y].get_type() != floor) {
+                co.x = ri(1, AREA_MAX_X-2);
+                co.y = ri(1, AREA_MAX_Y-2);
+        }
+
+        if(this->cell[co.x][co.y].get_type() == floor)
+                return co;
+        else
+                goto again;
 }
 
 void Area::horizontal_line(int y)
@@ -730,9 +742,10 @@ void World::draw_map()
 {
         int i, j;
 
+        player->area->tcodmap->computeFov(player->getx(), player->gety(), player->getfovradius(), true, FOV_BASIC);
         for(i = 1; i < AREA_MAX_X-1; ++i) {
                 for(j = 1; j < AREA_MAX_Y-1; ++j) {
-                        if(player->area->cell_is_visible(i, j)) {
+                        if(player->can_see(i, j)) {
                                 draw_cell(i, j);
                         } else {
                                 if(!player->area->lights_on) {
@@ -758,7 +771,13 @@ void World::draw_cell(int x, int y)
 
 void World::draw_cell(coord_t co)
 {
-        player->area->cell[co.x][co.y].draw(co.x, co.y);
+        if(player->area->cell[co.x][co.y].inhabitant) {
+                if(player->area->cell[co.x][co.y].inhabitant->alive) {
+                        player->area->cell[co.x][co.y].inhabitant->draw();
+                }
+        } else {
+                display->putmap(co.x, co.y, a->cell[co.x][co.y].c, a->cell[co.x][co.y].fg, a->cell[co.x][co.y].bg);
+        }
 }
 
 void World::draw_cell(int x, int y, TCODColor fg, TCODColor bg)
@@ -806,12 +825,12 @@ coord_t World::get_random_floor_cell(area_id_type id)
 again:
         co.x = ri(1, AREA_MAX_X-2);
         co.y = ri(1, AREA_MAX_Y-2);
-        while(area[id].cell[co.x][co.y].get_type() != floor) {
+        while(area[(int)id].cell[co.x][co.y].get_type() != floor) {
                 co.x = ri(1, AREA_MAX_X-2);
                 co.y = ri(1, AREA_MAX_Y-2);
         }
 
-        if(area[id].cell[co.x][co.y].get_type() == floor)
+        if(area[(int)id].cell[co.x][co.y].get_type() == floor)
                 return co;
         else
                 goto again;
@@ -849,6 +868,18 @@ cell_type World::get_cell_type(Area *where, coord_t co)
         return where->cell[co.x][co.y].get_type();
 }
         
+void World::generate_stairs()
+{
+        int i;
+
+        for(i=1; i<=10; i++) {
+                world->area[i].make_stairs_down();
+                world->area[i].make_stairs_up();
+        }
+
+        world->area[0].make_stairs_up();
+        world->area[11].make_stairs_down();
+}
 
 
 

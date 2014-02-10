@@ -112,6 +112,7 @@ class Actor {
                 int  getfovradius() { return fovradius; };
 
                 bool can_see(Actor *target);
+                bool can_see(int x, int y);
 
                 void attack(Actor *target, attack_type type = body);
                 void attack_physical(Actor *target);

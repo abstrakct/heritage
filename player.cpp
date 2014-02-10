@@ -142,12 +142,16 @@ void Player::use_stairs()
                 world->current_area++;
                 world->a = &world->area[world->current_area];
                 player->area = world->a;
+                player->setxy(player->area->stairs_down);
+                world->set_inhabitant(player);
                 display->clear();
                 display->update();
         } else if(player->area->cell[player->getx()][player->gety()].get_type() == stairs_down) {
                 world->current_area--;
                 world->a = &world->area[world->current_area];
                 player->area = world->a;
+                player->setxy(player->area->stairs_up);
+                world->set_inhabitant(player);
                 display->clear();
                 display->update();
         } else {

@@ -188,6 +188,7 @@ void NPC::use_stairs()
                 a++;
                 this->area_id = (area_id_type) a;
                 this->area = &world->area[this->area_id];
+                this->setxy(world->area[this->area_id].stairs_down);
                 //display->message("area id is now %d", this->area_id);
                 world->set_inhabitant(this);
                 delete path;
@@ -200,6 +201,7 @@ void NPC::use_stairs()
                 this->area_id = (area_id_type) a;
                 this->area = &world->area[this->area_id];
                 //display->message("area id is now %d", this->area_id);
+                this->setxy(world->area[this->area_id].stairs_up);
                 world->set_inhabitant(this);
                 delete path;
                 path = new TCODPath(this->area->tcodmap, 1.0f);

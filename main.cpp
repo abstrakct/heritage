@@ -36,7 +36,6 @@ bool fiftyfifty()
         int i;
 
         i = 1 + (rand() % 100);
-        fprintf(stderr, "fiftyfifty(): i = %d\n", i);
 
         if(i <= 50)
                 return true;
@@ -103,6 +102,8 @@ void init_areas()
         world->area[cellar_5].generate(cellar_4);
         world->area[cellar_6].generate(cellar_5);
         world->area[cellar_6].generate(cellar_6);
+
+        world->generate_stairs();
         
         world->current_area = (int)floor_1;
         world->a = &world->area[(int)floor_1];

@@ -14,6 +14,12 @@
 #define d(x,y) dice(x,y,0)
 #define CALL_MEMBER_FN(object,ptrToMember)  ((object)->*(ptrToMember))
 
+#ifdef DEBUG_ON
+#define DBG(M, ...) fprintf(stderr, "DEBUG %s:%d: " M "\n", __FILE__, __LINE__, ##__VA_ARGS__)
+#else
+#define DBG(M, ...)
+#endif
+
 extern Display *display;
 
 typedef struct {

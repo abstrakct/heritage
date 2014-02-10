@@ -84,7 +84,7 @@ void Actor::kill()
                 player->incfear();
                 player->incfear();
                 this->alive = false;
-                world->a->cell[this->co.x][this->co.y].set_corpse(this);
+                this->area->cell[this->co.x][this->co.y].set_corpse(this);
         } else {
                 player->die();
         }
@@ -440,7 +440,12 @@ void Actor::attack(Actor *target, attack_type type)
 
 bool Actor::can_see(Actor *target)
 {
-        return this->area->cell_is_visible(target->co.x, target->co.y);
+        return this->area->tcodmap->isInFov(target->getx(), target->gety());
+}
+
+bool Actor::can_see(int x, int y)
+{
+        return this->area->tcodmap->isInFov(x, y);
 }
 
 int  Actor::add_special_attack(special_type t)
