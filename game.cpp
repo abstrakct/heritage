@@ -8,6 +8,7 @@
 using namespace std;
 
 #include <iostream>
+#include <string>
 
 #include "libtcod.hpp"
 #include "actor.h"
@@ -17,6 +18,7 @@ using namespace std;
 #include "player.h"
 #include "npc.h"
 #include "world.h"
+#include "item.h"
 
 extern Display *display;
 extern Player *player;

@@ -5,6 +5,7 @@
 using namespace std;
 
 #include <iostream>
+#include <string>
 
 #include <unistd.h>
 #include "libtcod.hpp"
@@ -18,6 +19,7 @@ using namespace std;
 #include "npc.h"
 #include "sound.h"
 #include "world.h"
+#include "item.h"
 
 Game *game;
 Display *display;
@@ -25,6 +27,8 @@ Player *player;
 NPC *npc;
 World *world;
 SoundEngine *audio;
+vector<Item> itemdef;
+#define ITEMS 1
 
 signed int ability_modifier(int ab)
 {
@@ -122,6 +126,17 @@ void init_player()
         world->set_inhabitant(player);
 }
 
+void init_item_definitions()
+{
+        Item *i;
+
+        for(int x=0;x<ITEMS;x++) {
+                i = new Item("knife", it_weapon, true, false, ')');
+                itemdef.push_back(*i);
+                delete i;
+        }
+}
+
 int main(int argc, char **argv)
 {
         //unsigned int seed = time(0);
@@ -135,6 +150,7 @@ int main(int argc, char **argv)
         init_areas();
         init_player();
         init_npcs();
+        init_item_definitions();
 
         display = new Display;
         audio->initialize();

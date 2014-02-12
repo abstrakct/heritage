@@ -41,7 +41,7 @@ display.o: display.cpp include/libtcod.hpp include/libtcod.h \
  include/parser.hpp include/tree.hpp include/bsp.hpp \
  include/heightmap.hpp include/zip.hpp include/namegen.hpp \
  include/txtfield.hpp debug.h display.h common.h actor.h world.h player.h \
- npc.h
+ npc.h game.h command.h
 game.o: game.cpp include/libtcod.hpp include/libtcod.h include/list.h \
  include/color.h include/console.h include/console_types.h \
  include/image.h include/mouse.h include/mouse_types.h include/sys.h \
@@ -56,7 +56,8 @@ game.o: game.cpp include/libtcod.hpp include/libtcod.h include/list.h \
  include/parser.hpp include/tree.hpp include/bsp.hpp \
  include/heightmap.hpp include/zip.hpp include/namegen.hpp \
  include/txtfield.hpp actor.h common.h display.h debug.h world.h game.h \
- command.h player.h npc.h
+ command.h player.h npc.h item.h
+item.o: item.cpp item.h
 main.o: main.cpp include/libtcod.hpp include/libtcod.h include/list.h \
  include/color.h include/console.h include/console_types.h \
  include/image.h include/mouse.h include/mouse_types.h include/sys.h \
@@ -71,7 +72,7 @@ main.o: main.cpp include/libtcod.hpp include/libtcod.h include/list.h \
  include/parser.hpp include/tree.hpp include/bsp.hpp \
  include/heightmap.hpp include/zip.hpp include/namegen.hpp \
  include/txtfield.hpp actor.h common.h display.h debug.h world.h \
- command.h game.h player.h npc.h sound.h
+ command.h game.h player.h npc.h sound.h item.h
 npc.o: npc.cpp include/libtcod.hpp include/libtcod.h include/list.h \
  include/color.h include/console.h include/console_types.h \
  include/image.h include/mouse.h include/mouse_types.h include/sys.h \
@@ -100,7 +101,7 @@ player.o: player.cpp include/libtcod.hpp include/libtcod.h include/list.h \
  include/noise.hpp include/fov.hpp include/path.hpp include/lex.hpp \
  include/parser.hpp include/tree.hpp include/bsp.hpp \
  include/heightmap.hpp include/zip.hpp include/namegen.hpp \
- include/txtfield.hpp game.h command.h display.h actor.h common.h debug.h \
+ include/txtfield.hpp game.h common.h display.h debug.h command.h actor.h \
  world.h player.h
 sound.o: sound.cpp actor.h common.h display.h include/libtcod.hpp \
  include/libtcod.h include/list.h include/color.h include/console.h \
