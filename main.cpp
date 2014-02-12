@@ -28,142 +28,150 @@ NPC *npc;
 World *world;
 SoundEngine *audio;
 vector<Item> itemdef;
-#define ITEMS 1
+
+/* 
+ * The actual item definitions.
+ * Reading them from a text file would be nicer, but would also require more work.
+ */
+struct item_definition item_definitions[] {
+        { "knife", ')', it_weapon, true, false },
+        { "jacket", '[', it_clothing, false, false },
+};
 
 signed int ability_modifier(int ab)
 {
-        return ((ab / 2) - 5);
+    return ((ab / 2) - 5);
 }
 
 bool fiftyfifty()
 {
-        int i;
+    int i;
 
-        i = 1 + (rand() % 100);
+    i = 1 + (rand() % 100);
 
-        if(i <= 50)
-                return true;
-        else
-                return false;
+    if(i <= 50)
+        return true;
+    else
+        return false;
 }
 
 int dice(int num, int sides, signed int modifier)
 {
-        int i, result;
+    int i, result;
 
-        result = modifier;
-        for(i=0;i<num;i++) {
-                result += 1 + (rand() % sides);
-        }
+    result = modifier;
+    for(i=0;i<num;i++) {
+        result += 1 + (rand() % sides);
+    }
 
-        return result;
+    return result;
 }
 
 int ri(int a, int b) 
 {
-        int result;
-        result = (a + (rand() % (b-a+1)));
+    int result;
+    result = (a + (rand() % (b-a+1)));
 
-        return result;
+    return result;
 }
 
 void clean_up()
 {
-        delete player;
-        delete world;
-        delete audio;
-        delete [] npc;
-        delete game;
-        delete display;
+    delete player;
+    delete world;
+    delete audio;
+    delete [] npc;
+    delete game;
+    delete display;
 }
 
 void init_npcs()
 {
-        npc = new NPC[12];
+    npc = new NPC[12];
 
-        for(int i=0; i < 12; ++i) {
-                npc[i].setxy(world->get_random_walkable_cell(floor_1));
-                npc[i].setprevxy(npc[i].getxy());
-                npc[i].area = world->get_current_area();
-                world->set_inhabitant(&npc[i]);
-                npc[i].setai(AI_PATH);
-                
-                //dbg("NPC %d set x,y = %d,%d", i, npc[i].getx(), npc[i].gety());
-        }
+    for(int i=0; i < 12; ++i) {
+        npc[i].setxy(world->get_random_walkable_cell(floor_1));
+        npc[i].setprevxy(npc[i].getxy());
+        npc[i].area = world->get_current_area();
+        world->set_inhabitant(&npc[i]);
+        npc[i].setai(AI_PATH);
+
+        //dbg("NPC %d set x,y = %d,%d", i, npc[i].getx(), npc[i].gety());
+    }
 }
 
 void init_areas()
 {
-        world->area[floor_1].generate(floor_1);
-        world->area[floor_2].generate(floor_2);
-        world->area[floor_3].generate(floor_3);
-        world->area[floor_4].generate(floor_4);
-        world->area[floor_5].generate(floor_5);
-        world->area[floor_6].generate(floor_6);
-        world->area[cellar_1].generate(cellar_1);
-        world->area[cellar_2].generate(cellar_2);
-        world->area[cellar_4].generate(cellar_3);
-        world->area[cellar_5].generate(cellar_4);
-        world->area[cellar_6].generate(cellar_5);
-        world->area[cellar_6].generate(cellar_6);
+    world->area[floor_1].generate(floor_1);
+    world->area[floor_2].generate(floor_2);
+    world->area[floor_3].generate(floor_3);
+    world->area[floor_4].generate(floor_4);
+    world->area[floor_5].generate(floor_5);
+    world->area[floor_6].generate(floor_6);
+    world->area[cellar_1].generate(cellar_1);
+    world->area[cellar_2].generate(cellar_2);
+    world->area[cellar_4].generate(cellar_3);
+    world->area[cellar_5].generate(cellar_4);
+    world->area[cellar_6].generate(cellar_5);
+    world->area[cellar_6].generate(cellar_6);
 
-        world->generate_stairs();
-        
-        world->current_area = (int)floor_1;
-        world->a = &world->area[(int)floor_1];
+    world->generate_stairs();
+
+    world->current_area = (int)floor_1;
+    world->a = &world->area[(int)floor_1];
 }
 
 void init_player()
 {
-        for(int i=0;i<80;++i)
-                cout << " " << endl;
+    for(int i=0;i<80;++i)
+        cout << " " << endl;
 
-        player->create();
+    player->create();
 
-        player->setxy(world->get_random_walkable_cell(floor_1));
-        player->setprevxy(player->getxy());
-        player->area = world->get_current_area();
-        world->set_inhabitant(player);
+    player->setxy(world->get_random_walkable_cell(floor_1));
+    player->setprevxy(player->getxy());
+    player->area = world->get_current_area();
+    world->set_inhabitant(player);
 }
 
 void init_item_definitions()
 {
-        Item *i;
+    Item *i;
 
-        for(int x=0;x<ITEMS;x++) {
-                i = new Item("knife", it_weapon, true, false, ')');
-                itemdef.push_back(*i);
-                delete i;
-        }
+    for(int x = 0; x < (sizeof(item_definitions) / sizeof(struct item_definition)); x++) {
+        i = new Item(item_definitions[x]);
+        itemdef.push_back(*i);
+        delete i;
+    }
 }
 
 int main(int argc, char **argv)
 {
-        //unsigned int seed = time(0);
-        //srand(seed);
+    //unsigned int seed = time(0);
+    //srand(seed);
 
-        game = new Game;
-        audio = new SoundEngine;
-        world = new World;
-        player = new Player;
+    game = new Game;
+    audio = new SoundEngine;
+    world = new World;
+    player = new Player;
 
-        init_areas();
-        init_player();
-        init_npcs();
-        init_item_definitions();
+    init_areas();
+    init_player();
+    init_npcs();
+    init_item_definitions();
 
-        display = new Display;
-        audio->initialize();
-        audio->load_all_files();
-        
-        //audio->play_music(SOUND_MUSIC_HOUSE_OF_LEAVES);
-        //audio->play_sound(SOUND_EFFECT_STORM01, 0);
+    display = new Display;
+    audio->initialize();
+    audio->load_all_files();
 
-        display->message("");     // "kickstart" the messaging system!
-        game->loop();
-        
-        clean_up();
-        return 0;
+    //audio->play_music(SOUND_MUSIC_HOUSE_OF_LEAVES);
+    //audio->play_sound(SOUND_EFFECT_STORM01, 0);
+
+    display->message("");     // "kickstart" the messaging system!
+    game->loop();
+
+    clean_up();
+    return 0;
 }
 
-// vim: fdm=syntax
+// vim: fdm=syntax guifont=Terminus\ 8
