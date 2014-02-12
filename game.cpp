@@ -28,8 +28,9 @@ Game::Game()
         init_commands(&this->cmd);
 
         name = "The Heritage of Efraim Edevane - Chapter I: [TBA]";
-        version = "0.5.5";
+        version = "0.5.6";
         wizmode = false;
+        clock.settime(20, 0, 0);
 
         running = true;
 }

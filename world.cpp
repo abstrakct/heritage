@@ -586,7 +586,7 @@ direction Area::generate_starting_room()
 
 void Area::generate(area_id_type identifier)
 {
-    int j;
+    //int j;
     MyCallback *callback = new MyCallback;
     world->a = &world->area[(int)identifier];
     set_id(identifier);

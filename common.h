@@ -39,6 +39,42 @@ enum direction {
         sw
 };
 
+class Clock {
+    private:
+        int second, minute, hour;
+    public:
+        void settime(int h, int m, int s) { second=s; minute=m; hour=h; };
+        void inc_hour(int i) {
+            hour += i;
+            if(hour >= 24) {
+                hour -= 24;
+            }
+        };
+        void inc_minute(int i) {
+            minute += i;
+            if(minute >= 60) {
+                inc_hour(1);
+                minute -= 60;
+            }
+        };
+        void inc_second(int i) {
+            second += i;
+            if(second >= 60) {
+                inc_minute(1);
+                second -= 60;
+            }
+        };
+        Clock& operator+=(const int x) {
+            (*this).inc_second(x);
+            return *this;
+        };
+        void inc(int i) {
+            inc_second(i);
+        }
+        int get_hour() { return hour; };
+        int get_minute() { return minute; };
+};
+
 // Function prototypes
 bool fiftyfifty();
 int dice(int num, int sides, signed int modifier);

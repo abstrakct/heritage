@@ -8,6 +8,7 @@
 #ifndef _GAME_H
 #define _GAME_H
 
+#include "common.h"
 #include "command.h"
 #include "display.h"
 
@@ -24,6 +25,7 @@ class Game {
                 const char *name;  // the name of the game!
                 const char *version;
                 bool wizmode;
+                Clock clock;
         protected:
         private:
                 Command cmd;

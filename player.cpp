@@ -176,6 +176,7 @@ void Player::use_stairs()
 void Player::endturn()
 {
         decfear();
+        game->clock += ri(5,10);
 }
 
 
