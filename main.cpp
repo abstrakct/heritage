@@ -34,8 +34,8 @@ vector<Item> itemdef;
  * Reading them from a text file would be nicer, but would also require more work.
  */
 struct item_definition item_definitions[] {
-        { "knife", ')', it_weapon, true, false },
-        { "jacket", '[', it_clothing, false, false },
+        { "knife",  ')', it_weapon,   IF_WIELDABLE },
+        { "jacket", '[', it_clothing, IF_WEARABLE },
 };
 
 signed int ability_modifier(int ab)

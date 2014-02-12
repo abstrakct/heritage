@@ -24,6 +24,7 @@ extern Display *display;
 extern Player *player;
 extern NPC *npc;
 extern World *world;
+extern Game *game;
 
 Game::Game()
 {
@@ -146,6 +147,7 @@ void Game::loop()
                         case cmd_all_visible:
                                 world->a->set_all_visible();
                                 world->update_fov();
+                                game->clock += 3700;
                                 wizmode = true;
                                 break;
                         case cmd_incfear:

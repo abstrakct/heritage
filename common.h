@@ -52,14 +52,14 @@ class Clock {
         };
         void inc_minute(int i) {
             minute += i;
-            if(minute >= 60) {
+            while(minute >= 60) {
                 inc_hour(1);
                 minute -= 60;
             }
         };
         void inc_second(int i) {
             second += i;
-            if(second >= 60) {
+            while(second >= 60) {
                 inc_minute(1);
                 second -= 60;
             }
