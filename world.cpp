@@ -13,9 +13,11 @@ using namespace std;
 #include "world.h"
 #include "common.h"
 #include "player.h"
+#include "game.h"
 
 extern Player *player;
 extern World *world;
+extern Game *game;
 
 const char *area_name[] = {
     "Cellar, level 6",
@@ -72,6 +74,7 @@ Cell::Cell()
     inhabitant = NULL;
     corpse = NULL;
     c = 0;
+    item = 0;
 
     this->set_floor();
 }
@@ -615,6 +618,8 @@ void Area::generate(area_id_type identifier)
     lights_on = false;
 
     place_furniture(identifier);
+    spawn_items(10);
+
     delete callback;
 }
 
@@ -743,6 +748,24 @@ again:
         goto again;
 }
 
+coord_t Area::get_random_empty_floor_cell()
+{
+    coord_t co;
+
+again:
+    co.x = ri(1, AREA_MAX_X-2);
+    co.y = ri(1, AREA_MAX_Y-2);
+    while(this->cell[co.x][co.y].get_type() != floor ) {
+        co.x = ri(1, AREA_MAX_X-2);
+        co.y = ri(1, AREA_MAX_Y-2);
+    }
+
+    if(this->cell[co.x][co.y].get_type() == floor && this->cell[co.x][co.y].item == 0)
+        return co;
+    else
+        goto again;
+}
+
 void Area::horizontal_line(int y)
 {
     for(int i = 0; i < AREA_MAX_X; ++i)
@@ -819,6 +842,39 @@ bool Area::is_walkable(int x, int y)
     return this->cell[x][y].is_walkable();
 }
 
+void Area::spawn_items(int num)
+{
+    int i = 0;
+    vector<Item>::iterator it; 
+    it = game->itemdef.begin();
+
+    while(i != num) {
+       int c = ri(1, 100);
+       //cout << "c = " << c << " chance = " << it->chance << endl;
+       if(c <= it->chance) {
+           //cout << i << " - spawning a " << it->get_name() << endl;
+
+           coord_t co;
+           Item newitem;
+           
+           co = this->get_random_empty_floor_cell();
+           newitem = *it;
+           newitem.co = co;
+
+           world->items.push_back(newitem); // master list of items -- TODO: needed???
+           //this->items.push_back(*it);  // master list of items in one area - TODO: needed?
+
+           this->cell[co.x][co.y].item = new Item;
+           *this->cell[co.x][co.y].item = newitem;
+           i++;
+       } else {
+           if(it == game->itemdef.end())
+               it = game->itemdef.begin();
+           else
+               it++;
+       }
+    }
+}
 
 
 /*
@@ -912,6 +968,10 @@ void World::draw_map()
 
 void World::draw_cell(int x, int y)
 {
+    if(player->area->cell[x][y].item) {
+        display->putmap(x, y, player->area->cell[x][y].item->c, player->area->cell[x][y].fg, player->area->cell[x][y].bg);
+    }
+
     if(player->area->cell[x][y].inhabitant) {
         if(player->area->cell[x][y].inhabitant->alive) {
             player->area->cell[x][y].inhabitant->draw();

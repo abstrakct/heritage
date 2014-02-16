@@ -6,6 +6,7 @@ using namespace std;
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include <unistd.h>
 #include "libtcod.hpp"
@@ -27,15 +28,20 @@ Player *player;
 NPC *npc;
 World *world;
 SoundEngine *audio;
-vector<Item> itemdef;
 
 /* 
  * The actual item definitions.
  * Reading them from a text file would be nicer, but would also require more work.
  */
 struct item_definition item_definitions[] = {
-        { "knife",  ')', it_weapon,   IF_WIELDABLE },
-        { "jacket", '[', it_clothing, IF_WEARABLE },
+    // Weapons
+    { "knife",       ')', it_weapon,   IF_WIELDABLE, 10, 30 },
+    // Clothing
+    { "jacket",      '[', it_clothing, IF_WEARABLE,  10, 10 },
+    { "fancy pants", '[', it_clothing, IF_WEARABLE,   6, 10 },
+    { "gloves",      '[', it_clothing, IF_WEARABLE,   2, 10 },
+    // Tools and other things
+    { "key",         '?', it_key,      0,             0,  5 },
 };
 
 signed int ability_modifier(int ab)
@@ -140,7 +146,7 @@ void init_item_definitions()
 
     for(size_t x = 0; x < (sizeof(item_definitions) / sizeof(struct item_definition)); x++) {
         i = new Item(item_definitions[x]);
-        itemdef.push_back(*i);
+        game->itemdef.push_back(*i);
         delete i;
     }
 }
@@ -155,10 +161,10 @@ int main(int argc, char **argv)
     world = new World;
     player = new Player;
 
+    init_item_definitions();
     init_areas();
     init_player();
     init_npcs();
-    init_item_definitions();
 
     display = new Display;
     audio->initialize();

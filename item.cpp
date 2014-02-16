@@ -2,9 +2,11 @@
  * Items
  */
 
-#include <string>
 using namespace std;
+#include <iostream>
+#include <string>
 
+#include <unistd.h>
 #include "item.h"
 
 
@@ -14,13 +16,29 @@ Item::Item(struct item_definition def)
     name = def.name;
     c = def.c;
     flags = def.flags;
+    value = def.value;
+    chance = def.chance;
+    co.x = co.y = 0;
+}
+
+Item::Item()
+{
+}
+
+Item::Item(Item *item)
+{
+    this->type = item->type;
+    this->name = item->name;
+    this->c = item->c;
+    this->flags = item->flags;
+    this->value = item->value;
+    this->chance = item->chance;
+    this->co = item->co;
 }
 
 Item::~Item()
 {
 }
-
-
 
 
 

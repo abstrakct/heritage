@@ -11,6 +11,7 @@
 #include "common.h"
 #include "command.h"
 #include "display.h"
+#include "item.h"
 
 class Game {
         public:
@@ -26,6 +27,7 @@ class Game {
                 const char *version;
                 bool wizmode;
                 Clock clock;
+                vector<Item> itemdef;
         protected:
         private:
                 Command cmd;

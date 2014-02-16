@@ -9,6 +9,8 @@
 #include <string>
 using namespace std;
 
+#include "common.h"
+
 #define IF_WIELDABLE  0x00000001
 #define IF_POCKETABLE 0x00000002
 #define IF_WEARABLE   0x00000004
@@ -17,7 +19,8 @@ enum item_type {
     it_nothing = 0,
     it_weapon,
     it_clothing,
-    it_tool
+    it_tool,
+    it_key,
 };
 
 /*
@@ -28,6 +31,8 @@ struct item_definition {
     char c;
     item_type type;
     long flags;
+    int value;
+    int chance;
 };
 
 class Item {
@@ -35,10 +40,17 @@ class Item {
         string name;
         item_type type;
         long flags;
-        char c;
+        int value;       // max damage for weapons, protection for armor, something else for other
     public:
         Item(struct item_definition def);
+        Item(Item *item);
+        Item();
         ~Item();
+        string get_name() { return name; };
+
+        coord_t co;
+        int chance;      // spawn chance
+        char c;
 };
 
 #endif

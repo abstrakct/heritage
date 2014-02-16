@@ -11,6 +11,7 @@
 #include "libtcod.hpp"
 #include "actor.h"
 #include "common.h"
+#include "item.h"
 
 #define AREA_MAX_X 90
 #define AREA_MAX_Y 60
@@ -95,6 +96,7 @@ class Cell {
                 Actor       *corpse;
                 char         c;
                 TCODColor    fg, bg;
+                Item        *item;
 };
 
 class Area {
@@ -130,12 +132,15 @@ class Area {
                 area_id_type get_id() { return id; };
                 const char *get_area_name();
                 coord_t get_random_floor_cell();
+                coord_t get_random_empty_floor_cell();
+                void spawn_items(int num);
 
                 Cell    **cell;
                 TCODMap *tcodmap;
                 bool lights_on;
                 coord_t stairs_up;
                 coord_t stairs_down;
+                vector<Item> items;
 
                 friend class Cell;
 };
@@ -170,6 +175,8 @@ class World {
                 int current_area;
                 Area *area;       // becomes array of areas. the actual areas in the game.
                 Area *a;          // should always point to area[current_area]
+
+                vector<Item> items;
 
                 friend class Cell;
 };
