@@ -19,7 +19,7 @@ class Game {
                 ~Game();
                 void loop();
                 bool is_running();
-                void endgame();
+                void endthegame();
                 void intro();
                 void end_turn();
                 

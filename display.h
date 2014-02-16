@@ -58,10 +58,11 @@ class Display {
                 void touch() { touched = true; };
                 void clear();
                 TCOD_key_t get_key(bool flush);
-                TCOD_key_t wait_for_key(bool flush);
+                TCOD_key_t wait_for_key();
                 TCODColor get_random_color();
                 void print_npc_name(int x, int y, char *name);
                 void print_npc_name(int x, int y, char *name, TCODColor fg, TCODColor bg);
+                void flushem();
         protected:
         private:
                 bool touched;

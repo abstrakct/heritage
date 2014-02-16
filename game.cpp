@@ -47,7 +47,7 @@ bool Game::is_running()
         return running;
 }
 
-void Game::endgame()
+void Game::endthegame()
 {
         running = false;
 }
@@ -80,11 +80,10 @@ void Game::loop()
         while (this->is_running()) {
                 world->update_fov();
                 display->update();
-
                 c = cmd.get_command();
                 switch(c) {
                         case cmd_exit:
-                                endgame();
+                                endthegame();
                                 break;
                         case cmd_move_left:
                                 player->move_left();

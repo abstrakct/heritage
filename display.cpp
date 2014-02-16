@@ -65,7 +65,7 @@ Display::Display()
     console = new TCODConsole(chars_x, chars_y);
     console->setCustomFont(FONT, TCOD_FONT_TYPE_GRAYSCALE | TCOD_FONT_LAYOUT_ASCII_INROW, 16, 16);
     console->root->setCustomFont(FONT, TCOD_FONT_TYPE_GRAYSCALE | TCOD_FONT_LAYOUT_ASCII_INROW, 16, 16);
-    console->root->setKeyboardRepeat(200, 50);
+    console->root->setKeyboardRepeat(200, 100);
 
     for(int i = 0; i<13; ++i) {
         message_t item;
@@ -102,11 +102,12 @@ TCOD_key_t Display::get_key(bool flush)
     return console->root->checkForKeypress(TCOD_KEY_PRESSED);
 }
 
-TCOD_key_t Display::wait_for_key(bool flush)
+TCOD_key_t Display::wait_for_key()
 {
-    if(flush)
-        console->root->flush();
-    return console->root->waitForKeypress(true);
+    console->flush();
+    console->root->flush();
+
+    return console->waitForKeypress(true);
 }
 
 TCODColor Display::get_random_color()
@@ -265,19 +266,20 @@ bool Display::askyn()
 {
     TCOD_key_t key;
 again: 
-    console->root->flush();
-    key = display->wait_for_key(true);
-    if(key.vk == TCODK_CHAR) {
-        if(key.c == 'y' || key.c == 'Y') {
-            return true;
-        } else if(key.c == 'n' || key.c == 'N') {
-            return false;
-        } 
-        display->message("Please choose [y]es or [n]o.");
-        display->touch();
-        display->update();
-        goto again;
+    console->flush();
+    key = display->wait_for_key();
+    if(key.c == 'y' || key.c == 'Y') {
+        return true;
     }
+    
+    if(key.c == 'n' || key.c == 'N') {
+        return false;
+    } 
+
+    //display->message("Please choose [y]es or [n]o.");
+    display->touch();
+    display->update();
+    goto again;
 }
 
 void Display::messagec(TCODColor c, const char *message, ...)
@@ -303,5 +305,9 @@ void Display::clear()
     console->clear();
 }
 
+void Display::flushem()
+{
+    console->flush();
+}
 
 // vim: fdm=syntax guifont=Terminus\ 8

@@ -77,6 +77,7 @@ command_type Command::get_command()
 {
         vector<struct command_t>::iterator i;
 
+        display->flushem();
         TCOD_key_t key = display->get_key(true);
         //dbg("Got key: vk = %d   c = %c (%d)", key.vk, key.c, key.c);
 
@@ -94,6 +95,7 @@ command_type Command::get_command()
                 //}
         }
 
+        display->flushem();
         return cmd_nothing;
 }
 

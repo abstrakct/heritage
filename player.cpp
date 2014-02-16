@@ -91,7 +91,7 @@ void Player::die()
 {
         display->messagec(COLOR_FATAL, "You have died...");
         display->update();
-        game->endgame();
+        game->endthegame();
 }
 
 void Player::create()
