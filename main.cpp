@@ -33,7 +33,7 @@ vector<Item> itemdef;
  * The actual item definitions.
  * Reading them from a text file would be nicer, but would also require more work.
  */
-struct item_definition item_definitions[] {
+struct item_definition item_definitions[] = {
         { "knife",  ')', it_weapon,   IF_WIELDABLE },
         { "jacket", '[', it_clothing, IF_WEARABLE },
 };
@@ -138,7 +138,7 @@ void init_item_definitions()
 {
     Item *i;
 
-    for(int x = 0; x < (sizeof(item_definitions) / sizeof(struct item_definition)); x++) {
+    for(size_t x = 0; x < (sizeof(item_definitions) / sizeof(struct item_definition)); x++) {
         i = new Item(item_definitions[x]);
         itemdef.push_back(*i);
         delete i;
