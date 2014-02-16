@@ -866,6 +866,7 @@ void Area::spawn_items(int num)
 
            this->cell[co.x][co.y].item = new Item;
            *this->cell[co.x][co.y].item = newitem;
+           this->cell[co.x][co.y].item->fg = TCODColor::darkGreen;
            i++;
        } else {
            if(it == game->itemdef.end())
@@ -968,16 +969,16 @@ void World::draw_map()
 
 void World::draw_cell(int x, int y)
 {
-    if(player->area->cell[x][y].item) {
-        display->putmap(x, y, player->area->cell[x][y].item->c, player->area->cell[x][y].fg, player->area->cell[x][y].bg);
-    }
-
     if(player->area->cell[x][y].inhabitant) {
         if(player->area->cell[x][y].inhabitant->alive) {
             player->area->cell[x][y].inhabitant->draw();
         }
     } else {
-        display->putmap(x, y, a->cell[x][y].c, a->cell[x][y].fg, a->cell[x][y].bg);
+        if(player->area->cell[x][y].item) {
+            display->putmap(x, y, player->area->cell[x][y].item->c, player->area->cell[x][y].item->fg, player->area->cell[x][y].item->bg);
+        } else {
+            display->putmap(x, y, a->cell[x][y].c, a->cell[x][y].fg, a->cell[x][y].bg);
+        }
     }
 }
 

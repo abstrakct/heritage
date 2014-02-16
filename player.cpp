@@ -81,6 +81,8 @@ void Player::look()
                 default:
                         break;
         }
+        if(world->a->cell[this->getx()][this->gety()].item)
+            display->messagec(COLOR_GOOD, "There is a %s here.", world->a->cell[this->getx()][this->gety()].item->get_name());
         //if(world->a->cell[this->getx()][this->gety()].inhabitant != this)
         //        display->message("You are standing next to %s (%d,%d).", this->area->cell[this->getx()][this->gety()].inhabitant->getname(), this->getx(), this->gety());
 }

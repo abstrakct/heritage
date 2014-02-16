@@ -46,11 +46,13 @@ class Item {
         Item(Item *item);
         Item();
         ~Item();
-        string get_name() { return name; };
+        //string get_name() { return name; };
+        char *get_name();
 
         coord_t co;
         int chance;      // spawn chance
         char c;
+        TCODColor fg, bg;
 };
 
 #endif
