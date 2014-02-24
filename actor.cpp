@@ -397,6 +397,10 @@ void Actor::use_stairs()
 {
 }
 
+void Actor::set_in_combat()
+{
+}
+
 bool Actor::pass_roll(enum_stat stat)
 {
     int x;
@@ -456,6 +460,10 @@ void Actor::attack_physical(Actor *target)
 void Actor::attack(Actor *target, attack_type type)
 {
     target->enemy = this;
+    if(this == player) {
+        target->set_in_combat();
+    }
+
     switch(type) {
         case body:
             attack_physical(target);

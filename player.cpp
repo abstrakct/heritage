@@ -177,6 +177,10 @@ void Player::use_stairs()
         }
 }
 
+void Player::set_in_combat()
+{
+}
+
 void Player::endturn()
 {
         decfear();

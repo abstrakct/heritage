@@ -11,39 +11,39 @@
 #include "common.h"
 
 enum e_role {
-        role_unknown = 0,
-        role_player,
-        role_npc,
-        role_enemy,
+    role_unknown = 0,
+    role_player,
+    role_npc,
+    role_enemy,
 };
 
 enum attack_type {
-        body = 0,
-        mind,
-        soul,
-        other
+    body = 0,
+    mind,
+    soul,
+    other
 };
 
 enum enum_stat {
-        sMind = 0,
-        sBody,
-        sSoul,
-        sSanity,
-        sFear,
-        sHealth
+    sMind = 0,
+    sBody,
+    sSoul,
+    sSanity,
+    sFear,
+    sHealth
 };
 
 enum special_type {
-        special_none = 0,
-        special_mindblast,
-        special_soulcrush,
-        special_powerfist,
-        special_4,
-        special_5,
-        special_6,
-        special_7,
-        special_8,
-        special_9,
+    special_none = 0,
+    special_mindblast,
+    special_soulcrush,
+    special_powerfist,
+    special_4,
+    special_5,
+    special_6,
+    special_7,
+    special_8,
+    special_9,
 };
 
 extern const char *special_name[];
@@ -62,97 +62,97 @@ typedef void (Actor::*aifn)();
 #define SPECIAL_ADD_INCREASE 2
 
 class SpecialAttack {
-        public:
-                SpecialAttack();
-                SpecialAttack(special_type t);
-                ~SpecialAttack() {
-                };
+    public:
+        SpecialAttack();
+        SpecialAttack(special_type t);
+        ~SpecialAttack() {
+        };
 
-                special_type type;
-                char name[20];
-                int level;
+        special_type type;
+        char name[20];
+        int level;
 };
 
 class Actor {
-        public:
-                Actor();
-                virtual ~Actor() {  };
-                virtual bool is_player() = 0;
-                virtual void use_stairs();
-                
-                bool is_alive() { return alive; };
-                bool is_male();
-                void kill();
-                void draw();
-                void draw(TCODColor fg, TCODColor bg);
-                void drawcorpse();
-                void setxy(int x, int y);
-                void setxy(coord_t newco);
-                int  getx();
-                int  gety();
-                coord_t getxy();
-                void setprevxy(int x, int y);
-                void setprevxy(coord_t newco);
-                void setchar(char newc);
-                void setname(const char *name);
-                void setcolors(TCODColor fg, TCODColor bg);
-                void setgender(int i) { male = i; };
-                char *getname();
+    public:
+        Actor();
+        virtual ~Actor() {  };
+        virtual bool is_player() = 0;
+        virtual void use_stairs();
+        virtual void set_in_combat();
 
-                const char *get_sanitydesc();
-                void decstat(enum_stat which, int amount = 1);
-                void incstat(enum_stat which, int amount = 1);
-                void setstat(enum_stat which, int what);
-                int  getstat(enum_stat which);
-                void incfear();
-                void decfear();
-                void decsanity();
+        bool is_alive() { return alive; };
+        bool is_male();
+        void kill();
+        void draw();
+        void draw(TCODColor fg, TCODColor bg);
+        void drawcorpse();
+        void setxy(int x, int y);
+        void setxy(coord_t newco);
+        int  getx();
+        int  gety();
+        coord_t getxy();
+        void setprevxy(int x, int y);
+        void setprevxy(coord_t newco);
+        void setchar(char newc);
+        void setname(const char *name);
+        void setcolors(TCODColor fg, TCODColor bg);
+        void setgender(int i) { male = i; };
+        char *getname();
 
-                void setfovradius(int amount) { fovradius = amount; };
-                int  getfovradius() { return fovradius; };
+        const char *get_sanitydesc();
+        void decstat(enum_stat which, int amount = 1);
+        void incstat(enum_stat which, int amount = 1);
+        void setstat(enum_stat which, int what);
+        int  getstat(enum_stat which);
+        void incfear();
+        void decfear();
+        void decsanity();
 
-                bool can_see(Actor *target);
-                bool can_see(int x, int y);
+        void setfovradius(int amount) { fovradius = amount; };
+        int  getfovradius() { return fovradius; };
 
-                void attack(Actor *target, attack_type type = body);
-                void attack_physical(Actor *target);
+        bool can_see(Actor *target);
+        bool can_see(int x, int y);
 
-                bool pass_roll(enum_stat stat);
-                int  add_special_attack(special_type t); 
+        void attack(Actor *target, attack_type type = body);
+        void attack_physical(Actor *target);
 
-                // Movement
-                void move(int dx, int dy);
-                void move_left();
-                void move_right();
-                void move_up();
-                void move_down();
-                void move_nw();
-                void move_ne();
-                void move_sw();
-                void move_se();
-                void moved(bool b = true) { moved_ = b; };
-                bool has_moved() { return moved_; };
+        bool pass_roll(enum_stat stat);
+        int  add_special_attack(special_type t); 
 
-                area_id_type area_id;
-                Actor *enemy;              // public enemy haha!
-                Area *area;                // in which area is this actor?
-                bool alive;
-                vector <SpecialAttack> special;
-                //special_type special[10];
-        protected:
-        private:
-                bool male;
-                bool moved_;
-                char c;
-                char name[64];
-                coord_t co;
-                coord_t prev;
-                e_role role;
-                TCODColor fg, bg;
-                int fovradius;
+        // Movement
+        void move(int dx, int dy);
+        void move_left();
+        void move_right();
+        void move_up();
+        void move_down();
+        void move_nw();
+        void move_ne();
+        void move_sw();
+        void move_se();
+        void moved(bool b = true) { moved_ = b; };
+        bool has_moved() { return moved_; };
 
-                // Stats
-                int stat[6];
+        area_id_type area_id;
+        Actor *enemy;              // public enemy haha!
+        Area *area;                // in which area is this actor?
+        bool alive;
+        vector <SpecialAttack> special;
+    protected:
+    private:
+        bool male;
+        bool moved_;
+        char c;
+        char name[64];
+        coord_t co;
+        coord_t prev;
+        e_role role;
+        TCODColor fg, bg;
+        int fovradius;
+
+        // Stats
+        int stat[6];
 };
 
 // Prototypes
