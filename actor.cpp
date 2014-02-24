@@ -15,7 +15,7 @@ using namespace std;
 extern World *world;
 extern Display *display;
 extern Player *player;
-extern Game *game;
+extern Game g;
 
 const char *special_name[] = {
     "(none)",
@@ -212,7 +212,7 @@ void Actor::move(int dx, int dy)
     }
 
 
-    if(game->wizmode && this == player) {
+    if(g.wizmode && this == player) {
         prev = co;
         co.x += dx;
         co.y += dy;

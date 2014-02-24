@@ -17,7 +17,7 @@ using namespace std;
 
 extern Player *player;
 extern World *world;
-extern Game *game;
+extern Game g;
 
 const char *area_name[] = {
     "Cellar, level 6",
@@ -846,7 +846,7 @@ void Area::spawn_items(int num)
 {
     int i = 0;
     vector<Item>::iterator it; 
-    it = game->itemdef.begin();
+    it = g.itemdef.begin();
 
     while(i != num) {
        int c = ri(1, 100);
@@ -869,8 +869,8 @@ void Area::spawn_items(int num)
            this->cell[co.x][co.y].item->fg = TCODColor::darkGreen;
            i++;
        } else {
-           if(it == game->itemdef.end())
-               it = game->itemdef.begin();
+           if(it == g.itemdef.end())
+               it = g.itemdef.begin();
            else
                it++;
        }

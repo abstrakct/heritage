@@ -25,7 +25,7 @@ using namespace std;
 extern World *world;
 extern Player *player;
 extern NPC *npc;
-extern Game *game;
+extern Game g;
 
 TCODColor colorlist[] = {
     TCODColor::white,
@@ -129,7 +129,7 @@ void Display::draw_left_window()
     x = LEFT_X+1;
     y = LEFT_Y+2;
 
-    console->printEx(x+16, y, TCOD_BKGND_DEFAULT, TCOD_CENTER, "Time: %02d:%02d", game->clock.get_hour(), game->clock.get_minute()); y++; y++;
+    console->printEx(x+16, y, TCOD_BKGND_DEFAULT, TCOD_CENTER, "Time: %02d:%02d", g.clock.get_hour(), g.clock.get_minute()); y++; y++;
     console->printEx(x+16, y, TCOD_BKGND_DEFAULT, TCOD_CENTER, "Area: %s", world->a->get_area_name()); y++; y++;
     console->print(x, y, "Name: %s", player->getname()); y++;
     y++;

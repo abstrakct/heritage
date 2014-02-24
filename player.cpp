@@ -22,7 +22,7 @@ using namespace std;
 extern World   *world;
 extern Player  *player;
 extern Display *display;
-extern Game *game;
+extern Game g;
 
 Player::Player()
 {
@@ -91,7 +91,7 @@ void Player::die()
 {
         display->messagec(COLOR_FATAL, "You have died...");
         display->update();
-        game->endthegame();
+        g.endthegame();
 }
 
 void Player::create()
@@ -101,7 +101,7 @@ void Player::create()
         char c, d;
         int mind, body, soul;
 
-        cout << "Welcome to " << game->name << " - v" << game->version << endl << endl;
+        cout << "Welcome to " << g.name << " - v" << g.version << endl << endl;
         cout << "First, you will need to create your player character using this very simple character generator." <<endl;
         cout << "What's your name? ";
         getline(cin, input);
@@ -178,7 +178,7 @@ void Player::use_stairs()
 void Player::endturn()
 {
         decfear();
-        game->clock += ri(5,10);
+        g.clock += ri(5,10);
 }
 
 
