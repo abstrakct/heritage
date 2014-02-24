@@ -131,6 +131,7 @@ void Game::loop()
                 player->area->cell[player->getx()][player->gety()].activate();
                 break;
             case cmd_wait:
+                player->moved();
                 end_turn();
                 break;
             case cmd_special_1:

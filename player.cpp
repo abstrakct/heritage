@@ -161,6 +161,7 @@ void Player::use_stairs()
                 world->set_inhabitant(player);
                 display->clear();
                 display->update();
+                player->moved();
         } else if(player->area->cell[player->getx()][player->gety()].get_type() == stairs_down) {
                 world->clear_inhabitant(player->area, player->getxy());
                 world->current_area--;
@@ -170,6 +171,7 @@ void Player::use_stairs()
                 world->set_inhabitant(player);
                 display->clear();
                 display->update();
+                player->moved();
         } else {
                 display->messagec(COLOR_ERROR, "There are no stairs here!");
         }

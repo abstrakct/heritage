@@ -30,6 +30,18 @@ const char *special_name[] = {
     "Special 9",
 };
 
+const char *bodypart_string[] = {
+    "head",
+    "chest",
+    "left arm",
+    "right arm",
+    "left foot",
+    "right foot",
+    "guts",
+    "face",
+    "groin",
+};
+
 const char *sanitydesc[] = {
     "Member of WBC",              //  0 - 3
     "Completely insane",          //  3 - 10
@@ -187,10 +199,9 @@ void Actor::move(int dx, int dy)
             display->print_messages();
             display->touch();
             if(display->askyn()) {
-                display->message("oh yizz");
+                player->attack(this->area->cell[this->co.x + dx][this->co.y + dy].inhabitant);
                 player->moved(true);
             } else {
-                display->message("Ok.");
                 player->moved(false);
             }
         } else {
@@ -405,21 +416,32 @@ void Actor::attack_physical(Actor *target)
         int damage = dice(1, this->getstat(sBody), ability_modifier(this->getstat(sBody)));
         if(damage <= 0)
             damage = 1;
-        if(!world->a->tcodmap->isInFov(target->getx(), target->gety())) {
-            int x = ri(1,10);
-            switch(x) {
-                case  1: display->messagec(COLOR_FEAR, "You hear a scream somewhere in the house."); player->incfear(); break;
-                case  2: display->messagec(COLOR_FEAR, "You hear the sounds of fighting somewhere in the house."); player->incfear(); break;
-                case  3: display->messagec(COLOR_FEAR, "You hear someone shout."); player->incfear(); break;
-                case  4: display->messagec(COLOR_FEAR, "You hear someone yell."); player->incfear(); break;
-                case  5: display->messagec(COLOR_FEAR, "You hear the sound of something breaking."); player->incfear(); break;
-                case  6: display->messagec(COLOR_FEAR, "You hear the sound of someone crying."); player->incfear(); break;
-                case  7: display->messagec(COLOR_FEAR, "You hear someone wailing."); player->incfear(); break;
-                case  8: display->messagec(COLOR_FEAR, "You hear a bloodcurdling shriek from somewhere in the house."); player->incfear(); break;
-                case  9: display->messagec(COLOR_FEAR, "You hear a horrible howl from somewhere in the house."); player->incfear(); break;
-                case 10: display->messagec(COLOR_FEAR, "You hear weird, muffled noises from somewhere in the house."); player->incfear(); break;
-                default: break;
+        if(this != player) {
+            if(!this->can_see(target)) {
+            //if(!world->a->tcodmap->isInFov(target->getx(), target->gety())) {
+                int x = ri(1,10);
+                switch(x) {
+                    case  1: display->messagec(COLOR_FEAR, "You hear a scream somewhere in the house."); player->incfear(); break;
+                    case  2: display->messagec(COLOR_FEAR, "You hear the sounds of fighting somewhere in the house."); player->incfear(); break;
+                    case  3: display->messagec(COLOR_FEAR, "You hear someone shout."); player->incfear(); break;
+                    case  4: display->messagec(COLOR_FEAR, "You hear someone yell."); player->incfear(); break;
+                    case  5: display->messagec(COLOR_FEAR, "You hear the sound of something breaking."); player->incfear(); break;
+                    case  6: display->messagec(COLOR_FEAR, "You hear the sound of someone crying."); player->incfear(); break;
+                    case  7: display->messagec(COLOR_FEAR, "You hear someone wailing."); player->incfear(); break;
+                    case  8: display->messagec(COLOR_FEAR, "You hear a bloodcurdling shriek from somewhere in the house."); player->incfear(); break;
+                    case  9: display->messagec(COLOR_FEAR, "You hear a horrible howl from somewhere in the house."); player->incfear(); break;
+                    case 10: display->messagec(COLOR_FEAR, "You hear weird, muffled noises from somewhere in the house."); player->incfear(); break;
+                    default: break;
+                }
+            } else {
+                if(target != player)
+                    display->messagec(COLOR_FEAR, "You see %s attacking %s!", this->getname(), target->getname());
+                if(target == player)
+                    display->messagec(COLOR_FEAR, "%s %s you in the %s!", this->getname(), fiftyfifty() ? "hits" : "kicks", bodypart_string[ri(0,8)]);
+                player->incfear();
             }
+        } else {    // this == player
+            display->messagec(COLOR_GOOD, "You attack %s, causing %d amounts of damage!", target->getname(), damage);
         }
         //display->message("%s HIT %s! %d damage.", this->name, target->getname(), damage);
         target->decstat(sHealth, damage);
@@ -433,7 +455,6 @@ void Actor::attack_physical(Actor *target)
 
 void Actor::attack(Actor *target, attack_type type)
 {
-    display->message("%s attacks %s!", name, target->getname());
     target->enemy = this;
     switch(type) {
         case body:

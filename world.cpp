@@ -420,6 +420,7 @@ void Cell::activate()
     switch(this->type) {
         case cell_bookcase:
             this->activate_bookcase();
+            player->moved();
             break;
         default:
             break;
@@ -939,6 +940,8 @@ bool World::close_nearest_door(Actor *actor)
         for(dy=-1; dy <= 1; dy++) {
             if(is_open_door(actor->area, x+dx, y+dy)) {
                 close_door(actor->area, x+dx, y+dy);
+                if(actor == player)
+                    player->moved();
                 return true;
             }
         }
