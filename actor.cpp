@@ -51,6 +51,7 @@ Actor::Actor()
     co.x = co.y = 0;
     alive = true;
     enemy = NULL;
+    moved_ = false;
 }
 
 /*Actor::~Actor()
@@ -187,9 +188,10 @@ void Actor::move(int dx, int dy)
             display->touch();
             if(display->askyn()) {
                 display->message("oh yizz");
-                display->touch();
+                player->moved(true);
             } else {
                 display->message("Ok.");
+                player->moved(false);
             }
         } else {
             if(this->enemy) {
@@ -211,13 +213,13 @@ void Actor::move(int dx, int dy)
         return;
     }
 
-
     if(g.wizmode && this == player) {
         prev = co;
         co.x += dx;
         co.y += dy;
         world->clear_inhabitant(this->area, prev);
         world->set_inhabitant(this);
+        player->moved(true);
         display->touch();
         return;
     }
@@ -229,6 +231,8 @@ void Actor::move(int dx, int dy)
         world->clear_inhabitant(this->area, prev);
         world->set_inhabitant(this);
         display->touch();
+        if(this == player)
+            player->moved(true);
     }
 }
 

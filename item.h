@@ -1,5 +1,8 @@
 /*
- * Items
+ * The Items
+ *
+ * Copyright (C) 2013
+ *
  */
 
 
@@ -56,3 +59,7 @@ class Item {
 };
 
 #endif
+
+
+
+// vim: fdm=syntax guifont=Terminus\ 8

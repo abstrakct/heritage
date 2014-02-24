@@ -130,6 +130,8 @@ class Actor {
                 void move_ne();
                 void move_sw();
                 void move_se();
+                void moved(bool b) { moved_ = b; };
+                bool has_moved() { return moved_; };
 
                 area_id_type area_id;
                 Actor *enemy;              // public enemy haha!
@@ -140,6 +142,7 @@ class Actor {
         protected:
         private:
                 bool male;
+                bool moved_;
                 char c;
                 char name[64];
                 coord_t co;

@@ -102,12 +102,25 @@ TCOD_key_t Display::get_key(bool flush)
     return console->root->checkForKeypress(TCOD_KEY_PRESSED);
 }
 
+/*TCOD_key_t Display::wait_for_key()
+{
+    TCOD_key_t k;
+    console->flush();
+
+    k = console->waitForKeypress(true);
+
+    return k;
+}*/
+
 TCOD_key_t Display::wait_for_key()
 {
-    console->flush();
-    console->root->flush();
-
-    return console->waitForKeypress(true);
+    TCOD_key_t key;
+    TCOD_mouse_t mouse;
+    TCOD_event_t ev;
+    
+    ev = TCODSystem::waitForEvent(TCOD_EVENT_ANY,&key,&mouse,true);
+    if (ev == TCOD_EVENT_KEY_PRESS)
+        return key;
 }
 
 TCODColor Display::get_random_color()
@@ -268,6 +281,7 @@ bool Display::askyn()
 again: 
     console->flush();
     key = display->wait_for_key();
+    
     if(key.c == 'y' || key.c == 'Y') {
         return true;
     }
