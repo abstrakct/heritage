@@ -70,14 +70,6 @@ Actor::Actor()
   {
   }*/
 
-/*bool Actor::is_player()
-  {
-  if(role == player)
-  return true;
-  else
-  return false;
-  }*/
-
 bool Actor::is_male()
 { 
     if(male)
@@ -325,12 +317,20 @@ void Actor::setstat(enum_stat which, int what)
 
 void Actor::decstat(enum_stat which, int amount)
 {
-    this->stat[which] -= amount;
+    if(this->stat[which] > 0)
+        this->stat[which] -= amount;
 }
 
 void Actor::incstat(enum_stat which, int amount)
 {
     this->stat[which] += amount;
+    if(which == sBody || which == sMind || which == sSoul) {
+        if(this->stat[which] > 20)
+            this->stat[which] = 20;
+    } else {
+        if(this->stat[which] > 100)
+            this->stat[which] = 100;
+    }
 }
 
 void Actor::decsanity()
@@ -405,7 +405,7 @@ bool Actor::pass_roll(enum_stat stat)
 {
     int x;
 
-    x = dice(1,20,0);
+    x = dice(1,21,0);
     if(x <= this->getstat(stat))
         return true;
     else

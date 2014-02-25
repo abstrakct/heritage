@@ -137,27 +137,29 @@ void NPC::set_random_goal()
         }
     }
 
-    if(type > 50 && type <= 70) {
+    if(type > 50 && type <= 70) {  // move upstairs
         //display->message("%s has a goal: to go upstairs", this->getname());
         set_goal(this->area->stairs_up);
         this->goal_type = move_upstairs;
     }
 
-    if(type > 70 && type <= 90) {
+    if(type > 70 && type <= 90) {  // move downstairs
         //display->message("%s has a goal: to go downstairs", this->getname());
         set_goal(this->area->stairs_down);
         this->goal_type = move_downstairs;
     }
 
-    if(type > 90 && type <= 97) {
+    if(type > 90 && type <= 97) {  // not kill someone
         if(enemy) {
             display->message("%s has decided to NOT kill %s after all!", this->getname(), this->enemy->getname());
             clear_goal();
             enemy = NULL;
+            if(player->pass_roll(sSoul))
+                display->messagec(COLOR_FEAR, "You feel good vibrations.");
         }
     }
 
-    if(type > 97) {
+    if(type > 97) {  // kill someone
         int i = ri(0,12);
         if(i == 12) {
             if(player->area == this->area) {   // to avoid 3D pathfinding, only attack stuff on one's own level/floor/area
@@ -165,7 +167,11 @@ void NPC::set_random_goal()
                 set_goal(player->getxy());
                 this->goal_type = kill_player;
             }
+#ifdef DEBUG_ON
             display->message("%s has decided to kill YOU!!!!", this->getname());
+#endif
+            if(player->pass_roll(sSoul))
+                display->messagec(COLOR_FEAR, "You sense sinister forces at work.");
         } else {
             while(!npc[i].is_alive())
                 i = ri(0,11);
