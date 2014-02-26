@@ -327,10 +327,7 @@ void Actor::incstat(enum_stat which, int amount)
     if(which == sBody || which == sMind || which == sSoul) {
         if(this->stat[which] > 20)
             this->stat[which] = 20;
-    } else {
-        if(this->stat[which] > 100)
-            this->stat[which] = 100;
-    }
+    } 
 }
 
 void Actor::decsanity()

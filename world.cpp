@@ -234,7 +234,7 @@ void Cell::set_candle()
     this->type = cell_candle;
     this->fg = TCODColor::flame;
     this->bg = TCODColor::black;
-    c = 0x0F;
+    c = 0x05;
 }
 
 void Cell::set_visibility(bool b)
@@ -389,7 +389,8 @@ void Cell::activate_bookcase()
                 display->message(" ");
                 break;
             case 6:
-                display->messagec(COLOR_BOOK, "Amongst a nice collection of pulp novels, you come across a thick tome called \"Religions and Rituals - Then and Now\". The author is Ann Theodorette Ropos.");
+                display->messagec(COLOR_BOOK, "Amongst a collection of pulp novels, you come across a thick tome called \"Religions and Rituals - Then and Now\".");
+                display->messagec(COLOR_BOOK, "The author's name is Ann Theodorette Ropos.");
                 if(player->pass_roll(sMind)) {
                     display->messagec(COLOR_BOOK, "The tome is quite academic in style, but you manage to understand some of the main principles and ideas.");
                     display->messagec(COLOR_GOOD, "Congratulations! You feel that there is hope for your soul after all.");
@@ -399,7 +400,8 @@ void Cell::activate_bookcase()
                         player->incstat(sSoul, 1);
                 } else {
                     display->messagec(COLOR_BOOK, "The tome is quite academic in style, and obviously not meant to be understandable for laymen.");
-                    display->messagec(COLOR_BOOK, "You gain nothing from reading the long sentences with too many commas and obscure words which overpopulate this book.");
+                    display->messagec(COLOR_BOOK, "You gain nothing from reading the long sentences with too many commas and obscure words");
+                    display->messagec(COLOR_BOOK, "which overpopulate this book.");
                 }
                 display->message(" ");
                 break;

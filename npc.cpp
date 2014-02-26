@@ -151,15 +151,18 @@ void NPC::set_random_goal()
 
     if(type > 90 && type <= 97) {  // not kill someone
         if(enemy) {
+            if(this->enemy == player)
+                if(player->pass_roll(sSoul))
+                    display->messagec(COLOR_GOOD, "You feel good vibrations.");
+#ifdef DEBUG_ON
             display->message("%s has decided to NOT kill %s after all!", this->getname(), this->enemy->getname());
+#endif
             clear_goal();
             enemy = NULL;
-            if(player->pass_roll(sSoul))
-                display->messagec(COLOR_FEAR, "You feel good vibrations.");
         }
     }
 
-    if(type > 97) {  // kill someone
+    if(type > 97) {                // kill someone
         int i = ri(0,12);
         if(i == 12) {
             if(player->area == this->area) {   // to avoid 3D pathfinding, only attack stuff on one's own level/floor/area
