@@ -331,7 +331,7 @@ void Cell::activate_bookcase()
                 display->message(" ");
                 break;
             case 2:
-                display->messagec(COLOR_BOOK, "You come across a book called \"How To Fight - A Manual\". It looks interesting.");
+                display->messagec(COLOR_BOOK, "You come across a large book called \"How To Fight - A Reference\". It looks interesting.");
                 if(player->pass_roll(sMind)) {
                     display->messagec(COLOR_BOOK, "You read through the book, picking up a few useful fighting techniques.");
                     result = player->add_special_attack(special_powerfist);

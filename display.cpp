@@ -56,7 +56,7 @@ TCODColor colorlist[] = {
 
 Display::Display()
 {
-    char t[] = "The Heritage of Efraim Eveningstar - Chapter I";
+    char t[] = "The Heritage of Efraim Edevane - Chapter I: TBA";
 
     set_resolution(1024, 600);
     set_title(t);
