@@ -62,6 +62,17 @@ bool fiftyfifty()
         return false;
 }
 
+bool one_in(int chance)
+{
+    int i;
+
+    i = ri(1,chance);
+    if(i == chance)
+        return true;
+    else
+        return false;
+}
+
 int dice(int num, int sides, signed int modifier)
 {
     int i, result;

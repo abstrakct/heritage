@@ -256,8 +256,12 @@ void NPC::path_ai()
                     chance = 90;
             } else {
                 if(this->in_combat) {
-                    bool x = fiftyfifty();
-                    if(x) {
+                    if(one_in(10)) {
+                        clear_goal();
+                        set_random_goal();
+                    }
+
+                    if(fiftyfifty()) {
                         set_goal(this->area->stairs_down);
                         this->goal_type = move_downstairs;
                     } else {
@@ -265,7 +269,7 @@ void NPC::path_ai()
                         this->goal_type = move_upstairs;
                     }
                 } else {
-                    has_goal = false;
+                    clear_goal();
                     set_random_goal();
                 }
             }
