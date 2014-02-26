@@ -239,13 +239,18 @@ void NPC::path_ai()
 
         if(enemy) {
             if(this->in_combat) {
-                attack(this->enemy);
-                return;
+                if(this->is_next_to(this->enemy)) {
+                    attack(this->enemy);
+                    return;
+                }
             }
 
             if(this->area == enemy->area) {
                 set_goal(enemy->getxy());
-                chance = 90;
+                if(this->in_combat)
+                    chance = 95;
+                else
+                    chance = 90;
             } else {
                 has_goal = false;
                 set_random_goal();

@@ -20,7 +20,6 @@ enum goal_type_e {
     kill_npc
 };
 
-
 class NPC: public Actor {
     public:
         NPC();

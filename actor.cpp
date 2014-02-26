@@ -495,6 +495,19 @@ bool Actor::can_see(int x, int y)
     return result;
 }
 
+bool Actor::is_next_to(Actor *target)
+{
+    int dx,dy;
+    for(dx=-1;dx<=1;++dx) {
+        for(dy=-1;dy<=1;++dy) {
+            if((this->getx() + dx == target->getx()) && (this->gety() + dy == target->gety()))
+                return true;
+        }
+    }
+
+    return false;
+}
+
 int  Actor::add_special_attack(special_type t)
 {
     vector<SpecialAttack>::iterator it;

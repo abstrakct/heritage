@@ -114,6 +114,7 @@ class Actor {
 
         bool can_see(Actor *target);
         bool can_see(int x, int y);
+        bool is_next_to(Actor *target);
 
         void attack(Actor *target, attack_type type = body);
         void attack_physical(Actor *target);
