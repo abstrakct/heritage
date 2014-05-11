@@ -176,7 +176,7 @@ void Actor::drawcorpse()
     display->touch();
 }
 
-void Actor::move(int dx, int dy)
+bool Actor::move(int dx, int dy)
 {
     if(this->area->cell[this->co.x + dx][this->co.y + dy].inhabitant) {
         if(this == player) {
@@ -187,28 +187,29 @@ void Actor::move(int dx, int dy)
             display->touch();
             if(display->askyn()) {
                 display->message("oh yizz");
-                display->touch();
+                return true;
             } else {
                 display->message("Ok.");
+                return false;
             }
         } else {
             if(this->enemy) {
                 if(this->enemy->area == this->area) {
                     if(this->enemy->getx() == this->co.x + dx && this->enemy->gety() == this->co.y + dy) {
                         attack(enemy);
-                        return;
+                        return true;
                     }
                 }
             }
         }
 
-        return;
+        return false;
     }
 
     if(world->is_closed_door(this->area, this->co.x + dx, this->co.y + dy)) {
         world->open_door(this->area, this->co.x + dx, this->co.y + dy);
         display->touch();
-        return;
+        return true;
     }
 
 
@@ -219,7 +220,7 @@ void Actor::move(int dx, int dy)
         world->clear_inhabitant(this->area, prev);
         world->set_inhabitant(this);
         display->touch();
-        return;
+        return true;
     }
 
     if(this->area->is_walkable(this->co.x + dx, this->co.y + dy)) {
@@ -229,47 +230,48 @@ void Actor::move(int dx, int dy)
         world->clear_inhabitant(this->area, prev);
         world->set_inhabitant(this);
         display->touch();
+        return true;
     }
 }
 
-void Actor::move_left()
+bool Actor::move_left()
 {
-    this->move(-1, 0);
+    return this->move(-1, 0);
 }
 
-void Actor::move_right()
+bool Actor::move_right()
 {
-    this->move(1, 0);
+    return this->move(1, 0);
 }
 
-void Actor::move_down()
+bool Actor::move_down()
 {
-    this->move(0, 1);
+    return this->move(0, 1);
 }
 
-void Actor::move_up()
+bool Actor::move_up()
 {
-    this->move(0, -1);
+    return this->move(0, -1);
 }
 
-void Actor::move_nw()
+bool Actor::move_nw()
 {
-    this->move(-1, -1);
+    return this->move(-1, -1);
 }
 
-void Actor::move_ne()
+bool Actor::move_ne()
 {
-    this->move(1, -1);
+    return this->move(1, -1);
 }
 
-void Actor::move_sw()
+bool Actor::move_sw()
 {
-    this->move(-1, 1);
+    return this->move(-1, 1);
 }
 
-void Actor::move_se()
+bool Actor::move_se()
 {
-    this->move(1, 1);
+    return this->move(1, 1);
 }
 
 const char *Actor::get_sanitydesc()

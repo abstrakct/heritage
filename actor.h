@@ -80,7 +80,7 @@ class Actor {
                 virtual bool is_player() = 0;
                 virtual void use_stairs();
                 
-                bool is_alive() { return alive; };
+                const bool is_alive() const { return alive; };
                 bool is_male();
                 void kill();
                 void draw();
@@ -121,15 +121,15 @@ class Actor {
                 int  add_special_attack(special_type t); 
 
                 // Movement
-                void move(int dx, int dy);
-                void move_left();
-                void move_right();
-                void move_up();
-                void move_down();
-                void move_nw();
-                void move_ne();
-                void move_sw();
-                void move_se();
+                bool move(int dx, int dy);
+                bool move_left();
+                bool move_right();
+                bool move_up();
+                bool move_down();
+                bool move_nw();
+                bool move_ne();
+                bool move_sw();
+                bool move_se();
 
                 area_id_type area_id;
                 Actor *enemy;              // public enemy haha!
