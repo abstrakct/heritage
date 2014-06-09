@@ -35,13 +35,13 @@ SoundEngine *audio;
  */
 struct item_definition item_definitions[] = {
     // Weapons
-    { "knife",       ')', it_weapon,   IF_WIELDABLE, 10, 30 },
+    { "knife",       ')', it_weapon,   IF_WIELDABLE, 10,  0, 30 },
     // Clothing
-    { "jacket",      '[', it_clothing, IF_WEARABLE,  10, 10 },
-    { "fancy pants", '[', it_clothing, IF_WEARABLE,   6, 10 },
-    { "gloves",      '[', it_clothing, IF_WEARABLE,   2, 10 },
+    { "jacket",      '[', it_clothing, IF_WEARABLE,  10,  3, 10 },
+    { "fancy pants", '[', it_clothing, IF_WEARABLE,   6,  2, 10 },
+    { "gloves",      '[', it_clothing, IF_WEARABLE,   2,  1, 10 },
     // Tools and other things
-    { "key",         '?', it_key,      0,             0,  5 },
+    { "key",         '?', it_key,      0,             0,  0,  5 },
 };
 
 signed int ability_modifier(int ab)

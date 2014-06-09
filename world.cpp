@@ -362,11 +362,13 @@ void Cell::activate_bookcase()
                 display->messagec(COLOR_BOOK, "Your gaze stops at a book titled \"Physical Excercises for Modern Men and Women\".");
                 if(player->pass_roll(sMind)) {
                     display->messagec(COLOR_BOOK, "Inside the book are pictures and descriptions of various physical excercises. You take notice of some of these.");
-                    display->messagec(COLOR_GOOD, "Congratulations! You feel more prepared for physical combat.");
+                    int amount;
                     if(fiftyfifty())
-                        player->incstat(sBody, dice(1,3,0));
+                        amount = dice(1,3,0);
                     else
-                        player->incstat(sBody, 1);
+                        amount = 1;
+                    player->incstat(sBody, amount);
+                    display->messagec(COLOR_GOOD, "Congratulations! You feel more prepared for physical combat. (Body +%d)", amount);
                 } else {
                     display->messagec(COLOR_BOOK, "Inside the book are pictures and descriptions of various physical excercises.");
                     display->messagec(COLOR_BOOK, "You discard the book. Books are no substitute for real physical excercise!");
@@ -377,11 +379,14 @@ void Cell::activate_bookcase()
                 display->messagec(COLOR_BOOK, "You discover an issue of a magazine entitled \"Chess Puzzles Monthly\".");
                 if(player->pass_roll(sMind)) {
                     display->messagec(COLOR_BOOK, "You spend some time solving a few of the puzzles inside - even some of the hard ones!");
-                    display->messagec(COLOR_GOOD, "Congratulations! You can literally feel your brain expanding.");
+                    int amount;
                     if(fiftyfifty())
-                        player->incstat(sMind, dice(1,3,0));
+                        amount = dice(1,3,0);
                     else
-                        player->incstat(sMind, 1);
+                        amount = 1;
+
+                    player->incstat(sMind, amount);
+                    display->messagec(COLOR_GOOD, "Congratulations! You can literally feel your brain expanding. (Mind +%d)", amount);
                 } else {
                     display->messagec(COLOR_BOOK, "You try to solve some of the puzzles, but fail miserably at each and every one.");
                     display->messagec(COLOR_BOOK, "Frustrated, you tear the magazine apart and throw it away.");
@@ -392,11 +397,13 @@ void Cell::activate_bookcase()
                 display->messagec(COLOR_BOOK, "Amongst a nice collection of pulp novels, you come across a thick tome called \"Religions and Rituals - Then and Now\". The author is Ann Theodorette Ropos.");
                 if(player->pass_roll(sMind)) {
                     display->messagec(COLOR_BOOK, "The tome is quite academic in style, but you manage to understand some of the main principles and ideas.");
-                    display->messagec(COLOR_GOOD, "Congratulations! You feel that there is hope for your soul after all.");
+                    int amount;
                     if(fiftyfifty())
-                        player->incstat(sSoul, dice(1,3,0));
+                        amount = dice(1,3,0);
                     else
-                        player->incstat(sSoul, 1);
+                        amount = 1;
+                    player->incstat(sSoul, amount);
+                    display->messagec(COLOR_GOOD, "Congratulations! You feel that there is hope for your soul after all. (Soul +%d)", amount);
                 } else {
                     display->messagec(COLOR_BOOK, "The tome is quite academic in style, and obviously not meant to be understandable for laymen.");
                     display->messagec(COLOR_BOOK, "You gain nothing from reading the long sentences with too many commas and obscure words which overpopulate this book.");
@@ -617,13 +624,13 @@ void Area::generate(area_id_type identifier)
     this->build_tcodmap();
     lights_on = false;
 
-    place_furniture(identifier);
+    this->place_furniture();
     spawn_items(10);
 
     delete callback;
 }
 
-void Area::place_furniture(area_id_type identifier)
+void Area::place_furniture()
 {
     int dx, dy, i;
     // bookcases

@@ -110,7 +110,7 @@ class Area {
                 ~Area();
                 void generate(area_id_type identifier);
                 direction generate_starting_room();
-                void place_furniture(area_id_type identifier);
+                void place_furniture();
                 void horizontal_line(int y);
                 void horizontal_line(int x, int y, int x2);
                 void horizontal_line(int x, int y, int x2, cell_type t);

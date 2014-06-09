@@ -65,7 +65,7 @@ Actor::Actor()
   return false;
   }*/
 
-bool Actor::is_male()
+bool Actor::is_male() 
 { 
     if(male)
         return true;
@@ -102,12 +102,12 @@ void Actor::setxy(coord_t newco)
     co = newco;
 }
 
-int Actor::getx()
+int Actor::getx() 
 {
     return co.x;
 }
 
-int Actor::gety()
+int Actor::gety() 
 {
     return co.y;
 }
@@ -140,12 +140,12 @@ void Actor::setcolors(TCODColor fg, TCODColor bg)
     this->bg = bg;
 }
 
-char *Actor::getname()
+const char *Actor::getname() const
 {
     return this->name;
 }
 
-coord_t Actor::getxy()
+const coord_t Actor::getxy() const
 {
     return co;
 }
@@ -212,7 +212,6 @@ bool Actor::move(int dx, int dy)
         return true;
     }
 
-
     if(game->wizmode && this == player) {
         prev = co;
         co.x += dx;
@@ -232,6 +231,8 @@ bool Actor::move(int dx, int dy)
         display->touch();
         return true;
     }
+
+    return false;
 }
 
 bool Actor::move_left()
