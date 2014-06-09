@@ -15,7 +15,7 @@ using namespace std;
 extern World *world;
 extern Display *display;
 extern Player *player;
-extern Game *game;
+extern Game g;
 
 const char *special_name[] = {
     "(none)",
@@ -28,6 +28,18 @@ const char *special_name[] = {
     "Special 7",
     "Special 8",
     "Special 9",
+};
+
+const char *bodypart_string[] = {
+    "head",
+    "chest",
+    "left arm",
+    "right arm",
+    "left foot",
+    "right foot",
+    "guts",
+    "face",
+    "groin",
 };
 
 const char *sanitydesc[] = {
@@ -51,6 +63,7 @@ Actor::Actor()
     co.x = co.y = 0;
     alive = true;
     enemy = NULL;
+    moved_ = false;
 }
 
 /*Actor::~Actor()
@@ -176,7 +189,7 @@ void Actor::drawcorpse()
     display->touch();
 }
 
-bool Actor::move(int dx, int dy)
+void Actor::move(int dx, int dy)
 {
     if(this->area->cell[this->co.x + dx][this->co.y + dy].inhabitant) {
         if(this == player) {
@@ -186,40 +199,40 @@ bool Actor::move(int dx, int dy)
             display->print_messages();
             display->touch();
             if(display->askyn()) {
-                display->message("oh yizz");
-                return true;
+                player->attack(this->area->cell[this->co.x + dx][this->co.y + dy].inhabitant);
+                player->moved(true);
             } else {
-                display->message("Ok.");
-                return false;
+                player->moved(false);
             }
         } else {
             if(this->enemy) {
                 if(this->enemy->area == this->area) {
                     if(this->enemy->getx() == this->co.x + dx && this->enemy->gety() == this->co.y + dy) {
                         attack(enemy);
-                        return true;
+                        return;
                     }
                 }
             }
         }
 
-        return false;
+        return;
     }
 
     if(world->is_closed_door(this->area, this->co.x + dx, this->co.y + dy)) {
         world->open_door(this->area, this->co.x + dx, this->co.y + dy);
         display->touch();
-        return true;
+        return;
     }
 
-    if(game->wizmode && this == player) {
+    if(g.wizmode && this == player) {
         prev = co;
         co.x += dx;
         co.y += dy;
         world->clear_inhabitant(this->area, prev);
         world->set_inhabitant(this);
+        player->moved(true);
         display->touch();
-        return true;
+        return;
     }
 
     if(this->area->is_walkable(this->co.x + dx, this->co.y + dy)) {
@@ -229,50 +242,49 @@ bool Actor::move(int dx, int dy)
         world->clear_inhabitant(this->area, prev);
         world->set_inhabitant(this);
         display->touch();
-        return true;
+        if(this == player)
+            player->moved(true);
     }
-
-    return false;
 }
 
-bool Actor::move_left()
+void Actor::move_left()
 {
-    return this->move(-1, 0);
+    this->move(-1, 0);
 }
 
-bool Actor::move_right()
+void Actor::move_right()
 {
-    return this->move(1, 0);
+    this->move(1, 0);
 }
 
-bool Actor::move_down()
+void Actor::move_down()
 {
-    return this->move(0, 1);
+    this->move(0, 1);
 }
 
-bool Actor::move_up()
+void Actor::move_up()
 {
-    return this->move(0, -1);
+    this->move(0, -1);
 }
 
-bool Actor::move_nw()
+void Actor::move_nw()
 {
-    return this->move(-1, -1);
+    this->move(-1, -1);
 }
 
-bool Actor::move_ne()
+void Actor::move_ne()
 {
-    return this->move(1, -1);
+    this->move(1, -1);
 }
 
-bool Actor::move_sw()
+void Actor::move_sw()
 {
-    return this->move(-1, 1);
+    this->move(-1, 1);
 }
 
-bool Actor::move_se()
+void Actor::move_se()
 {
-    return this->move(1, 1);
+    this->move(1, 1);
 }
 
 const char *Actor::get_sanitydesc()
@@ -385,6 +397,10 @@ void Actor::use_stairs()
 {
 }
 
+void Actor::set_in_combat()
+{
+}
+
 bool Actor::pass_roll(enum_stat stat)
 {
     int x;
@@ -404,21 +420,32 @@ void Actor::attack_physical(Actor *target)
         int damage = dice(1, this->getstat(sBody), ability_modifier(this->getstat(sBody)));
         if(damage <= 0)
             damage = 1;
-        if(!world->a->tcodmap->isInFov(target->getx(), target->gety())) {
-            int x = ri(1,10);
-            switch(x) {
-                case  1: display->messagec(COLOR_FEAR, "You hear a scream somewhere in the house."); player->incfear(); break;
-                case  2: display->messagec(COLOR_FEAR, "You hear the sounds of fighting somewhere in the house."); player->incfear(); break;
-                case  3: display->messagec(COLOR_FEAR, "You hear someone shout."); player->incfear(); break;
-                case  4: display->messagec(COLOR_FEAR, "You hear someone yell."); player->incfear(); break;
-                case  5: display->messagec(COLOR_FEAR, "You hear the sound of something breaking."); player->incfear(); break;
-                case  6: display->messagec(COLOR_FEAR, "You hear the sound of someone crying."); player->incfear(); break;
-                case  7: display->messagec(COLOR_FEAR, "You hear someone wailing."); player->incfear(); break;
-                case  8: display->messagec(COLOR_FEAR, "You hear a bloodcurdling shriek from somewhere in the house."); player->incfear(); break;
-                case  9: display->messagec(COLOR_FEAR, "You hear a horrible howl from somewhere in the house."); player->incfear(); break;
-                case 10: display->messagec(COLOR_FEAR, "You hear weird, muffled noises from somewhere in the house."); player->incfear(); break;
-                default: break;
+        if(this != player) {
+            if(!this->can_see(target)) {
+            //if(!world->a->tcodmap->isInFov(target->getx(), target->gety())) {
+                int x = ri(1,10);
+                switch(x) {
+                    case  1: display->messagec(COLOR_FEAR, "You hear a scream somewhere in the house."); player->incfear(); break;
+                    case  2: display->messagec(COLOR_FEAR, "You hear the sounds of fighting somewhere in the house."); player->incfear(); break;
+                    case  3: display->messagec(COLOR_FEAR, "You hear someone shout."); player->incfear(); break;
+                    case  4: display->messagec(COLOR_FEAR, "You hear someone yell."); player->incfear(); break;
+                    case  5: display->messagec(COLOR_FEAR, "You hear the sound of something breaking."); player->incfear(); break;
+                    case  6: display->messagec(COLOR_FEAR, "You hear the sound of someone crying."); player->incfear(); break;
+                    case  7: display->messagec(COLOR_FEAR, "You hear someone wailing."); player->incfear(); break;
+                    case  8: display->messagec(COLOR_FEAR, "You hear a bloodcurdling shriek from somewhere in the house."); player->incfear(); break;
+                    case  9: display->messagec(COLOR_FEAR, "You hear a horrible howl from somewhere in the house."); player->incfear(); break;
+                    case 10: display->messagec(COLOR_FEAR, "You hear weird, muffled noises from somewhere in the house."); player->incfear(); break;
+                    default: break;
+                }
+            } else {
+                if(target != player)
+                    display->messagec(COLOR_FEAR, "You see %s attacking %s!", this->getname(), target->getname());
+                if(target == player)
+                    display->messagec(COLOR_FEAR, "%s %s you in the %s!", this->getname(), fiftyfifty() ? "hits" : "kicks", bodypart_string[ri(0,8)]);
+                player->incfear();
             }
+        } else {    // this == player
+            display->messagec(COLOR_GOOD, "You attack %s, causing %d amounts of damage!", target->getname(), damage);
         }
         //display->message("%s HIT %s! %d damage.", this->name, target->getname(), damage);
         target->decstat(sHealth, damage);
@@ -432,8 +459,11 @@ void Actor::attack_physical(Actor *target)
 
 void Actor::attack(Actor *target, attack_type type)
 {
-    display->message("%s attacks %s!", name, target->getname());
     target->enemy = this;
+    if(this == player) {
+        target->set_in_combat();
+    }
+
     switch(type) {
         case body:
             attack_physical(target);

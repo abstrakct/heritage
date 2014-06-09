@@ -24,7 +24,7 @@ extern Display *display;
 extern Player *player;
 extern NPC *npc;
 extern World *world;
-extern Game *game;
+extern Game g;
 
 Game::Game()
 {
@@ -58,16 +58,18 @@ void Game::intro()
 
 void Game::end_turn()
 {
-    for(int i=0;i<12;i++) {
-        if(npc[i].is_alive()) {
-            //if(player->can_see(npc[i].getx(), npc[i].gety()))
-            //        display->message("You can see %s!", npc[i].getname());
-            npc[i].ai();
+    if(player->has_moved()) {
+        for(int i=0;i<12;i++) {
+            if(npc[i].is_alive()) {
+                //if(player->can_see(npc[i].getx(), npc[i].gety()))
+                //        display->message("You can see %s!", npc[i].getname());
+                npc[i].ai();
+            }
         }
-    }
 
-    player->endturn();
-    player->look();
+        player->endturn();
+        player->look();
+    }
 }
 
 void Game::loop()
@@ -75,52 +77,51 @@ void Game::loop()
     command_type c;
     TCOD_key_t key;
 
+    //console.print(10, 10, "Welcome to game!!");
+
     while (this->is_running()) {
         world->update_fov();
         display->update();
         c = cmd.get_command();
+        player->moved(false);
         switch(c) {
-            case cmd_nothing:
-                // animations or something here?
-                break;
             case cmd_exit:
                 endthegame();
                 break;
             case cmd_move_left:
-                if(player->move_left())
-                    end_turn();
+                player->move_left();
+                end_turn();
                 break;
             case cmd_move_right:
-                if(player->move_right())
-                    end_turn();
+                player->move_right();
+                end_turn();
                 break;
             case cmd_move_up:
-                if(player->move_up())
-                    end_turn();
+                player->move_up();
+                end_turn();
                 break;
             case cmd_move_down:
-                if(player->move_down())
-                    end_turn();
+                player->move_down();
+                end_turn();
                 break;
             case cmd_move_nw:
-                if(player->move_nw())
-                    end_turn();
+                player->move_nw();
+                end_turn();
                 break;
             case cmd_move_ne:
-                if(player->move_ne())
-                    end_turn();
+                player->move_ne();
+                end_turn();
                 break;
             case cmd_move_sw:
-                if(player->move_sw())
-                    end_turn();
+                player->move_sw();
+                end_turn();
                 break;
             case cmd_move_se:
-                if(player->move_se())
-                    end_turn();
+                player->move_se();
+                end_turn();
                 break;
             case cmd_close_door:
                 world->close_nearest_door(player);
-                end_turn();
                 break;
             case cmd_stairs:
                 player->use_stairs();
@@ -130,6 +131,7 @@ void Game::loop()
                 player->area->cell[player->getx()][player->gety()].activate();
                 break;
             case cmd_wait:
+                player->moved();
                 end_turn();
                 break;
             case cmd_special_1:
@@ -148,8 +150,8 @@ void Game::loop()
             case cmd_all_visible:
                 world->a->set_all_visible();
                 world->update_fov();
+                g.clock += 3700;
                 wizmode = true;
-                //game->clock += 3700;
                 break;
             case cmd_incfear:
                 player->incfear();

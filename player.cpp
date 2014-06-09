@@ -22,7 +22,7 @@ using namespace std;
 extern World   *world;
 extern Player  *player;
 extern Display *display;
-extern Game *game;
+extern Game g;
 
 Player::Player()
 {
@@ -91,7 +91,7 @@ void Player::die()
 {
         display->messagec(COLOR_FATAL, "You have died...");
         display->update();
-        game->endthegame();
+        g.endthegame();
 }
 
 void Player::create()
@@ -101,7 +101,7 @@ void Player::create()
         char c, d;
         int mind, body, soul;
 
-        cout << "Welcome to " << game->name << " - v" << game->version << endl << endl;
+        cout << "Welcome to " << g.name << " - v" << g.version << endl << endl;
         cout << "First, you will need to create your player character using this very simple character generator." <<endl;
         cout << "What's your name? ";
         getline(cin, input);
@@ -161,6 +161,7 @@ void Player::use_stairs()
                 world->set_inhabitant(player);
                 display->clear();
                 display->update();
+                player->moved();
         } else if(player->area->cell[player->getx()][player->gety()].get_type() == stairs_down) {
                 world->clear_inhabitant(player->area, player->getxy());
                 world->current_area--;
@@ -170,15 +171,20 @@ void Player::use_stairs()
                 world->set_inhabitant(player);
                 display->clear();
                 display->update();
+                player->moved();
         } else {
                 display->messagec(COLOR_ERROR, "There are no stairs here!");
         }
 }
 
+void Player::set_in_combat()
+{
+}
+
 void Player::endturn()
 {
         decfear();
-        game->clock += ri(5,10);
+        g.clock += ri(5,10);
 }
 
 
