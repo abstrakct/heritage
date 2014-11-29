@@ -65,7 +65,7 @@ Display::Display()
     console = new TCODConsole(chars_x, chars_y);
     console->setCustomFont(FONT, TCOD_FONT_TYPE_GRAYSCALE | TCOD_FONT_LAYOUT_ASCII_INROW, 16, 16);
     console->root->setCustomFont(FONT, TCOD_FONT_TYPE_GRAYSCALE | TCOD_FONT_LAYOUT_ASCII_INROW, 16, 16);
-    console->root->setKeyboardRepeat(200, 100);
+    console->root->setKeyboardRepeat(200, 75);
 
     for(int i = 0; i<13; ++i) {
         message_t item;

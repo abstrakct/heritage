@@ -91,14 +91,14 @@ class Actor {
         void setxy(coord_t newco);
         int  getx();
         int  gety();
-        coord_t getxy();
+        const coord_t getxy() const;
         void setprevxy(int x, int y);
         void setprevxy(coord_t newco);
         void setchar(char newc);
         void setname(const char *name);
         void setcolors(TCODColor fg, TCODColor bg);
         void setgender(int i) { male = i; };
-        char *getname();
+        const char *getname() const;
 
         const char *get_sanitydesc();
         void decstat(enum_stat which, int amount = 1);

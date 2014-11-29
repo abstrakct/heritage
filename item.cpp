@@ -1,5 +1,10 @@
 /*
  * Items
+ *
+ * Copyright (C) rkaid <rkaidstudios@gmail.com> 2013, 2014
+ * 
+ * See LICENSE.txt for licensing information.
+ *
  */
 
 using namespace std;
@@ -16,7 +21,8 @@ Item::Item(struct item_definition def)
     name = def.name;
     c = def.c;
     flags = def.flags;
-    value = def.value;
+    attack = def.attack;
+    defense = def.defense;
     chance = def.chance;
     co.x = co.y = 0;
     fg = TCODColor::black;
@@ -29,13 +35,7 @@ Item::Item()
 
 Item::Item(Item *item)
 {
-    this->type = item->type;
-    this->name = item->name;
-    this->c = item->c;
-    this->flags = item->flags;
-    this->value = item->value;
-    this->chance = item->chance;
-    this->co = item->co;
+    *this = *item;
 }
 
 Item::~Item()
@@ -53,5 +53,22 @@ char *Item::get_name()
     return ret;
 }
 
+Inventory::Inventory()
+{
+}
+
+Inventory::~Inventory()
+{
+}
+
+int Inventory::num_items()
+{
+    int ret = 0;
+
+    for(int i = 0; i < items.size(); i++)
+        ret++;
+
+    return ret;
+}
 
 // vim: fdm=syntax guifont=Terminus\ 8

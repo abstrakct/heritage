@@ -1,7 +1,9 @@
 /*
  * The Items
  *
- * Copyright (C) 2013
+ * Copyright (C) rkaid <rkaidstudios@gmail.com> 2013, 2014
+ * 
+ * See LICENSE.txt for licensing information.
  *
  */
 
@@ -15,7 +17,7 @@ using namespace std;
 #include "common.h"
 
 #define IF_WIELDABLE  0x00000001
-#define IF_POCKETABLE 0x00000002
+#define IF_CAN_CUT    0x00000002
 #define IF_WEARABLE   0x00000004
 
 enum item_type {
@@ -34,7 +36,8 @@ struct item_definition {
     char c;
     item_type type;
     long flags;
-    int value;
+    int attack;
+    int defense;
     int chance;
 };
 
@@ -43,7 +46,8 @@ class Item {
         string name;
         item_type type;
         long flags;
-        int value;       // max damage for weapons, protection for armor, something else for other
+        int attack;
+        int defense;
     public:
         Item(struct item_definition def);
         Item(Item *item);
@@ -56,6 +60,17 @@ class Item {
         int chance;      // spawn chance
         char c;
         TCODColor fg, bg;
+};
+
+class Inventory {
+    public:
+        Inventory();
+        ~Inventory();
+        
+        int num_items();
+
+    private:
+        vector<Item> items;
 };
 
 #endif

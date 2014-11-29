@@ -66,10 +66,6 @@ Actor::Actor()
     moved_ = false;
 }
 
-/*Actor::~Actor()
-  {
-  }*/
-
 bool Actor::is_male()
 { 
     if(male)
@@ -107,12 +103,12 @@ void Actor::setxy(coord_t newco)
     co = newco;
 }
 
-int Actor::getx()
+int Actor::getx() 
 {
     return co.x;
 }
 
-int Actor::gety()
+int Actor::gety() 
 {
     return co.y;
 }
@@ -145,12 +141,12 @@ void Actor::setcolors(TCODColor fg, TCODColor bg)
     this->bg = bg;
 }
 
-char *Actor::getname()
+const char *Actor::getname() const
 {
     return this->name;
 }
 
-coord_t Actor::getxy()
+const coord_t Actor::getxy() const
 {
     return co;
 }

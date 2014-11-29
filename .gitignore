@@ -6,3 +6,6 @@ terminal.png
 doc
 Doxyfile
 tags
+.release_time
+build/*
+*.orig

@@ -36,13 +36,13 @@ SoundEngine *audio;
 struct item_definition item_definitions[] = {
     // name                 char  type         flags       value chance 
     // Weapons
-    { "knife",               ')', it_weapon,   IF_WIELDABLE, 10, 30 },
+    { "knife",               ')', it_weapon,   IF_WIELDABLE, 10, 1, 30 },
     // Clothing
-    { "jacket",              '[', it_clothing, IF_WEARABLE,  10, 10 },
-    { "pair of pants",       '[', it_clothing, IF_WEARABLE,   6, 10 },
-    { "pair of gloves",      '[', it_clothing, IF_WEARABLE,   2, 10 },
+    { "jacket",              '[', it_clothing, IF_WEARABLE,  10, 3, 10 },
+    { "pair of pants",       '[', it_clothing, IF_WEARABLE,   6, 2, 10 },
+    { "pair of gloves",      '[', it_clothing, IF_WEARABLE,   2, 1, 10 },
     // Tools and other things
-    { "key",                 '?', it_key,      0,             0,  5 },
+    { "key",                 '?', it_key,      0,             0, 0,  5 },
 };
 
 signed int ability_modifier(int ab)
@@ -128,9 +128,9 @@ void init_areas()
     world->area[floor_6].generate(floor_6);
     world->area[cellar_1].generate(cellar_1);
     world->area[cellar_2].generate(cellar_2);
-    world->area[cellar_4].generate(cellar_3);
-    world->area[cellar_5].generate(cellar_4);
-    world->area[cellar_6].generate(cellar_5);
+    world->area[cellar_3].generate(cellar_3);
+    world->area[cellar_4].generate(cellar_4);
+    world->area[cellar_5].generate(cellar_5);
     world->area[cellar_6].generate(cellar_6);
 
     world->generate_stairs();
