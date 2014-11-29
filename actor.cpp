@@ -78,14 +78,15 @@ void Actor::kill()
 {
     //display->message("%s dies at %d,%d!", name, this->co.x, this->co.y);
     if(!this->is_player()) {
-        if(!player->can_see(this))
-            display->messagec(COLOR_FATAL, "You hear a horrible, chilling scream!");
-        else
+        if(player->can_see(this))
             display->messagec(COLOR_FATAL, "%s has been killed!", this->getname());
+        else
+            display->messagec(COLOR_FATAL, "You hear a horrible, chilling scream!");
         player->incfear();
         player->incfear();
         this->alive = false;
         this->area->cell[this->co.x][this->co.y].set_corpse(this);
+        this->area->cell[this->co.x][this->co.y].inhabitant = NULL;
     } else {
         player->die();
     }
