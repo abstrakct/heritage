@@ -34,15 +34,19 @@ SoundEngine *audio;
  * Reading them from a text file would be nicer, but would also require more work.
  */
 struct item_definition item_definitions[] = {
-    // name                 char  type         flags       value chance 
+    // name                 char  type         flags        att def chance 
     // Weapons
-    { "knife",               ')', it_weapon,   IF_WIELDABLE, 10, 1, 30 },
+    { "knife",               ')', it_weapon,   IF_WIELDABLE,  6, 1, 30 },
+    { "broken bottle",       ')', it_weapon,   IF_WIELDABLE,  4, 2, 20 },
+    { "cane",                ')', it_weapon,   IF_WIELDABLE, 12, 2, 10 },
     // Clothing
-    { "jacket",              '[', it_clothing, IF_WEARABLE,  10, 3, 10 },
-    { "pair of pants",       '[', it_clothing, IF_WEARABLE,   6, 2, 10 },
-    { "pair of gloves",      '[', it_clothing, IF_WEARABLE,   2, 1, 10 },
+    { "jacket",              '[', it_clothing, IF_WEARABLE,   1, 3, 10 },
+    { "pair of pants",       '[', it_clothing, IF_WEARABLE,   1, 2, 10 },
+    { "pair of gloves",      '[', it_clothing, IF_WEARABLE,   1, 1, 10 },
     // Tools and other things
-    { "key",                 '?', it_key,      0,             0, 0,  5 },
+    { "skeleton key",        '?', it_key,      0,             0, 0,  5 },
+    { "large key",           '?', it_key,      0,             0, 0,  5 },
+    { "small key",           '?', it_key,      0,             0, 0,  5 },
 };
 
 signed int ability_modifier(int ab)
