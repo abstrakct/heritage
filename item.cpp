@@ -65,10 +65,29 @@ int Inventory::num_items()
 {
     int ret = 0;
 
-    for(int i = 0; i < items.size(); i++)
+    for(unsigned int i = 0; i < items.size(); i++)
         ret++;
 
     return ret;
+}
+
+Item Inventory::get(int x)
+{
+    Item ret;
+    vector<Item>::iterator it;
+    int i;
+
+    it = items.begin();
+    for(i = 0; i != x; i++)
+        it++;
+
+    ret = *it;
+    return ret;
+}
+
+void Inventory::add(Item *i)
+{
+    this->items.push_back(*i);
 }
 
 // vim: fdm=syntax guifont=Terminus\ 8

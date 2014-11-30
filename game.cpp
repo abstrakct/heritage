@@ -130,6 +130,13 @@ void Game::loop()
             case cmd_activate:
                 player->area->cell[player->getx()][player->gety()].activate();
                 break;
+            case cmd_pickup:
+                player->inv->add(pcell.item);
+                display->message("You now have %d items.", player->inv->num_items());
+                pcell.item = NULL;
+                display->touch();
+                end_turn();
+                break;
             case cmd_wait:
                 player->moved();
                 end_turn();

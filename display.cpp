@@ -166,12 +166,6 @@ void Display::draw_left_window()
         console->setDefaultForeground(TCODColor::green);
         console->print(x, y, "Special abilities:"); y++;
         console->setDefaultForeground(TCODColor::white);
-        /*for(int i=1;i<10;++i) {
-          if(player->special[i] != special_none) {
-          console->setDefaultForeground(TCODColor::azure);
-          console->print(x, y, "%d. %s", i, special_name[(int)player->special[i]]); y++;
-          }
-          }*/
         vector<SpecialAttack>::iterator it;
         int i;
         for(it = player->special.begin(), i = 1; it != player->special.end(); ++it, ++i) {
@@ -179,6 +173,14 @@ void Display::draw_left_window()
                 console->print(x, y, "%d. %s %d", i, it->name, it->level); y++;
         }
 
+        y++;
+        console->setDefaultForeground(TCODColor::green);
+        console->print(x, y, "Inventory:"); y++;
+        console->setDefaultForeground(TCODColor::white);
+        for(i = 0; i < player->inv->num_items(); i++) {
+                console->print(x, y, "%s", player->inv->get(i).get_name());
+                y++;
+        }
 
         console->setDefaultForeground(TCODColor::white);
 }

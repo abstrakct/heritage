@@ -20,6 +20,7 @@
 #define DBG(M, ...)
 #endif
 
+#define pcell player->area->cell[player->getx()][player->gety()]
 extern Display *display;
 
 typedef struct {

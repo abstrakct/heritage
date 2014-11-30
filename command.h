@@ -29,6 +29,7 @@ enum command_type {
         cmd_close_door,
         cmd_stairs,
         cmd_activate,
+        cmd_pickup,
         cmd_special_1,
         cmd_special_2,
         cmd_special_3,

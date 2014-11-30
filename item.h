@@ -68,6 +68,8 @@ class Inventory {
         ~Inventory();
         
         int num_items();
+        void add(Item *i);
+        Item get(int x);
 
     private:
         vector<Item> items;

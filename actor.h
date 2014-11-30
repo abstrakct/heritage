@@ -140,6 +140,7 @@ class Actor {
         Area *area;                // in which area is this actor?
         bool alive;
         vector <SpecialAttack> special;
+        Inventory *inv;
     protected:
     private:
         bool male;
