@@ -59,6 +59,7 @@ class Item {
         coord_t co;
         int chance;      // spawn chance
         char c;
+        char key;
         TCODColor fg, bg;
 };
 
@@ -73,6 +74,7 @@ class Inventory {
 
     private:
         vector<Item> items;
+        char keys[13]; 
 };
 
 #endif

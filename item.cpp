@@ -27,6 +27,7 @@ Item::Item(struct item_definition def)
     co.x = co.y = 0;
     fg = TCODColor::black;
     bg = TCODColor::black;
+    key = 0;
 }
 
 Item::Item()
@@ -87,6 +88,7 @@ Item Inventory::get(int x)
 
 void Inventory::add(Item *i)
 {
+    i->key = this->num_items() + 'a';
     this->items.push_back(*i);
 }
 

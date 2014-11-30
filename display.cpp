@@ -176,9 +176,9 @@ void Display::draw_left_window()
         y++;
         console->setDefaultForeground(TCODColor::green);
         console->print(x, y, "Inventory:"); y++;
-        console->setDefaultForeground(TCODColor::white);
+        console->setDefaultForeground(TCODColor::azure);
         for(i = 0; i < player->inv->num_items(); i++) {
-                console->print(x, y, "%s", player->inv->get(i).get_name());
+                console->print(x, y, "%c - %s", player->inv->get(i).key, player->inv->get(i).get_name());
                 y++;
         }
 
