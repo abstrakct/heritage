@@ -19,12 +19,15 @@ extern Game g;
 
 const char *special_name[] = {
     "(none)",
+    // Offense
     "Mindblast",
     "Soulcrush",
     "Powerfist",
-    "Special 4",
-    "Special 5",
-    "Special 6",
+    // Defense
+    "Zenmind",
+    "Spiritsoul",
+    "Toughen up",
+    // ?
     "Special 7",
     "Special 8",
     "Special 9",
@@ -182,7 +185,7 @@ void Actor::move(int dx, int dy)
     if(this->area->cell[this->co.x + dx][this->co.y + dy].inhabitant) {
         if(this == player) {
             display->message("%s is standing in your way!", this->area->cell[this->co.x + dx][this->co.y + dy].inhabitant->getname());
-            display->message("Do you want to attack %s [y/n]?", this->area->cell[this->co.x + dx][this->co.y + dy].inhabitant->getname());
+            /*display->message("Do you want to attack %s [y/n]?", this->area->cell[this->co.x + dx][this->co.y + dy].inhabitant->getname());
             display->touch();
             display->print_messages();
             display->touch();
@@ -191,7 +194,7 @@ void Actor::move(int dx, int dy)
                 player->moved(true);
             } else {
                 player->moved(false);
-            }
+            }*/
         } else {
             if(this->enemy) {
                 if(this->enemy->area == this->area) {
