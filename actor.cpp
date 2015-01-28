@@ -67,6 +67,7 @@ Actor::Actor()
     alive = true;
     enemy = NULL;
     moved_ = false;
+    add_special(special_none);
 }
 
 bool Actor::is_male()
@@ -504,7 +505,7 @@ bool Actor::is_next_to(Actor *target)
     return false;
 }
 
-int  Actor::add_special_attack(special_type t)
+int  Actor::add_special(special_type t)
 {
     vector<SpecialAttack>::iterator it;
     SpecialAttack *s;
@@ -522,11 +523,66 @@ int  Actor::add_special_attack(special_type t)
     return SPECIAL_ADD_SUCCESS;
 }
 
+int  Actor::add_special(special_type t, bool off)
+{
+    vector<SpecialAttack>::iterator it;
+    SpecialAttack *s;
+
+    for(it = this->special.begin(); it != this->special.end(); ++it) {
+        if(it->type == t) {
+            it->level++;
+            return SPECIAL_ADD_INCREASE;
+        }
+    }
+
+    s = new SpecialAttack(t, off);
+    this->special.push_back(*s);
+    delete s;
+    return SPECIAL_ADD_SUCCESS;
+}
+
+special_type Actor::get_special_type(int i)
+{
+    vector<SpecialAttack>::iterator it;
+
+    if(i < this->special.size()) {
+        it = this->special.begin() + i;
+        return it->type;
+    } else {
+        return special_none;
+    }
+}
+
+int Actor::get_special_level(int i)
+{
+    vector<SpecialAttack>::iterator it;
+
+    if(i < this->special.size()) {
+        it = this->special.begin() + i;
+        return it->level;
+    } else {
+        return 0;
+    }
+}
+
+void Actor::do_special(SpecialAttack sp)
+{
+    coord_t c;
+
+    display->message("%s %d", special_name[sp.type], sp.level);
+    if(sp.offensive)
+        c = display->get_direction();
+    else
+        display->message("You blahblah");
+    
+}
+
 SpecialAttack::SpecialAttack()
 {
     type = special_none;
     level = 0;
     name[0] = '\0';
+    offensive = false;
 }
 
 SpecialAttack::SpecialAttack(special_type t)
@@ -534,5 +590,14 @@ SpecialAttack::SpecialAttack(special_type t)
     type = t;
     level = 1;
     strcpy(name, special_name[(int) t]);
+    offensive = false;
+}
+
+SpecialAttack::SpecialAttack(special_type t, bool off)
+{
+    type = t;
+    level = 1;
+    strcpy(name, special_name[(int) t]);
+    offensive = off;
 }
 // vim: fdm=syntax guifont=Terminus\ 8

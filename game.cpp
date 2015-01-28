@@ -79,6 +79,8 @@ void Game::loop()
 {
     command_type c;
     TCOD_key_t key;
+    special_type type;
+    SpecialAttack sp;
 
     //console.print(10, 10, "Welcome to game!!");
 
@@ -138,15 +140,75 @@ void Game::loop()
                 end_turn();
                 break;
             case cmd_special_1:
-                display->message("SPECIAL ATTACK 1");
+                type = player->get_special_type(1);
+                if(type) {
+                    sp = player->special.at(1);
+                    player->do_special(sp);
+                }
                 display->touch();
                 break;
             case cmd_special_2:
-                display->message("SPECIAL ATTACK 2");
+                type = player->get_special_type(2);
+                if(type) {
+                    sp = player->special.at(2);
+                    player->do_special(sp);
+                }
                 display->touch();
                 break;
             case cmd_special_3:
-                display->message("SPECIAL ATTACK 3");
+                type = player->get_special_type(3);
+                if(type) {
+                    sp = player->special.at(3);
+                    player->do_special(sp);
+                }
+                display->touch();
+                break;
+            case cmd_special_4:
+                type = player->get_special_type(4);
+                if(type) {
+                    sp = player->special.at(4);
+                    player->do_special(sp);
+                }
+                display->touch();
+                break;
+            case cmd_special_5:
+                type = player->get_special_type(5);
+                if(type) {
+                    sp = player->special.at(5);
+                    player->do_special(sp);
+                }
+                display->touch();
+                break;
+            case cmd_special_6:
+                type = player->get_special_type(6);
+                if(type) {
+                    sp = player->special.at(6);
+                    player->do_special(sp);
+                }
+                display->touch();
+                break;
+            case cmd_special_7:
+                type = player->get_special_type(7);
+                if(type) {
+                    sp = player->special.at(7);
+                    player->do_special(sp);
+                }
+                display->touch();
+                break;
+            case cmd_special_8:
+                type = player->get_special_type(8);
+                if(type) {
+                    sp = player->special.at(8);
+                    player->do_special(sp);
+                }
+                display->touch();
+                break;
+            case cmd_special_9:
+                type = player->get_special_type(9);
+                if(type) {
+                    sp = player->special.at(9);
+                    player->do_special(sp);
+                }
                 display->touch();
                 break;
                 // Debug/development commands:
@@ -158,6 +220,10 @@ void Game::loop()
                 break;
             case cmd_incfear:
                 player->incfear();
+                end_turn();
+                break;
+            case cmd_give_powerfist:
+                player->add_special(special_powerfist, true);
                 end_turn();
                 break;
             default:

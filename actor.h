@@ -65,12 +65,14 @@ class SpecialAttack {
     public:
         SpecialAttack();
         SpecialAttack(special_type t);
+        SpecialAttack(special_type t, bool off);
         ~SpecialAttack() {
         };
 
         special_type type;
         char name[20];
         int level;
+        bool offensive;
 };
 
 class Actor {
@@ -120,7 +122,11 @@ class Actor {
         void attack_physical(Actor *target);
 
         bool pass_roll(enum_stat stat);
-        int  add_special_attack(special_type t); 
+        int  add_special(special_type t); 
+        int  add_special(special_type t, bool off);
+        special_type get_special_type(int i);
+        int get_special_level(int i);
+        void do_special(SpecialAttack sp);
 
         // Movement
         void move(int dx, int dy);

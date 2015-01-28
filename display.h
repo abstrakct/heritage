@@ -10,6 +10,7 @@
 
 #include <vector>
 #include "libtcod.hpp"
+#include "common.h"
 
 #define CHARS_X 128
 #define CHARS_Y 75
@@ -54,6 +55,7 @@ class Display {
                 void message(const char *message, ...);
                 void messagec(TCODColor c, const char *message, ...);
                 bool askyn();
+                coord_t get_direction();
                 void print_messages();
                 void touch() { touched = true; };
                 void clear();

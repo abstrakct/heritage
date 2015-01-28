@@ -9,7 +9,6 @@
 #ifndef _COMMAND_H
 #define _COMMAND_H
 
-using namespace std;
 
 #include <vector>
 #include "libtcod.hpp"
@@ -42,6 +41,7 @@ enum command_type {
         // debug / developement commands
         cmd_all_visible,
         cmd_incfear,
+        cmd_give_powerfist,
 };
 
 struct command_t {

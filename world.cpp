@@ -18,6 +18,7 @@ using namespace std;
 extern Player *player;
 extern World *world;
 extern Game g;
+extern Display *display;
 
 const char *area_name[] = {
     "Cellar, level 6",
@@ -296,7 +297,7 @@ void Cell::activate_bookcase()
     i = ri(1, 20);
     di = ri(10, 15);
     if(i <= di) {
-        book = ri(1, 7);
+        book = ri(1, 8);
         switch(book) {
             case 1:
                 display->messagec(COLOR_BOOK, "An old book titled \"Unlocking Your Brain's True Potential - Vol. I\" catches your eye.");
@@ -321,7 +322,7 @@ void Cell::activate_bookcase()
                                 display->messagec(COLOR_BOOK, "You open the book at \"Chapter XXI - Beyond the Mind\" and read for a while.");
                                 break;
                         }
-                        result = player->add_special_attack(special_mindblast);
+                        result = player->add_special(special_mindblast, true);
                         if(result == SPECIAL_ADD_SUCCESS)
                             display->messagec(COLOR_GOOD, "Congratulations! You can now employ your mind to cause minor destruction!");
                         if(result == SPECIAL_ADD_INCREASE)
@@ -345,7 +346,7 @@ void Cell::activate_bookcase()
                                 display->messagec(COLOR_BOOK, "You open the book at \"Chapter XX - Finding Your Personal Nirvana\" and read for a while.");
                                 break;
                         }
-                        result = player->add_special_attack(special_zenmind);
+                        result = player->add_special(special_zenmind);
                         if(result == SPECIAL_ADD_SUCCESS)
                             display->messagec(COLOR_GOOD, "Congratulations! You can now calm your fears using your own mind!");
                         if(result == SPECIAL_ADD_INCREASE)
@@ -361,14 +362,14 @@ void Cell::activate_bookcase()
                 if(player->pass_roll(sMind)) {
                     if(fiftyfifty()) {
                         display->messagec(COLOR_BOOK, "You read through the book, picking up a few useful fighting techniques.");
-                        result = player->add_special_attack(special_powerfist);
+                        result = player->add_special(special_powerfist, true);
                         if(result == SPECIAL_ADD_SUCCESS)
                             display->messagec(COLOR_GOOD, "Congratulations! You can now use a special move in physical combat!");
                         if(result == SPECIAL_ADD_INCREASE)
                             display->messagec(COLOR_GOOD, "Congratulations! You learn a few more techniques for physical combat!");
                     } else {
                         display->messagec(COLOR_BOOK, "You read through the book, picking up a few useful defensive techniques. You feel tougher already!");
-                        result = player->add_special_attack(special_toughenup);
+                        result = player->add_special(special_toughenup);
                         if(result == SPECIAL_ADD_SUCCESS)
                             display->messagec(COLOR_GOOD, "Congratulations! You can now defend yourself more easily, and feel less anxious overall!");
                         if(result == SPECIAL_ADD_INCREASE)
@@ -384,14 +385,14 @@ void Cell::activate_bookcase()
                 if(player->pass_roll(sMind)) {
                     if(fiftyfifty()) {
                         display->messagec(COLOR_BOOK, "As you flip through the book you come to a sudden realization about the soul and your own spirituality.");
-                        result = player->add_special_attack(special_soulcrush);
+                        result = player->add_special(special_soulcrush, true);
                         if(result == SPECIAL_ADD_SUCCESS)
                             display->messagec(COLOR_GOOD, "Congratulations! You can now use some of the powers of your soul to help you make it through the night!");
                         if(result == SPECIAL_ADD_INCREASE)
                             display->messagec(COLOR_GOOD, "Congratulations! You increase the power of your soulcrushing ability!");
                     } else {
                         display->messagec(COLOR_BOOK, "As you flip through the book you come to a sudden realization about the soul and your own spirituality.");
-                        result = player->add_special_attack(special_spiritsoul);
+                        result = player->add_special(special_spiritsoul);
                         if(result == SPECIAL_ADD_SUCCESS)
                             display->messagec(COLOR_GOOD, "Congratulations! Your soul is now connected more closely to the spiritual world. You feel safer!");
                         if(result == SPECIAL_ADD_INCREASE)

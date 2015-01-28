@@ -9,7 +9,6 @@
 #define _WORLD_H
 
 #include "libtcod.hpp"
-#include "actor.h"
 #include "common.h"
 #include "item.h"
 
@@ -17,6 +16,7 @@
 #define AREA_MAX_Y 60
 
 #define MAX_AREAS 12
+
 
 enum area_id_type {
         cellar_6 = 0,

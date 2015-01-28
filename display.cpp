@@ -13,14 +13,16 @@ using namespace std;
 #include <cstdio>
 
 #include "libtcod.hpp"
+
+#include "common.h"
 #include "debug.h"
 #include "display.h"
-#include "common.h"
 #include "actor.h"
 #include "player.h"
 #include "npc.h"
 #include "world.h"
 #include "game.h"
+#include "command.h"
 
 extern World *world;
 extern Player *player;
@@ -99,7 +101,13 @@ TCOD_key_t Display::get_key(bool flush)
 {
     if(flush)
         console->root->flush();
-    return console->root->checkForKeypress(TCOD_KEY_PRESSED);
+    //return console->root->checkForKeypress(TCOD_KEY_PRESSED);
+    //return console->root->waitForKeypress(true);
+    TCOD_key_t key;
+    TCOD_mouse_t mouse;
+    TCOD_event_t ev = TCODSystem::waitForEvent(TCOD_EVENT_ANY,&key,&mouse,false);
+    if (ev == TCOD_EVENT_KEY_PRESS)
+        return key;
 }
 
 /*TCOD_key_t Display::wait_for_key()
@@ -175,9 +183,11 @@ void Display::draw_left_window()
       }*/
     vector<SpecialAttack>::iterator it;
     int i;
-    for(it = player->special.begin(), i = 1; it != player->special.end(); ++it, ++i) {
-        console->setDefaultForeground(TCODColor::azure);
-        console->print(x, y, "%d. %s %d", i, it->name, it->level); y++;
+    for(it = player->special.begin(), i = 0; it != player->special.end(); ++it, ++i) {
+        if(it->type != special_none) {
+            console->setDefaultForeground(TCODColor::azure);
+            console->print(x, y, "%d. %s %d", i, it->name, it->level); y++;
+        }
     }
 
 
@@ -201,7 +211,7 @@ void Display::update()
 
     world->draw_map();
 
-    display->print_messages();
+    this->print_messages();
 
     TCODConsole::blit(console, 0, 0, chars_x, chars_y, TCODConsole::root, 0.1, 0.1);
 
@@ -280,7 +290,7 @@ bool Display::askyn()
     TCOD_key_t key;
 again: 
     console->flush();
-    key = display->wait_for_key();
+    key = this->wait_for_key();
     
     if(key.c == 'y' || key.c == 'Y') {
         return true;
@@ -291,10 +301,65 @@ again:
     } 
 
     //display->message("Please choose [y]es or [n]o.");
-    display->touch();
-    display->update();
+    this->touch();
+    this->update();
     goto again;
 }
+
+coord_t Display::get_direction()
+{
+    coord_t p;
+    command_type c;
+
+    this->message("Which direction?");
+    this->touch();
+    this->print_messages();
+    this->update();
+    
+    c = g.cmd.get_command();
+    while(c == cmd_nothing)
+        c = g.cmd.get_command();
+    switch(c) {
+        case cmd_move_left:
+            p.x = -1;
+            p.y = 0;
+            break;
+        case cmd_move_right:
+            p.x = 1;
+            p.y = 0;
+            break;
+        case cmd_move_up:
+            p.x = 0;
+            p.y = -1;
+            break;
+        case cmd_move_down:
+            p.x = 0;
+            p.y = 1;
+            break;
+        case cmd_move_nw:
+            p.x = -1;
+            p.y = -1;
+            break;
+        case cmd_move_ne:
+            p.x = 1;
+            p.y = -1;
+            break;
+        case cmd_move_sw:
+            p.x = -1;
+            p.y = 1;
+            break;
+        case cmd_move_se:
+            p.x = 1;
+            p.y = 1;
+            break;
+        default:
+            p.x = 0; p.y = 0;
+            break;
+    }
+
+    return p;
+}
+
 
 void Display::messagec(TCODColor c, const char *message, ...)
 {
