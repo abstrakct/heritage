@@ -683,8 +683,18 @@ void Area::place_furniture()
     // bookcases
     for(i = 0; i < 10; ++i) {
         if(fiftyfifty()) {
+            int dx,dy;
             coord_t c = world->get_random_floor_cell(this->get_id());
             this->cell[c.x][c.y].set_bookcase();
+            for(dx=-1;dx<=1;dx++) {
+                for(dy=-1;dy<=1;dy++) {
+                    if(this->cell[c.x+dx][c.y+dy].is_walkable()) {
+                        if(ri(1,3) == 1) {
+                            this->cell[c.x+dx][c.y+dy].set_bookcase();
+                        }
+                    }
+                }
+            }
         }
     }
 

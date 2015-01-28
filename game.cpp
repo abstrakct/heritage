@@ -58,6 +58,9 @@ void Game::intro()
 
 void Game::end_turn()
 {
+    display->print_messages();
+    display->touch();
+
     if(player->has_moved()) {
         for(int i=0;i<12;i++) {
             if(npc[i].is_alive()) {
