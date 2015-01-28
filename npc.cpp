@@ -41,7 +41,7 @@ NPC::NPC()
     setchar('@');
 
     fg = display->get_random_color();
-    bg = TCODColor::black; // display->get_random_color();
+    bg = TCODColor::darkerGrey; // display->get_random_color();
     setcolors(fg, bg);
 
     setai(AI_RANDOM);

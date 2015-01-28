@@ -122,6 +122,7 @@ class Area {
                 bool cell_is_visible(int x, int y);
                 bool is_walkable(int x, int y);
                 void make_room(int x1, int y1, int x2, int y2);
+                void make_room_with_doors(int x1, int y1, int x2, int y2);
                 void make_door(int x, int y, bool open);
                 void make_stairs_up();
                 void make_stairs_down();

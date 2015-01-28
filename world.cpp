@@ -40,9 +40,9 @@ class MyCallback : public ITCODBspCallback
         bool visitNode(TCODBsp *node, void *userData)
         {
             //dbg("making room, x=%d y=%d w=%d h=%d", node->x, node->y, node->w, node->h);
-            world->a->make_room(node->x, node->y, node->x + node->w-2, node->y + node->h-2);
+            world->a->make_room_with_doors(node->x, node->y, node->x + node->w-2, node->y + node->h-2);
 
-            if(node->horizontal) {
+            /*if(node->horizontal) {
                 int x1 = node->x - 2;
                 int y1 = node->y - 2;
                 int x2 = node->x + node->w - 2;
@@ -56,7 +56,7 @@ class MyCallback : public ITCODBspCallback
                 int y2 = node->y + node->h - 2;
                 world->a->make_door(ri(x1, x2), y1, false);
                 world->a->make_door(ri(x1, x2), y2, false);
-            }
+            }*/
 
             return true;
         }
@@ -603,7 +603,7 @@ void Area::generate(area_id_type identifier)
     MyCallback *callback = new MyCallback;
     world->a = &world->area[(int)identifier];
     set_id(identifier);
-    bsp->splitRecursive(NULL, 5, 4, 7, 1.7f, 1.7f);
+    bsp->splitRecursive(NULL, ri(4,6), ri(4,6), ri(5,8), 1.7f, 1.7f);
     /*int i = ri(1,3);
     if(i==1)
         bsp->traversePreOrder(callback, NULL);
@@ -705,6 +705,19 @@ void Area::make_room(int x1, int y1, int x2, int y2)
     vertical_line(x2, y1, y2);
 }
 
+void Area::make_room_with_doors(int x1, int y1, int x2, int y2)
+{
+    horizontal_line(x1, y1, x2);
+    horizontal_line(x1, y2, x2);
+    vertical_line(x1, y1, y2);
+    vertical_line(x2, y1, y2);
+
+    make_door(ri(x1,x2), y1, false);
+    make_door(ri(x1,x2), y2, false);
+    make_door(x1, ri(y1,y2), false);
+    make_door(x2, ri(y1,y2), false);
+}
+
 void Area::make_door(int x, int y, bool open)
 {
     //dbg("Making door at %d,%d (%s)", x, y, open ? "open" : "closed");
@@ -713,8 +726,8 @@ void Area::make_door(int x, int y, bool open)
         return;
     if(y <= 1)
         return;
-    if(cell[x][y].get_type() != wall)
-        return;
+    //if(cell[x][y].get_type() != wall)
+    //    return;
 
     if(open)
         cell[x][y].set_door_open();
