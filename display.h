@@ -86,6 +86,7 @@ class Display {
 #define COLOR_ERROR     TCODColor::red
 #define COLOR_BOOK      TCODColor::azure
 #define COLOR_GOOD      TCODColor::green
+#define COLOR_BAD       TCODColor::lightRed
 
 #endif
 

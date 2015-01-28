@@ -90,6 +90,7 @@ void Actor::kill()
         player->incfear();
         this->alive = false;
         this->area->cell[this->co.x][this->co.y].set_corpse(this);
+        this->area->cell[this->co.x][this->co.y].inhabitant = NULL;
     } else {
         player->die();
     }
@@ -409,12 +410,17 @@ bool Actor::pass_roll(enum_stat stat)
         return false;
 }
 
+/* ATTACKS AND COMBAT */
+
 void Actor::attack_physical(Actor *target)
 {
+    attack_physical(target, target->getstat(sBody), dice(1, this->getstat(sBody), ability_modifier(this->getstat(sBody))));
+}
+
+void Actor::attack_physical(Actor *target, int d, int damage)
+{
     int tohit = target->getstat(sBody);
-    int d = dice(1, 20, 0);
     if(d >= tohit) {
-        int damage = dice(1, this->getstat(sBody), ability_modifier(this->getstat(sBody)));
         if(damage <= 0)
             damage = 1;
         if(this != player) {
@@ -451,7 +457,17 @@ void Actor::attack_physical(Actor *target)
             this->enemy = NULL;
 
         }
+    } else {
+        display->messagec(COLOR_BAD, "You attack %s, but you miss!", target->getname());
     }
+}
+
+void Actor::attack_powerfist(Actor *target, SpecialAttack sp)
+{
+    int d = dice(1, 20, 4 + (int)(sp.level * 1.2));
+    int damage = dice(2, this->getstat(sBody), ability_modifier(this->getstat(sBody)) + (int)(sp.level));
+
+    attack_physical(target, d, damage);
 }
 
 void Actor::attack(Actor *target, attack_type type)
@@ -469,6 +485,21 @@ void Actor::attack(Actor *target, attack_type type)
             break;
     }
 }
+
+void Actor::attack(Actor *target, SpecialAttack sp)
+{
+    target->enemy = this;
+    if(this == player) {
+        target->set_in_combat();
+    }
+
+    if(sp.type == special_powerfist) {
+        attack_powerfist(target, sp);
+    }
+}
+
+
+// STUFF
 
 bool Actor::can_see(Actor *target)
 {
@@ -541,6 +572,24 @@ int  Actor::add_special(special_type t, bool off)
     return SPECIAL_ADD_SUCCESS;
 }
 
+int  Actor::add_special(special_type t, bool off, attack_type a)
+{
+    vector<SpecialAttack>::iterator it;
+    SpecialAttack *s;
+
+    for(it = this->special.begin(); it != this->special.end(); ++it) {
+        if(it->type == t) {
+            it->level++;
+            return SPECIAL_ADD_INCREASE;
+        }
+    }
+
+    s = new SpecialAttack(t, off, a);
+    this->special.push_back(*s);
+    delete s;
+    return SPECIAL_ADD_SUCCESS;
+}
+
 special_type Actor::get_special_type(int i)
 {
     vector<SpecialAttack>::iterator it;
@@ -570,11 +619,16 @@ void Actor::do_special(SpecialAttack sp)
     coord_t c;
 
     display->message("%s %d", special_name[sp.type], sp.level);
-    if(sp.offensive)
+    if(sp.offensive) {
         c = display->get_direction();
-    else
+        if(this->area->cell[co.x + c.x][co.y + c.y].inhabitant) {
+            this->attack(this->area->cell[co.x + c.x][co.y + c.y].inhabitant, sp);
+        } else {
+            display->message("There's no one there!");
+        }
+    } else {
         display->message("You blahblah");
-    
+    }
 }
 
 SpecialAttack::SpecialAttack()
@@ -591,6 +645,7 @@ SpecialAttack::SpecialAttack(special_type t)
     level = 1;
     strcpy(name, special_name[(int) t]);
     offensive = false;
+    attack = body;
 }
 
 SpecialAttack::SpecialAttack(special_type t, bool off)
@@ -599,5 +654,15 @@ SpecialAttack::SpecialAttack(special_type t, bool off)
     level = 1;
     strcpy(name, special_name[(int) t]);
     offensive = off;
+    attack = body;
+}
+
+SpecialAttack::SpecialAttack(special_type t, bool off, attack_type a)
+{
+    type = t;
+    level = 1;
+    strcpy(name, special_name[(int) t]);
+    offensive = off;
+    attack = a;
 }
 // vim: fdm=syntax guifont=Terminus\ 8

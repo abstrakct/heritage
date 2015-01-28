@@ -322,7 +322,7 @@ void Cell::activate_bookcase()
                                 display->messagec(COLOR_BOOK, "You open the book at \"Chapter XXI - Beyond the Mind\" and read for a while.");
                                 break;
                         }
-                        result = player->add_special(special_mindblast, true);
+                        result = player->add_special(special_mindblast, true, mind);
                         if(result == SPECIAL_ADD_SUCCESS)
                             display->messagec(COLOR_GOOD, "Congratulations! You can now employ your mind to cause minor destruction!");
                         if(result == SPECIAL_ADD_INCREASE)
@@ -362,7 +362,7 @@ void Cell::activate_bookcase()
                 if(player->pass_roll(sMind)) {
                     if(fiftyfifty()) {
                         display->messagec(COLOR_BOOK, "You read through the book, picking up a few useful fighting techniques.");
-                        result = player->add_special(special_powerfist, true);
+                        result = player->add_special(special_powerfist, true, body);
                         if(result == SPECIAL_ADD_SUCCESS)
                             display->messagec(COLOR_GOOD, "Congratulations! You can now use a special move in physical combat!");
                         if(result == SPECIAL_ADD_INCREASE)
@@ -385,7 +385,7 @@ void Cell::activate_bookcase()
                 if(player->pass_roll(sMind)) {
                     if(fiftyfifty()) {
                         display->messagec(COLOR_BOOK, "As you flip through the book you come to a sudden realization about the soul and your own spirituality.");
-                        result = player->add_special(special_soulcrush, true);
+                        result = player->add_special(special_soulcrush, true, soul);
                         if(result == SPECIAL_ADD_SUCCESS)
                             display->messagec(COLOR_GOOD, "Congratulations! You can now use some of the powers of your soul to help you make it through the night!");
                         if(result == SPECIAL_ADD_INCREASE)
@@ -1052,6 +1052,8 @@ void World::draw_cell(int x, int y)
     if(player->area->cell[x][y].inhabitant) {
         if(player->area->cell[x][y].inhabitant->alive) {
             player->area->cell[x][y].inhabitant->draw();
+        } else {
+            display->putmap(x, y, a->cell[x][y].c, a->cell[x][y].fg, a->cell[x][y].bg);
         }
     } else {
         if(player->area->cell[x][y].item) {

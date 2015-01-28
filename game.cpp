@@ -223,7 +223,7 @@ void Game::loop()
                 end_turn();
                 break;
             case cmd_give_powerfist:
-                player->add_special(special_powerfist, true);
+                player->add_special(special_powerfist, true, body);
                 end_turn();
                 break;
             default:

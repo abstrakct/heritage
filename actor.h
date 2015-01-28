@@ -66,10 +66,12 @@ class SpecialAttack {
         SpecialAttack();
         SpecialAttack(special_type t);
         SpecialAttack(special_type t, bool off);
+        SpecialAttack(special_type t, bool off, attack_type a);
         ~SpecialAttack() {
         };
 
         special_type type;
+        attack_type attack;
         char name[20];
         int level;
         bool offensive;
@@ -119,11 +121,15 @@ class Actor {
         bool is_next_to(Actor *target);
 
         void attack(Actor *target, attack_type type = body);
+        void attack(Actor *target, SpecialAttack sp);
         void attack_physical(Actor *target);
+        void attack_physical(Actor *target, int d, int damage);
+        void attack_powerfist(Actor *target, SpecialAttack sp);
 
         bool pass_roll(enum_stat stat);
         int  add_special(special_type t); 
         int  add_special(special_type t, bool off);
+        int  add_special(special_type t, bool off, attack_type a);
         special_type get_special_type(int i);
         int get_special_level(int i);
         void do_special(SpecialAttack sp);
