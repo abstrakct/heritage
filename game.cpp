@@ -81,6 +81,7 @@ void Game::loop()
     TCOD_key_t key;
     special_type type;
     SpecialAttack sp;
+    coord_t coord;
 
     //console.print(10, 10, "Welcome to game!!");
 
@@ -134,6 +135,13 @@ void Game::loop()
                 break;
             case cmd_activate:
                 player->area->cell[player->getx()][player->gety()].activate();
+                break;
+            case cmd_fight:
+                coord = display->get_direction();
+                if(player->area->cell[player->getx() + coord.x][player->gety() + coord.y].inhabitant) {
+                    player->attack(player->area->cell[player->getx() + coord.x][player->gety() + coord.y].inhabitant);
+                }
+                display->touch();
                 break;
             case cmd_wait:
                 player->moved();
