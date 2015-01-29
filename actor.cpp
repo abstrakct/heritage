@@ -370,6 +370,11 @@ void Actor::incfear()
         display->messagec(COLOR_FATAL, "You have been scared to death!");
         player->kill();
     }
+
+    if(getstat(sFear) > 100 && !this->is_player()) {
+        display->messagec(COLOR_HORROR, "A gutwrenching scream fills the air, before it dies away.");
+        this->kill();
+    }
 }
 
 void Actor::decfear()
@@ -441,11 +446,12 @@ void Actor::attack_physical(Actor *target, int d, int damage)
                     default: break;
                 }
             } else {
-                if(target != player)
+                if(target != player) {
                     display->messagec(COLOR_FEAR, "You see %s attacking %s!", this->getname(), target->getname());
-                if(target == player)
+                } if(target == player) {
                     display->messagec(COLOR_FEAR, "%s %s you in the %s!", this->getname(), fiftyfifty() ? "hits" : "kicks", bodypart_string[ri(0,8)]);
-                player->incfear();
+                }
+                target->incfear();
             }
         } else {    // this == player
             display->messagec(COLOR_GOOD, "You attack %s, causing %d amounts of damage!", target->getname(), damage);
