@@ -415,6 +415,17 @@ bool Actor::pass_roll(enum_stat stat)
         return false;
 }
 
+bool Actor::pass_roll(enum_stat stat, int i)
+{
+    int x;
+
+    x = dice(1,21,i);
+    if(x <= this->getstat(stat))
+        return true;
+    else
+        return false;
+}
+
 /* ATTACKS AND COMBAT */
 
 void Actor::attack_physical(Actor *target)
@@ -468,12 +479,72 @@ void Actor::attack_physical(Actor *target, int d, int damage)
     }
 }
 
+void Actor::attack_mind(Actor *target, int d, int damage)
+{
+    int tohit = target->getstat(sMind);
+    if(d >= tohit) {
+        if(damage <= 0)
+            damage = 1;
+        if(this != player) {
+            if(!this->can_see(target)) {
+                if(this->pass_roll(sMind, 2)) {
+                    int x = ri(1,10);
+                    switch(x) {
+                        case  1: display->messagec(COLOR_FEAR2, "You sense a mind in despair."); player->incfear(); break;
+                        case  2: display->messagec(COLOR_FEAR2, "You sense minds fighting somewhere in the house."); player->incfear(); break;
+                        case  3: display->messagec(COLOR_FEAR2, "You sense someone trying to shout."); player->incfear(); break;
+                        case  4: display->messagec(COLOR_FEAR2, "You sense someone trying to yell."); player->incfear(); break;
+                        case  5: display->messagec(COLOR_FEAR2, "You sense a mind breaking."); player->incfear(); break;
+                        case  6: display->messagec(COLOR_FEAR2, "You sense someone crying."); player->incfear(); break;
+                        case  7: display->messagec(COLOR_FEAR2, "You sense someone wailing."); player->incfear(); break;
+                        case  8: display->messagec(COLOR_FEAR2, "You sense someone's blood thickening."); player->incfear(); break;
+                        case  9: display->messagec(COLOR_FEAR2, "You sense a silent, yet horrible howl coming from somewhere in the house."); player->incfear(); break;
+                        case 10: display->messagec(COLOR_FEAR2, "You seem to pick up weird, muffled noises from somewhere in the house."); player->incfear(); break;
+                        default: break;
+                    }
+                } else {
+                    if(ri(1,5) == 1) {
+                        display->messagec(COLOR_FEAR2, "You sense bad things.");
+                        player->incfear();
+                    }
+                }
+            } else {
+                if(target != player) {
+                    display->messagec(COLOR_FEAR, "You sense %s attacking %s!", this->getname(), target->getname());
+                } if(target == player) {
+                    display->messagec(COLOR_FEAR, "%s attacks your mind!", this->getname());
+                }
+                target->incfear();
+            }
+        } else {    // this == player
+            display->messagec(COLOR_GOOD, "You attack %s with your mind, causing %d amounts of sanity damage!", target->getname(), damage);
+        }
+        //display->message("%s HIT %s! %d damage.", this->name, target->getname(), damage);
+        target->decstat(sSanity, damage);
+        if(target->getstat(sSanity) <= 0) {
+            target->kill();
+            this->enemy = NULL;
+
+        }
+    } else {
+        display->messagec(COLOR_BAD, "You attack %s, but you miss!", target->getname());
+    }
+}
+
 void Actor::attack_powerfist(Actor *target, SpecialAttack sp)
 {
     int d = dice(1, 20, 4 + (int)(sp.level * 1.2));
     int damage = dice(2, this->getstat(sBody), ability_modifier(this->getstat(sBody)) + (int)(sp.level));
 
     attack_physical(target, d, damage);
+}
+
+void Actor::attack_mindblast(Actor *target, SpecialAttack sp)
+{
+    int d = dice(1, 20, 4 + (int)(sp.level * 1.2));
+    int damage = dice(2, this->getstat(sMind), ability_modifier(this->getstat(sMind)) + (int)(sp.level));
+
+    attack_mind(target, d, damage);
 }
 
 void Actor::attack(Actor *target, attack_type type)
@@ -483,12 +554,14 @@ void Actor::attack(Actor *target, attack_type type)
         target->set_in_combat();
     }
 
-    switch(type) {
-        case body:
-            attack_physical(target);
-            break;
-        default:
-            break;
+    if(this->has_special()) {
+        switch(type) {
+            case body:
+                attack_physical(target);
+                break;
+            default:
+                break;
+        }
     }
 }
 
@@ -501,6 +574,8 @@ void Actor::attack(Actor *target, SpecialAttack sp)
 
     if(sp.type == special_powerfist) {
         attack_powerfist(target, sp);
+    } else if(sp.type == special_mindblast) {
+        attack_mindblast(target, sp);
     }
 }
 
@@ -540,6 +615,17 @@ bool Actor::is_next_to(Actor *target)
     }
 
     return false;
+}
+
+bool Actor::has_special()
+{
+    if(this->special.size() > 1) {
+        display->message("HAS SPECIAL");
+        return true;
+    } else {
+        display->message("NOT HAS SPECIAL");
+        return false;
+    }
 }
 
 int  Actor::add_special(special_type t)

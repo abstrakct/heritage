@@ -63,8 +63,10 @@ command_t command_set_normal[] = {
 
     // debug / development commands
     { { TCODK_F1,     0,  1, 0, 0, 0, 0, 0 }, cmd_all_visible },
-    { { TCODK_F2,     0,  1, 0, 0, 0, 0, 0 }, cmd_incfear },
-    { { TCODK_F3,     0,  1, 0, 0, 0, 0, 0 }, cmd_give_powerfist },
+    { { TCODK_F2,     0,  1, 0, 0, 0, 0, 0 }, cmd_give_powerfist },
+    { { TCODK_F3,     0,  1, 0, 0, 0, 0, 0 }, cmd_give_mindblast },
+    { { TCODK_F4,     0,  1, 0, 0, 0, 0, 0 }, cmd_give_powerfist },
+    { { TCODK_F5,     0,  1, 0, 0, 0, 0, 0 }, cmd_incfear },
 };
 
 Command::Command()

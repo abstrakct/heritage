@@ -124,9 +124,15 @@ class Actor {
         void attack(Actor *target, SpecialAttack sp);
         void attack_physical(Actor *target);
         void attack_physical(Actor *target, int d, int damage);
+        void attack_mind(Actor *target, int d, int damage);
+
         void attack_powerfist(Actor *target, SpecialAttack sp);
+        void attack_mindblast(Actor *target, SpecialAttack sp);
+        //void attack_soulcrush(Actor *target, SpecialAttack sp);
 
         bool pass_roll(enum_stat stat);
+        bool pass_roll(enum_stat stat, int i);
+        bool has_special();
         int  add_special(special_type t); 
         int  add_special(special_type t, bool off);
         int  add_special(special_type t, bool off, attack_type a);

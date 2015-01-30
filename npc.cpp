@@ -52,6 +52,19 @@ NPC::NPC()
 
     setgender(ri(0, 1));
     generate_name();
+
+    // give them a random special power
+    int i = ri(1,3);
+    switch(i) {
+        case 1:
+            this->add_special(special_powerfist, true, body);
+            break;
+        case 2:
+            this->add_special(special_mindblast, true, mind);
+            break;
+        default:
+            break;
+    }
 }
 
 NPC::~NPC()

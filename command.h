@@ -43,6 +43,7 @@ enum command_type {
         cmd_all_visible,
         cmd_incfear,
         cmd_give_powerfist,
+        cmd_give_mindblast,
 };
 
 struct command_t {

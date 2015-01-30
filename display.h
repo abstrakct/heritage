@@ -79,6 +79,8 @@ class Display {
 };
 
 #define COLOR_FEAR      TCODColor::flame
+#define COLOR_FEAR2     TCODColor::darkerFlame
+#define COLOR_FEAR3     TCODColor::darkestFlame
 #define COLOR_LESSFEAR  TCODColor::lime
 #define COLOR_FATAL     TCODColor::darkFuchsia
 #define COLOR_INFO      TCODColor::amber
