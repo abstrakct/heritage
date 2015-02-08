@@ -9,11 +9,15 @@ using namespace std;
 
 #include <iostream>
 #include <vector>
+using namespace std;
 
 #include "libtcod.hpp"
 #include "command.h"
 #include "common.h"
 #include "debug.h"
+#include "display.h"
+
+extern Display *display;
 
 command_t command_set_normal[] = {
     { { TCODK_CHAR,   0,  1, 0, 0, 0, 0, 0 }, cmd_nothing },
@@ -45,14 +49,25 @@ command_t command_set_normal[] = {
     { { TCODK_CHAR,  '<', 1, 0, 0, 0, 0, 0 }, cmd_stairs },
     { { TCODK_CHAR,  'a', 1, 0, 0, 0, 0, 0 }, cmd_activate },
     { { TCODK_CHAR,  'g', 1, 0, 0, 0, 0, 0 }, cmd_pickup },
+    { { TCODK_CHAR,  'f', 1, 0, 0, 0, 0, 0 }, cmd_fight },
+
     // Special moves!
     { { TCODK_1,      0,  1, 0, 0, 0, 0, 0 }, cmd_special_1 },
     { { TCODK_2,      0,  1, 0, 0, 0, 0, 0 }, cmd_special_2 },
     { { TCODK_3,      0,  1, 0, 0, 0, 0, 0 }, cmd_special_3 },
+    { { TCODK_4,      0,  1, 0, 0, 0, 0, 0 }, cmd_special_4 },
+    { { TCODK_5,      0,  1, 0, 0, 0, 0, 0 }, cmd_special_5 },
+    { { TCODK_6,      0,  1, 0, 0, 0, 0, 0 }, cmd_special_6 },
+    { { TCODK_7,      0,  1, 0, 0, 0, 0, 0 }, cmd_special_7 },
+    { { TCODK_8,      0,  1, 0, 0, 0, 0, 0 }, cmd_special_8 },
+    { { TCODK_9,      0,  1, 0, 0, 0, 0, 0 }, cmd_special_9 },
 
     // debug / development commands
     { { TCODK_F1,     0,  1, 0, 0, 0, 0, 0 }, cmd_all_visible },
-    { { TCODK_F2,     0,  1, 0, 0, 0, 0, 0 }, cmd_incfear },
+    { { TCODK_F2,     0,  1, 0, 0, 0, 0, 0 }, cmd_give_powerfist },
+    { { TCODK_F3,     0,  1, 0, 0, 0, 0, 0 }, cmd_give_mindblast },
+    { { TCODK_F4,     0,  1, 0, 0, 0, 0, 0 }, cmd_give_powerfist },
+    { { TCODK_F5,     0,  1, 0, 0, 0, 0, 0 }, cmd_incfear },
 };
 
 Command::Command()
@@ -85,11 +100,14 @@ command_type Command::get_command()
     for(i = command_list.begin(); i != command_list.end(); ++i) {
         if(key.vk == TCODK_CHAR) {
             if(key.c == i->key.c) {
+                display->flushem();
                 return i->cmd;
             }
         } else if(key.vk == i->key.vk) {
+            display->flushem();
             return i->cmd;
         } else if(key.vk == TCODK_NONE) {
+            display->flushem();
             return cmd_nothing;
         }
 

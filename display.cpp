@@ -13,14 +13,16 @@ using namespace std;
 #include <cstdio>
 
 #include "libtcod.hpp"
+
+#include "common.h"
 #include "debug.h"
 #include "display.h"
-#include "common.h"
 #include "actor.h"
 #include "player.h"
 #include "npc.h"
 #include "world.h"
 #include "game.h"
+#include "command.h"
 
 extern World *world;
 extern Player *player;
@@ -97,9 +99,15 @@ void Display::set_title(char *window_title)
 
 TCOD_key_t Display::get_key(bool flush)
 {
-        if(flush)
-                console->root->flush();
-        return console->root->checkForKeypress(TCOD_KEY_PRESSED);
+    if(flush)
+        console->root->flush();
+    //return console->root->checkForKeypress(TCOD_KEY_PRESSED);
+    //return console->root->waitForKeypress(true);
+    TCOD_key_t key;
+    TCOD_mouse_t mouse;
+    TCOD_event_t ev = TCODSystem::waitForEvent(TCOD_EVENT_ANY,&key,&mouse,false);
+    if (ev == TCOD_EVENT_KEY_PRESS)
+        return key;
 }
 
 /*TCOD_key_t Display::wait_for_key()
@@ -136,53 +144,61 @@ char *Display::get_title()
 
 void Display::draw_left_window()
 {
-        int x, y;
+    int x, y;
 
-        x = LEFT_X+1;
-        y = LEFT_Y+2;
+    x = LEFT_X+1;
+    y = LEFT_Y+2;
 
-        console->printEx(x+16, y, TCOD_BKGND_DEFAULT, TCOD_CENTER, "Time: %02d:%02d", g.clock.get_hour(), g.clock.get_minute()); y++; y++;
-        console->printEx(x+16, y, TCOD_BKGND_DEFAULT, TCOD_CENTER, "Area: %s", world->a->get_area_name()); y++; y++;
-        console->print(x, y, "Name: %s", player->getname()); y++;
-        y++;
-        console->print(x, y, "Mind: %d", player->getstat(sMind)); y++;
-        console->print(x, y, "Body: %d", player->getstat(sBody)); y++;
-        console->print(x, y, "Soul: %d", player->getstat(sSoul)); y++;
-        y++;
-        console->print(x, y, "Health:"); y++;
-        console->setDefaultForeground(TCODColor::azure);
-        console->print(x, y, "%d", player->getstat(sHealth)); y++;
-        console->setDefaultForeground(TCODColor::white);
-        console->print(x, y, "Sanity:"); y++;
-        console->setDefaultForeground(TCODColor::azure);
-        console->print(x, y, "%d", player->getstat(sSanity)); console->print(x+5, y, "(%s)", player->get_sanitydesc()); y++;
-        console->setDefaultForeground(TCODColor::white);
-        console->print(x, y, "Fear:"); y++;
-        console->setDefaultForeground(TCODColor::azure);
-        console->print(x, y, "%d", player->getstat(sFear)); /*console->print(x+5, y, "(Fearless)");*/ y++;
-        console->setDefaultForeground(TCODColor::white);
+    console->printEx(x+16, y, TCOD_BKGND_DEFAULT, TCOD_CENTER, "Time: %02d:%02d", g.clock.get_hour(), g.clock.get_minute()); y++; y++;
+    console->printEx(x+16, y, TCOD_BKGND_DEFAULT, TCOD_CENTER, "Area: %s", world->a->get_area_name()); y++; y++;
+    console->print(x, y, "Name: %s", player->getname()); y++;
+    y++;
+    console->print(x, y, "Mind: %d", player->getstat(sMind)); y++;
+    console->print(x, y, "Body: %d", player->getstat(sBody)); y++;
+    console->print(x, y, "Soul: %d", player->getstat(sSoul)); y++;
+    y++;
+    console->print(x, y, "Health:"); y++;
+    console->setDefaultForeground(TCODColor::azure);
+    console->print(x, y, "%d", player->getstat(sHealth)); y++;
+    console->setDefaultForeground(TCODColor::white);
+    console->print(x, y, "Sanity:"); y++;
+    console->setDefaultForeground(TCODColor::azure);
+    console->print(x, y, "%d", player->getstat(sSanity)); console->print(x+5, y, "(%s)", player->get_sanitydesc()); y++;
+    console->setDefaultForeground(TCODColor::white);
+    console->print(x, y, "Fear:"); y++;
+    console->setDefaultForeground(TCODColor::azure);
+    console->print(x, y, "%d", player->getstat(sFear)); /*console->print(x+5, y, "(Fearless)");*/ y++;
+    console->setDefaultForeground(TCODColor::white);
 
-        y++;
-        console->setDefaultForeground(TCODColor::green);
-        console->print(x, y, "Special abilities:"); y++;
-        console->setDefaultForeground(TCODColor::white);
-        vector<SpecialAttack>::iterator it;
-        int i;
-        for(it = player->special.begin(), i = 1; it != player->special.end(); ++it, ++i) {
-                console->setDefaultForeground(TCODColor::azure);
-                console->print(x, y, "%d. %s %d", i, it->name, it->level); y++;
+    y++;
+    console->setDefaultForeground(TCODColor::green);
+    console->print(x, y, "Special abilities:"); y++;
+    console->setDefaultForeground(TCODColor::white);
+    /*for(int i=1;i<10;++i) {
+      if(player->special[i] != special_none) {
+      console->setDefaultForeground(TCODColor::azure);
+      console->print(x, y, "%d. %s", i, special_name[(int)player->special[i]]); y++;
+      }
+      }*/
+    vector<SpecialAttack>::iterator it;
+    int i;
+    for(it = player->special.begin(), i = 0; it != player->special.end(); ++it, ++i) {
+        if(it->type != special_none) {
+            console->setDefaultForeground(TCODColor::azure);
+            console->print(x, y, "%d. %s %d", i, it->name, it->level); y++;
         }
+    }
 
+    y++;
+    console->setDefaultForeground(TCODColor::green);
+    console->print(x, y, "Inventory:"); y++;
+    console->setDefaultForeground(TCODColor::azure);
+    for(i = 0; i < player->inv->num_items(); i++) {
+        console->print(x, y, "%c - %s", player->inv->get(i).key, player->inv->get(i).get_name());
         y++;
-        console->setDefaultForeground(TCODColor::green);
-        console->print(x, y, "Inventory:"); y++;
-        console->setDefaultForeground(TCODColor::azure);
-        for(i = 0; i < player->inv->num_items(); i++) {
-                console->print(x, y, "%c - %s", player->inv->get(i).key, player->inv->get(i).get_name());
-                y++;
-        }
+    }
 
-        console->setDefaultForeground(TCODColor::white);
+    console->setDefaultForeground(TCODColor::white);
 }
 
 void Display::draw_game_screen()
@@ -202,7 +218,7 @@ void Display::update()
 
         world->draw_map();
 
-        display->print_messages();
+    this->print_messages();
 
         TCODConsole::blit(console, 0, 0, chars_x, chars_y, TCODConsole::root, 0.1, 0.1);
 
@@ -280,22 +296,77 @@ bool Display::askyn()
 {
         TCOD_key_t key;
 again: 
-        console->flush();
-        key = display->wait_for_key();
+    console->flush();
+    key = this->wait_for_key();
+    
+    if(key.c == 'y' || key.c == 'Y') {
+        return true;
+    }
+    
+    if(key.c == 'n' || key.c == 'N') {
+        return false;
+    } 
 
-        if(key.c == 'y' || key.c == 'Y') {
-                return true;
-        }
-
-        if(key.c == 'n' || key.c == 'N') {
-                return false;
-        } 
-
-        //display->message("Please choose [y]es or [n]o.");
-        display->touch();
-        display->update();
-        goto again;
+    //display->message("Please choose [y]es or [n]o.");
+    this->touch();
+    this->update();
+    goto again;
 }
+
+coord_t Display::get_direction()
+{
+    coord_t p;
+    command_type c;
+
+    this->message("Which direction?");
+    this->touch();
+    this->print_messages();
+    this->update();
+    
+    c = g.cmd.get_command();
+    while(c == cmd_nothing)
+        c = g.cmd.get_command();
+    switch(c) {
+        case cmd_move_left:
+            p.x = -1;
+            p.y = 0;
+            break;
+        case cmd_move_right:
+            p.x = 1;
+            p.y = 0;
+            break;
+        case cmd_move_up:
+            p.x = 0;
+            p.y = -1;
+            break;
+        case cmd_move_down:
+            p.x = 0;
+            p.y = 1;
+            break;
+        case cmd_move_nw:
+            p.x = -1;
+            p.y = -1;
+            break;
+        case cmd_move_ne:
+            p.x = 1;
+            p.y = -1;
+            break;
+        case cmd_move_sw:
+            p.x = -1;
+            p.y = 1;
+            break;
+        case cmd_move_se:
+            p.x = 1;
+            p.y = 1;
+            break;
+        default:
+            p.x = 0; p.y = 0;
+            break;
+    }
+
+    return p;
+}
+
 
 void Display::messagec(TCODColor c, const char *message, ...)
 {

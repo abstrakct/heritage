@@ -12,7 +12,6 @@
 #define ITEM_H
 
 #include <string>
-using namespace std;
 
 #include "common.h"
 

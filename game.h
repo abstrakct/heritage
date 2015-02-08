@@ -14,24 +14,24 @@
 #include "item.h"
 
 class Game {
-        public:
-                Game();
-                ~Game();
-                void loop();
-                bool is_running();
-                void endthegame();
-                void intro();
-                void end_turn();
-                
-                const char *name;  // the name of the game!
-                const char *version;
-                bool wizmode;
-                Clock clock;
-                vector<Item> itemdef;
-        protected:
-        private:
-                Command cmd;
-                bool running;
+    public:
+        Game();
+        ~Game();
+        void loop();
+        bool is_running();
+        void endthegame();
+        void intro();
+        void end_turn();
+
+        const char *name;  // the name of the game!
+        const char *version;
+        bool wizmode;
+        Clock clock;
+        vector<Item> itemdef;
+        Command cmd;
+    protected:
+    private:
+        bool running;
 };
 
 #endif

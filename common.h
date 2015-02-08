@@ -8,8 +8,9 @@
 #ifndef _COMMON_H
 #define _COMMON_H
 
-#include "display.h"
+#include <vector>
 #include "debug.h"
+#include "libtcod.hpp"
 
 #define d(x,y) dice(x,y,0)
 #define CALL_MEMBER_FN(object,ptrToMember)  ((object)->*(ptrToMember))
@@ -21,7 +22,12 @@
 #endif
 
 #define pcell player->area->cell[player->getx()][player->gety()]
-extern Display *display;
+//
+// Forward declarations
+class Actor;
+class Display;
+class Item;
+class SpecialAttack;
 
 typedef struct {
         int x;

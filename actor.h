@@ -38,9 +38,9 @@ enum special_type {
     special_mindblast,
     special_soulcrush,
     special_powerfist,
-    special_4,
-    special_5,
-    special_6,
+    special_zenmind,
+    special_spiritsoul,
+    special_toughenup,
     special_7,
     special_8,
     special_9,
@@ -65,12 +65,16 @@ class SpecialAttack {
     public:
         SpecialAttack();
         SpecialAttack(special_type t);
+        SpecialAttack(special_type t, bool off);
+        SpecialAttack(special_type t, bool off, attack_type a);
         ~SpecialAttack() {
         };
 
         special_type type;
+        attack_type attack;
         char name[20];
         int level;
+        bool offensive;
 };
 
 class Actor {
@@ -117,10 +121,24 @@ class Actor {
         bool is_next_to(Actor *target);
 
         void attack(Actor *target, attack_type type = body);
+        void attack(Actor *target, SpecialAttack sp);
         void attack_physical(Actor *target);
+        void attack_physical(Actor *target, int d, int damage);
+        void attack_mind(Actor *target, int d, int damage);
+
+        void attack_powerfist(Actor *target, SpecialAttack sp);
+        void attack_mindblast(Actor *target, SpecialAttack sp);
+        //void attack_soulcrush(Actor *target, SpecialAttack sp);
 
         bool pass_roll(enum_stat stat);
-        int  add_special_attack(special_type t); 
+        bool pass_roll(enum_stat stat, int i);
+        bool has_special();
+        int  add_special(special_type t); 
+        int  add_special(special_type t, bool off);
+        int  add_special(special_type t, bool off, attack_type a);
+        special_type get_special_type(int i);
+        int get_special_level(int i);
+        void do_special(SpecialAttack sp);
 
         // Movement
         void move(int dx, int dy);

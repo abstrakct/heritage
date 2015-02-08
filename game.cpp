@@ -58,6 +58,9 @@ void Game::intro()
 
 void Game::end_turn()
 {
+    display->print_messages();
+    display->touch();
+
     if(player->has_moved()) {
         for(int i=0;i<12;i++) {
             if(npc[i].is_alive()) {
@@ -76,6 +79,9 @@ void Game::loop()
 {
     command_type c;
     TCOD_key_t key;
+    special_type type;
+    SpecialAttack sp;
+    coord_t coord;
 
     //console.print(10, 10, "Welcome to game!!");
 
@@ -137,20 +143,87 @@ void Game::loop()
                 display->touch();
                 end_turn();
                 break;
+            case cmd_fight:
+                coord = display->get_direction();
+                if(player->area->cell[player->getx() + coord.x][player->gety() + coord.y].inhabitant) {
+                    player->attack(player->area->cell[player->getx() + coord.x][player->gety() + coord.y].inhabitant);
+                }
+                display->touch();
+                break;
             case cmd_wait:
                 player->moved();
                 end_turn();
                 break;
             case cmd_special_1:
-                display->message("SPECIAL ATTACK 1");
+                type = player->get_special_type(1);
+                if(type) {
+                    sp = player->special.at(1);
+                    player->do_special(sp);
+                }
                 display->touch();
                 break;
             case cmd_special_2:
-                display->message("SPECIAL ATTACK 2");
+                type = player->get_special_type(2);
+                if(type) {
+                    sp = player->special.at(2);
+                    player->do_special(sp);
+                }
                 display->touch();
                 break;
             case cmd_special_3:
-                display->message("SPECIAL ATTACK 3");
+                type = player->get_special_type(3);
+                if(type) {
+                    sp = player->special.at(3);
+                    player->do_special(sp);
+                }
+                display->touch();
+                break;
+            case cmd_special_4:
+                type = player->get_special_type(4);
+                if(type) {
+                    sp = player->special.at(4);
+                    player->do_special(sp);
+                }
+                display->touch();
+                break;
+            case cmd_special_5:
+                type = player->get_special_type(5);
+                if(type) {
+                    sp = player->special.at(5);
+                    player->do_special(sp);
+                }
+                display->touch();
+                break;
+            case cmd_special_6:
+                type = player->get_special_type(6);
+                if(type) {
+                    sp = player->special.at(6);
+                    player->do_special(sp);
+                }
+                display->touch();
+                break;
+            case cmd_special_7:
+                type = player->get_special_type(7);
+                if(type) {
+                    sp = player->special.at(7);
+                    player->do_special(sp);
+                }
+                display->touch();
+                break;
+            case cmd_special_8:
+                type = player->get_special_type(8);
+                if(type) {
+                    sp = player->special.at(8);
+                    player->do_special(sp);
+                }
+                display->touch();
+                break;
+            case cmd_special_9:
+                type = player->get_special_type(9);
+                if(type) {
+                    sp = player->special.at(9);
+                    player->do_special(sp);
+                }
                 display->touch();
                 break;
                 // Debug/development commands:
@@ -162,6 +235,14 @@ void Game::loop()
                 break;
             case cmd_incfear:
                 player->incfear();
+                end_turn();
+                break;
+            case cmd_give_powerfist:
+                player->add_special(special_powerfist, true, body);
+                end_turn();
+                break;
+            case cmd_give_mindblast:
+                player->add_special(special_mindblast, true, mind);
                 end_turn();
                 break;
             default:

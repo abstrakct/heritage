@@ -18,6 +18,7 @@ using namespace std;
 extern Player *player;
 extern World *world;
 extern Game g;
+extern Display *display;
 
 const char *area_name[] = {
     "Cellar, level 6",
@@ -40,9 +41,9 @@ class MyCallback : public ITCODBspCallback
         bool visitNode(TCODBsp *node, void *userData)
         {
             //dbg("making room, x=%d y=%d w=%d h=%d", node->x, node->y, node->w, node->h);
-            world->a->make_room(node->x, node->y, node->x + node->w-2, node->y + node->h-2);
+            world->a->make_room_with_doors(node->x, node->y, node->x + node->w-2, node->y + node->h-2);
 
-            if(node->horizontal) {
+            /*if(node->horizontal) {
                 int x1 = node->x - 2;
                 int y1 = node->y - 2;
                 int x2 = node->x + node->w - 2;
@@ -56,7 +57,7 @@ class MyCallback : public ITCODBspCallback
                 int y2 = node->y + node->h - 2;
                 world->a->make_door(ri(x1, x2), y1, false);
                 world->a->make_door(ri(x1, x2), y2, false);
-            }
+            }*/
 
             return true;
         }
@@ -296,35 +297,61 @@ void Cell::activate_bookcase()
     i = ri(1, 20);
     di = ri(10, 15);
     if(i <= di) {
-        book = ri(1, 7);
+        book = ri(1, 8);
         switch(book) {
             case 1:
                 display->messagec(COLOR_BOOK, "An old book titled \"Unlocking Your Brain's True Potential - Vol. I\" catches your eye.");
                 display->messagec(COLOR_BOOK, "The book is written by Dr. Evan Hoffman.");
                 if(player->pass_roll(sMind)) {
-                    int a = ri(1,5);
-                    switch(a) {
-                        case 1:
-                            display->messagec(COLOR_BOOK, "You open the book at \"Chapter XIII - Telekinetics and related subjects\" and read for a while.");
-                            break;
-                        case 2:
-                            display->messagec(COLOR_BOOK, "You open the book at \"Chapter XII - Mindblasting - Fact or Fiction?\" and read for a while.");
-                            break;
-                        case 3:
-                            display->messagec(COLOR_BOOK, "You open the book at \"Chapter XV - Improving the Flow\" and read for a while.");
-                            break;
-                        case 4:
-                            display->messagec(COLOR_BOOK, "You open the book at \"Chapter IX - S.L.: A Case Study\" and read for a while.");
-                            break;
-                        case 5:
-                            display->messagec(COLOR_BOOK, "You open the book at \"Chapter XXI - Beyond the Mind\" and read for a while.");
-                            break;
+                    if(fiftyfifty()) {
+                        int a = ri(1,5);
+                        switch(a) {
+                            case 1:
+                                display->messagec(COLOR_BOOK, "You open the book at \"Chapter XIII - Telekinetics and related subjects\" and read for a while.");
+                                break;
+                            case 2:
+                                display->messagec(COLOR_BOOK, "You open the book at \"Chapter XII - Mindblasting - Fact or Fiction?\" and read for a while.");
+                                break;
+                            case 3:
+                                display->messagec(COLOR_BOOK, "You open the book at \"Chapter XV - Improving the Flow\" and read for a while.");
+                                break;
+                            case 4:
+                                display->messagec(COLOR_BOOK, "You open the book at \"Chapter IX - S.L.: A Case Study\" and read for a while.");
+                                break;
+                            case 5:
+                                display->messagec(COLOR_BOOK, "You open the book at \"Chapter XXI - Beyond the Mind\" and read for a while.");
+                                break;
+                        }
+                        result = player->add_special(special_mindblast, true, mind);
+                        if(result == SPECIAL_ADD_SUCCESS)
+                            display->messagec(COLOR_GOOD, "Congratulations! You can now employ your mind to cause minor destruction!");
+                        if(result == SPECIAL_ADD_INCREASE)
+                            display->messagec(COLOR_GOOD, "Congratulations! You increase the power of your mindblast!");
+                    } else {
+                        int a = ri(1,5);
+                        switch(a) {
+                            case 1:
+                                display->messagec(COLOR_BOOK, "You open the book at \"Chapter XVI - Defensive techniques for a healthy mind\" and read for a while.");
+                                break;
+                            case 2:
+                                display->messagec(COLOR_BOOK, "You open the book at \"Chapter XVII - Buddhism for beginners\" and read for a while.");
+                                break;
+                            case 3:
+                                display->messagec(COLOR_BOOK, "You open the book at \"Chapter XVIII - Meditation: Does it work?\" and read for a while.");
+                                break;
+                            case 4:
+                                display->messagec(COLOR_BOOK, "You open the book at \"Chapter XIX - Zen against Anxiety\" and read for a while.");
+                                break;
+                            case 5:
+                                display->messagec(COLOR_BOOK, "You open the book at \"Chapter XX - Finding Your Personal Nirvana\" and read for a while.");
+                                break;
+                        }
+                        result = player->add_special(special_zenmind);
+                        if(result == SPECIAL_ADD_SUCCESS)
+                            display->messagec(COLOR_GOOD, "Congratulations! You can now calm your fears using your own mind!");
+                        if(result == SPECIAL_ADD_INCREASE)
+                            display->messagec(COLOR_GOOD, "Congratulations! You increase the power of your zenmind!");
                     }
-                    result = player->add_special_attack(special_mindblast);
-                    if(result == SPECIAL_ADD_SUCCESS)
-                        display->messagec(COLOR_GOOD, "Congratulations! You can now employ your mind to cause minor destruction!");
-                    if(result == SPECIAL_ADD_INCREASE)
-                        display->messagec(COLOR_GOOD, "Congratulations! You increase the power of your mindblast!");
                 } else {
                     display->messagec(COLOR_BOOK, "You flip randomly through the book, but the medical terminology goes straight over your head. You put the book back on the shelf.");
                 }
@@ -333,12 +360,21 @@ void Cell::activate_bookcase()
             case 2:
                 display->messagec(COLOR_BOOK, "You come across a large book called \"How To Fight - A Reference\". It looks interesting.");
                 if(player->pass_roll(sMind)) {
-                    display->messagec(COLOR_BOOK, "You read through the book, picking up a few useful fighting techniques.");
-                    result = player->add_special_attack(special_powerfist);
-                    if(result == SPECIAL_ADD_SUCCESS)
-                        display->messagec(COLOR_GOOD, "Congratulations! You can now use a special move in physical combat!");
-                    if(result == SPECIAL_ADD_INCREASE)
-                        display->messagec(COLOR_GOOD, "Congratulations! You learn a few more techniques for physical combat!");
+                    if(fiftyfifty()) {
+                        display->messagec(COLOR_BOOK, "You read through the book, picking up a few useful fighting techniques.");
+                        result = player->add_special(special_powerfist, true, body);
+                        if(result == SPECIAL_ADD_SUCCESS)
+                            display->messagec(COLOR_GOOD, "Congratulations! You can now use a special move in physical combat!");
+                        if(result == SPECIAL_ADD_INCREASE)
+                            display->messagec(COLOR_GOOD, "Congratulations! You learn a few more techniques for physical combat!");
+                    } else {
+                        display->messagec(COLOR_BOOK, "You read through the book, picking up a few useful defensive techniques. You feel tougher already!");
+                        result = player->add_special(special_toughenup);
+                        if(result == SPECIAL_ADD_SUCCESS)
+                            display->messagec(COLOR_GOOD, "Congratulations! You can now defend yourself more easily, and feel less anxious overall!");
+                        if(result == SPECIAL_ADD_INCREASE)
+                            display->messagec(COLOR_GOOD, "Congratulations! You toughen up even more!");
+                    }
                 } else {
                     display->messagec(COLOR_BOOK, "You flip through the book, but see nothing you don't already know.");
                 }
@@ -347,12 +383,21 @@ void Cell::activate_bookcase()
             case 3:
                 display->messagec(COLOR_BOOK, "You find a small book called \"Mysteries of the Soul\", written by Marvin E. A. Edeef.");
                 if(player->pass_roll(sMind)) {
-                    display->messagec(COLOR_BOOK, "As you flip through the book you come to a sudden realization about the soul and your own spirituality.");
-                    result = player->add_special_attack(special_soulcrush);
-                    if(result == SPECIAL_ADD_SUCCESS)
-                        display->messagec(COLOR_GOOD, "Congratulations! You can now use some of the powers of your soul to help you make it through the night!");
-                    if(result == SPECIAL_ADD_INCREASE)
-                        display->messagec(COLOR_GOOD, "Congratulations! You increase the power of your soulcrushing ability!");
+                    if(fiftyfifty()) {
+                        display->messagec(COLOR_BOOK, "As you flip through the book you come to a sudden realization about the soul and your own spirituality.");
+                        result = player->add_special(special_soulcrush, true, soul);
+                        if(result == SPECIAL_ADD_SUCCESS)
+                            display->messagec(COLOR_GOOD, "Congratulations! You can now use some of the powers of your soul to help you make it through the night!");
+                        if(result == SPECIAL_ADD_INCREASE)
+                            display->messagec(COLOR_GOOD, "Congratulations! You increase the power of your soulcrushing ability!");
+                    } else {
+                        display->messagec(COLOR_BOOK, "As you flip through the book you come to a sudden realization about the soul and your own spirituality.");
+                        result = player->add_special(special_spiritsoul);
+                        if(result == SPECIAL_ADD_SUCCESS)
+                            display->messagec(COLOR_GOOD, "Congratulations! Your soul is now connected more closely to the spiritual world. You feel safer!");
+                        if(result == SPECIAL_ADD_INCREASE)
+                            display->messagec(COLOR_GOOD, "Congratulations! You increase the power of your spiritsoul!");
+                    }
                 } else {
                     display->messagec(COLOR_BOOK, "You flip through the book, quickly concluding that it's just New-Age mumbo jumbo.");
                 }
@@ -603,7 +648,7 @@ void Area::generate(area_id_type identifier)
     MyCallback *callback = new MyCallback;
     world->a = &world->area[(int)identifier];
     set_id(identifier);
-    bsp->splitRecursive(NULL, 5, 4, 7, 1.7f, 1.7f);
+    bsp->splitRecursive(NULL, ri(4,6), ri(4,6), ri(5,8), 1.7f, 1.7f);
     /*int i = ri(1,3);
     if(i==1)
         bsp->traversePreOrder(callback, NULL);
@@ -639,8 +684,18 @@ void Area::place_furniture()
     // bookcases
     for(i = 0; i < 10; ++i) {
         if(fiftyfifty()) {
+            int dx,dy;
             coord_t c = world->get_random_floor_cell(this->get_id());
             this->cell[c.x][c.y].set_bookcase();
+            for(dx=-1;dx<=1;dx++) {
+                for(dy=-1;dy<=1;dy++) {
+                    if(this->cell[c.x+dx][c.y+dy].is_walkable()) {
+                        if(ri(1,3) == 1) {
+                            this->cell[c.x+dx][c.y+dy].set_bookcase();
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -705,6 +760,19 @@ void Area::make_room(int x1, int y1, int x2, int y2)
     vertical_line(x2, y1, y2);
 }
 
+void Area::make_room_with_doors(int x1, int y1, int x2, int y2)
+{
+    horizontal_line(x1, y1, x2);
+    horizontal_line(x1, y2, x2);
+    vertical_line(x1, y1, y2);
+    vertical_line(x2, y1, y2);
+
+    make_door(ri(x1,x2), y1, false);
+    make_door(ri(x1,x2), y2, false);
+    make_door(x1, ri(y1,y2), false);
+    make_door(x2, ri(y1,y2), false);
+}
+
 void Area::make_door(int x, int y, bool open)
 {
     //dbg("Making door at %d,%d (%s)", x, y, open ? "open" : "closed");
@@ -713,8 +781,8 @@ void Area::make_door(int x, int y, bool open)
         return;
     if(y <= 1)
         return;
-    if(cell[x][y].get_type() != wall)
-        return;
+    //if(cell[x][y].get_type() != wall)
+    //    return;
 
     if(open)
         cell[x][y].set_door_open();
@@ -984,6 +1052,8 @@ void World::draw_cell(int x, int y)
     if(player->area->cell[x][y].inhabitant) {
         if(player->area->cell[x][y].inhabitant->alive) {
             player->area->cell[x][y].inhabitant->draw();
+        } else {
+            display->putmap(x, y, a->cell[x][y].c, a->cell[x][y].fg, a->cell[x][y].bg);
         }
     } else {
         if(player->area->cell[x][y].item) {

@@ -41,7 +41,7 @@ NPC::NPC()
     setchar('@');
 
     fg = display->get_random_color();
-    bg = TCODColor::black; // display->get_random_color();
+    bg = TCODColor::darkerGrey; // display->get_random_color();
     setcolors(fg, bg);
 
     setai(AI_RANDOM);
@@ -52,6 +52,19 @@ NPC::NPC()
 
     setgender(ri(0, 1));
     generate_name();
+
+    // give them a random special power
+    int i = ri(1,3);
+    switch(i) {
+        case 1:
+            this->add_special(special_powerfist, true, body);
+            break;
+        case 2:
+            this->add_special(special_mindblast, true, mind);
+            break;
+        default:
+            break;
+    }
 }
 
 NPC::~NPC()
