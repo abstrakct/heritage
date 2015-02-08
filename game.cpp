@@ -137,9 +137,14 @@ void Game::loop()
                 player->area->cell[player->getx()][player->gety()].activate();
                 break;
             case cmd_pickup:
-                player->inv->add(pcell.item);
-                display->message("You now have %d items.", player->inv->num_items());
-                pcell.item = NULL;
+                if(pcell.item) {
+                    player->inv->add(pcell.item);
+                    display->message("You now have %d items.", player->inv->num_items());
+                    pcell.item = NULL;
+                    player->moved();
+                } else {
+                    display->message("There is nothing here to pick up!");
+                }
                 display->touch();
                 end_turn();
                 break;
