@@ -527,7 +527,7 @@ void Actor::attack_mind(Actor *target, int d, int damage)
     }
 }
 
-void Actor::attack_powerfist(Actor *target, SpecialAttack sp)
+void Actor::attack_powerfist(Actor *target, SpecialMove sp)
 {
     int d = dice(1, 20, 4 + (int)(sp.level * 1.2));
     int damage = dice(2, this->getstat(sBody), ability_modifier(this->getstat(sBody)) + (int)(sp.level));
@@ -535,7 +535,7 @@ void Actor::attack_powerfist(Actor *target, SpecialAttack sp)
     attack_physical(target, d, damage);
 }
 
-void Actor::attack_mindblast(Actor *target, SpecialAttack sp)
+void Actor::attack_mindblast(Actor *target, SpecialMove sp)
 {
     int d = dice(1, 20, 4 + (int)(sp.level * 1.2));
     int damage = dice(2, this->getstat(sMind), ability_modifier(this->getstat(sMind)) + (int)(sp.level));
@@ -543,7 +543,7 @@ void Actor::attack_mindblast(Actor *target, SpecialAttack sp)
     attack_mind(target, d, damage);
 }
 
-void Actor::attack(Actor *target, attack_type type)
+void Actor::attack(Actor *target, special_move_t type)
 {
         target->enemy = this;
         if(this == player) {
@@ -559,7 +559,7 @@ void Actor::attack(Actor *target, attack_type type)
         }
 }
 
-void Actor::attack(Actor *target, SpecialAttack sp)
+void Actor::attack(Actor *target, SpecialMove sp)
 {
     target->enemy = this;
     if(this == player) {
@@ -624,8 +624,8 @@ bool Actor::has_special()
 
 int  Actor::add_special(special_type t)
 {
-        vector<SpecialAttack>::iterator it;
-        SpecialAttack *s;
+        vector<SpecialMove>::iterator it;
+        SpecialMove *s;
 
         for(it = this->special.begin(); it != this->special.end(); ++it) {
                 if(it->type == t) {
@@ -634,7 +634,7 @@ int  Actor::add_special(special_type t)
                 }
         }
 
-        s = new SpecialAttack(t);
+        s = new SpecialMove(t);
         this->special.push_back(*s);
         delete s;
         return SPECIAL_ADD_SUCCESS;
@@ -642,8 +642,8 @@ int  Actor::add_special(special_type t)
 
 int  Actor::add_special(special_type t, bool off)
 {
-    vector<SpecialAttack>::iterator it;
-    SpecialAttack *s;
+    vector<SpecialMove>::iterator it;
+    SpecialMove *s;
 
     for(it = this->special.begin(); it != this->special.end(); ++it) {
         if(it->type == t) {
@@ -652,16 +652,16 @@ int  Actor::add_special(special_type t, bool off)
         }
     }
 
-    s = new SpecialAttack(t, off);
+    s = new SpecialMove(t, off);
     this->special.push_back(*s);
     delete s;
     return SPECIAL_ADD_SUCCESS;
 }
 
-int  Actor::add_special(special_type t, bool off, attack_type a)
+int  Actor::add_special(special_type t, bool off, special_move_t a)
 {
-    vector<SpecialAttack>::iterator it;
-    SpecialAttack *s;
+    vector<SpecialMove>::iterator it;
+    SpecialMove *s;
 
     for(it = this->special.begin(); it != this->special.end(); ++it) {
         if(it->type == t) {
@@ -670,7 +670,7 @@ int  Actor::add_special(special_type t, bool off, attack_type a)
         }
     }
 
-    s = new SpecialAttack(t, off, a);
+    s = new SpecialMove(t, off, a);
     this->special.push_back(*s);
     delete s;
     return SPECIAL_ADD_SUCCESS;
@@ -678,7 +678,7 @@ int  Actor::add_special(special_type t, bool off, attack_type a)
 
 special_type Actor::get_special_type(int i)
 {
-    vector<SpecialAttack>::iterator it;
+    vector<SpecialMove>::iterator it;
 
     if(i < this->special.size()) {
         it = this->special.begin() + i;
@@ -690,7 +690,7 @@ special_type Actor::get_special_type(int i)
 
 int Actor::get_special_level(int i)
 {
-    vector<SpecialAttack>::iterator it;
+    vector<SpecialMove>::iterator it;
 
     if(i < this->special.size()) {
         it = this->special.begin() + i;
@@ -700,7 +700,7 @@ int Actor::get_special_level(int i)
     }
 }
 
-void Actor::do_special(SpecialAttack sp)
+void Actor::do_special(SpecialMove sp)
 {
     coord_t c;
 
@@ -717,7 +717,7 @@ void Actor::do_special(SpecialAttack sp)
     }
 }
 
-SpecialAttack::SpecialAttack()
+SpecialMove::SpecialMove()
 {
     type = special_none;
     level = 0;
@@ -725,7 +725,7 @@ SpecialAttack::SpecialAttack()
     offensive = false;
 }
 
-SpecialAttack::SpecialAttack(special_type t)
+SpecialMove::SpecialMove(special_type t)
 {
     type = t;
     level = 1;
@@ -734,7 +734,7 @@ SpecialAttack::SpecialAttack(special_type t)
     attack = body;
 }
 
-SpecialAttack::SpecialAttack(special_type t, bool off)
+SpecialMove::SpecialMove(special_type t, bool off)
 {
     type = t;
     level = 1;
@@ -743,7 +743,7 @@ SpecialAttack::SpecialAttack(special_type t, bool off)
     attack = body;
 }
 
-SpecialAttack::SpecialAttack(special_type t, bool off, attack_type a)
+SpecialMove::SpecialMove(special_type t, bool off, special_move_t a)
 {
     type = t;
     level = 1;

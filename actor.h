@@ -17,7 +17,7 @@ enum e_role {
     role_enemy,
 };
 
-enum attack_type {
+enum special_move_t {
     body = 0,
     mind,
     soul,
@@ -61,17 +61,17 @@ typedef void (Actor::*aifn)();
 #define SPECIAL_ADD_SUCCESS  1
 #define SPECIAL_ADD_INCREASE 2
 
-class SpecialAttack {
+class SpecialMove {
     public:
-        SpecialAttack();
-        SpecialAttack(special_type t);
-        SpecialAttack(special_type t, bool off);
-        SpecialAttack(special_type t, bool off, attack_type a);
-        ~SpecialAttack() {
+        SpecialMove();
+        SpecialMove(special_type t);
+        SpecialMove(special_type t, bool off);
+        SpecialMove(special_type t, bool off, special_move_t a);
+        ~SpecialMove() {
         };
 
         special_type type;
-        attack_type attack;
+        special_move_t attack;
         char name[20];
         int level;
         bool offensive;
@@ -120,25 +120,25 @@ class Actor {
         bool can_see(int x, int y);
         bool is_next_to(Actor *target);
 
-        void attack(Actor *target, attack_type type = body);
-        void attack(Actor *target, SpecialAttack sp);
+        void attack(Actor *target, special_move_t type = body);
+        void attack(Actor *target, SpecialMove sp);
         void attack_physical(Actor *target);
         void attack_physical(Actor *target, int d, int damage);
         void attack_mind(Actor *target, int d, int damage);
 
-        void attack_powerfist(Actor *target, SpecialAttack sp);
-        void attack_mindblast(Actor *target, SpecialAttack sp);
-        //void attack_soulcrush(Actor *target, SpecialAttack sp);
+        void attack_powerfist(Actor *target, SpecialMove sp);
+        void attack_mindblast(Actor *target, SpecialMove sp);
+        //void attack_soulcrush(Actor *target, SpecialMove sp);
 
         bool pass_roll(enum_stat stat);
         bool pass_roll(enum_stat stat, int i);
         bool has_special();
         int  add_special(special_type t); 
         int  add_special(special_type t, bool off);
-        int  add_special(special_type t, bool off, attack_type a);
+        int  add_special(special_type t, bool off, special_move_t a);
         special_type get_special_type(int i);
         int get_special_level(int i);
-        void do_special(SpecialAttack sp);
+        void do_special(SpecialMove sp);
 
         // Movement
         void move(int dx, int dy);
@@ -157,7 +157,7 @@ class Actor {
         Actor *enemy;              // public enemy haha!
         Area *area;                // in which area is this actor?
         bool alive;
-        vector <SpecialAttack> special;
+        vector <SpecialMove> special;
         Inventory *inv;
     protected:
     private:

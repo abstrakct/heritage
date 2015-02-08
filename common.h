@@ -27,7 +27,7 @@
 class Actor;
 class Display;
 class Item;
-class SpecialAttack;
+class SpecialMove;
 
 typedef struct {
         int x;

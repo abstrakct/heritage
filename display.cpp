@@ -180,7 +180,7 @@ void Display::draw_left_window()
       console->print(x, y, "%d. %s", i, special_name[(int)player->special[i]]); y++;
       }
       }*/
-    vector<SpecialAttack>::iterator it;
+    vector<SpecialMove>::iterator it;
     int i;
     for(it = player->special.begin(), i = 0; it != player->special.end(); ++it, ++i) {
         if(it->type != special_none) {

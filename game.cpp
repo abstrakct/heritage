@@ -80,7 +80,7 @@ void Game::loop()
     command_type c;
     TCOD_key_t key;
     special_type type;
-    SpecialAttack sp;
+    SpecialMove sp;
     coord_t coord;
 
     //console.print(10, 10, "Welcome to game!!");
